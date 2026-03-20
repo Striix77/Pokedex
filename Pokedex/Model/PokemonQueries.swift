@@ -37,4 +37,12 @@ struct PokemonQueries {
           }
         }
         """
+    
+    static let pokemonTypesList = """
+        query samplePokeAPIquery {
+          type {
+            name
+          }
+        }
+        """
 }
