@@ -37,8 +37,8 @@ struct PokemonListView: View {
             .controlSize(.large)
         }
     }
-    
-    private var pokemonList: some View{
+
+    private var pokemonList: some View {
         List(viewModel.filteredPokemon) { pokemon in
             NavigationLink(value: pokemon) {
                 HStack {

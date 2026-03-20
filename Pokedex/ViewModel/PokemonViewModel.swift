@@ -10,9 +10,11 @@ import Foundation
 @Observable
 class PokemonViewModel {
     var list = [Pokemon]()
+    var typeList: [PokemonType] = []
     var searchText = ""
     var isLoading = false
     var errorMessage: String? = nil
+    var selectedFilter: String = "All"
 
     var favorites: Set<Int> = [] {
         didSet {
@@ -47,11 +49,23 @@ class PokemonViewModel {
     }
 
     var filteredPokemon: [Pokemon] {
+        var searchedList: [Pokemon]
         if searchText.isEmpty {
-            return list
+            searchedList =  list
         } else {
-            return list.filter {
+            searchedList = list.filter {
                 $0.name.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+        return filterByTypes(in: searchedList)
+    }
+
+    func filterByTypes(in pokemonList: [Pokemon]) -> [Pokemon] {
+        if selectedFilter == "All" {
+            return pokemonList
+        } else {
+            return pokemonList.filter { pokemon in
+                pokemon.typeString.contains(selectedFilter)
             }
         }
     }
@@ -64,13 +78,25 @@ class PokemonViewModel {
         }
 
         let query = PokemonQueries.getPokemonList
+        let typeQuery = PokemonQueries.pokemonTypesList
 
         let body: [String: Any] = ["query": query]
+        let typeBody: [String: Any] = ["query": typeQuery]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        var typeRequest = URLRequest(url: url)
+        typeRequest.httpMethod = "POST"
+        typeRequest.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
+        typeRequest.httpBody = try? JSONSerialization.data(
+            withJSONObject: typeBody
+        )
 
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
@@ -81,8 +107,20 @@ class PokemonViewModel {
             )
             print("decoded")
 
+            // Types
+            let (typeData, _) = try await URLSession.shared.data(
+                for: typeRequest
+            )
+            print("got the types")
+            let decodedTypes = try JSONDecoder().decode(
+                TypeResponse.self,
+                from: typeData
+            )
+            print("decoded types")
+
             await MainActor.run {
                 self.list = decoded.data.pokemon
+                self.typeList = decodedTypes.data.type
             }
         } catch {
             self.errorMessage = error.localizedDescription
