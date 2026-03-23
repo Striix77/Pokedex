@@ -13,8 +13,12 @@ struct PokemonListView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(colors: [Color.red,Color.white], startPoint: UnitPoint(x: 1, y: 1), endPoint: UnitPoint(x: 0, y: 0))
-                    .ignoresSafeArea()
+//                LinearGradient(
+//                    colors: [Color.red, Color.white],
+//                    startPoint: UnitPoint(x: 1, y: 1),
+//                    endPoint: UnitPoint(x: 0, y: 0)
+//                )
+//                .ignoresSafeArea()
                 if viewModel.isLoading && viewModel.list.isEmpty {
                     ProgressView("Catching 'em all...")
                 } else if viewModel.errorMessage != nil {
@@ -37,6 +41,22 @@ struct PokemonListView: View {
                 } else {
                     VStack {
                         List(viewModel.filteredPokemon) { pokemon in
+                            var typeColors: (Color?, Color?) {
+                                var colors: (Color?, Color?)
+                                colors.0 =
+                                    PokemonColorType(
+                                        rawValue: pokemon.pokemontypes[0].type
+                                            .name
+                                    )?.color
+                                if pokemon.pokemontypes.count > 1 {
+                                    colors.1 =
+                                        PokemonColorType(
+                                            rawValue: pokemon.pokemontypes[1]
+                                                .type.name
+                                        )?.color
+                                }
+                                return colors
+                            }
                             NavigationLink(value: pokemon) {
                                 HStack {
                                     Text("\(pokemon.id)")
@@ -46,6 +66,16 @@ struct PokemonListView: View {
                                         .bold()
                                 }
                             }
+                            .listRowBackground(
+                                LinearGradient(
+                                    colors: [
+                                        typeColors.0 ?? Color.white,
+                                        typeColors.1 ?? Color.white,
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
                         }
                         .scrollContentBackground(.hidden)
                         .navigationTitle("Pokédex")
