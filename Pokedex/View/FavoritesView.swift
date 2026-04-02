@@ -20,17 +20,7 @@ struct FavoritesView: View {
                 if favoritePokemon.isEmpty {
                     contentUnavailable
                 } else {
-                    List(favoritePokemon) { pokemon in
-                        NavigationLink(value: pokemon) {
-                            HStack {
-                                Text("\(pokemon.id)")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(pokemon.name.capitalized)
-                                    .bold()
-                            }
-                        }
-                    }
+                    pokemonList
                 }
             }
             .navigationTitle("My Favorites")
@@ -54,5 +44,19 @@ struct FavoritesView: View {
                 "Go to the list and tap the heart on your favorite Pokémon!"
             )
         )
+    }
+
+    private var pokemonList: some View {
+        List(favoritePokemon) { pokemon in
+            NavigationLink(value: pokemon) {
+                HStack {
+                    Text("\(pokemon.id)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(pokemon.name.capitalized)
+                        .bold()
+                }
+            }
+        }
     }
 }
