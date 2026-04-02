@@ -1,0 +1,40 @@
+//
+//  PokemonStatsView.swift
+//  Pokedex
+//
+//  Created by Freak on 02.04.2026.
+//
+
+import SwiftUI
+
+struct PokemonStatsView: View {
+    let typeString: String
+    let weight: Int
+    let height: Int
+
+    var body: some View {
+        HStack(spacing: 40) {
+            StatVStack(
+                label: "Type",
+                value: typeString,
+                color: .orange
+            )
+            StatVStack(
+                label: "Weight",
+                value: "\(weight)",
+                color: .blue
+            )
+            StatVStack(
+                label: "Height",
+                value: "\(height)",
+                color: .green
+            )
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20).fill(
+                Color(.systemBackground)
+            ).shadow(radius: 5)
+        )
+    }
+}
