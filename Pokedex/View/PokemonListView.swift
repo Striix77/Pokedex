@@ -17,35 +17,11 @@ struct PokemonListView: View {
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
             } else {
-                List(viewModel.filteredPokemon) { pokemon in
-                    NavigationLink(value: pokemon) {
-                        HStack {
-                            Text("\(pokemon.id)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Text(pokemon.name.capitalized)
-                                .bold()
-                        }
-                    }
-                }
-                .navigationTitle("Pokédex")
-                .searchable(
-                    text: $viewModel.searchText,
-                    prompt: "Search Pokémon..."
-                )
-                .onAppear {
-                    Task {
-                        await viewModel.fetchPokemon()
-                    }
-                }
-                .navigationDestination(for: Pokemon.self) { pokemon in
-                    PokemonDetailsView(
-                        pokemon: pokemon,
-                        isFavorite: viewModel.favorites.contains(pokemon.id),
-                        onFavoriteToggle: {
-                            viewModel.toggleFavorite(pokemon: pokemon)
-                        }
-                    )
+                pokemonList
+            }
+        }
+    }
+
     private var contentUnavailable: some View {
         ContentUnavailableView {
             Label("Connection Lost", systemImage: "wifi.exclamationmark")
@@ -61,8 +37,37 @@ struct PokemonListView: View {
             .controlSize(.large)
         }
     }
+    
+    private var pokemonList: some View{
+        List(viewModel.filteredPokemon) { pokemon in
+            NavigationLink(value: pokemon) {
+                HStack {
+                    Text("\(pokemon.id)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(pokemon.name.capitalized)
+                        .bold()
                 }
             }
+        }
+        .navigationTitle("Pokédex")
+        .searchable(
+            text: $viewModel.searchText,
+            prompt: "Search Pokémon..."
+        )
+        .onAppear {
+            Task {
+                await viewModel.fetchPokemon()
+            }
+        }
+        .navigationDestination(for: Pokemon.self) { pokemon in
+            PokemonDetailsView(
+                pokemon: pokemon,
+                isFavorite: viewModel.favorites.contains(pokemon.id),
+                onFavoriteToggle: {
+                    viewModel.toggleFavorite(pokemon: pokemon)
+                }
+            )
         }
     }
 }
