@@ -14,17 +14,17 @@ struct PokemonStatsView: View {
 
     var body: some View {
         HStack(spacing: 40) {
-            StatVStack(
+            StatView(
                 label: "Type",
                 value: typeString,
                 color: .orange
             )
-            StatVStack(
+            StatView(
                 label: "Weight",
                 value: "\(weight)",
                 color: .blue
             )
-            StatVStack(
+            StatView(
                 label: "Height",
                 value: "\(height)",
                 color: .green
@@ -38,3 +38,4 @@ struct PokemonStatsView: View {
         )
     }
 }
+

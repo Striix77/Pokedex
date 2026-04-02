@@ -18,22 +18,22 @@ struct PokemonBattleStatsView: View {
                 .font(.title2)
                 .bold()
 
-            StatBar(
+            StatBarView(
                 label: "HP",
                 value: pokemonHP,
                 color: .green
             )
-            StatBar(
+            StatBarView(
                 label: "ATK",
                 value: pokemonAttack,
                 color: .red
             )
-            StatBar(
+            StatBarView(
                 label: "DEF",
                 value: pokemonDefense,
                 color: .blue
             )
-            StatBar(
+            StatBarView(
                 label: "SPD",
                 value: pokemonSpeed,
                 color: .orange
