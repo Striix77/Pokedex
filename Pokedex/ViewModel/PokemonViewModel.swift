@@ -121,6 +121,7 @@ class PokemonViewModel {
             await MainActor.run {
                 self.list = decoded.data.pokemon
                 self.typeList = decodedTypes.data.type
+                print(self.typeList)
             }
         } catch {
             self.errorMessage = error.localizedDescription
