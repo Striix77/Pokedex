@@ -15,17 +15,7 @@ struct PokemonListView: View {
             if viewModel.isLoading && viewModel.list.isEmpty {
                 ProgressView("Catching 'em all...")
             } else if viewModel.errorMessage != nil {
-                ContentUnavailableView {
-                        Label("Connection Lost", systemImage: "wifi.exclamationmark")
-                    } description: {
-                        Text("Looks like Team Rocket is at it again...\nMaybe try again later!")
-                    } actions: {
-                        Button("Try Again") {
-                            Task { await viewModel.fetchPokemon() }
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.large)
-                    }
+                contentUnavailable
             } else {
                 List(viewModel.filteredPokemon) { pokemon in
                     NavigationLink(value: pokemon) {
@@ -56,6 +46,21 @@ struct PokemonListView: View {
                             viewModel.toggleFavorite(pokemon: pokemon)
                         }
                     )
+    private var contentUnavailable: some View {
+        ContentUnavailableView {
+            Label("Connection Lost", systemImage: "wifi.exclamationmark")
+        } description: {
+            Text(
+                "Looks like Team Rocket is at it again...\nMaybe try again later!"
+            )
+        } actions: {
+            Button("Try Again") {
+                Task { await viewModel.fetchPokemon() }
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+        }
+    }
                 }
             }
         }
