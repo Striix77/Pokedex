@@ -24,29 +24,10 @@ struct PokemonDetailsView: View {
                     isFavorite: isFavorite,
                     formattedGeneration: pokemon.formattedGeneration
                 )
-                //Info Stats
-                HStack(spacing: 40) {
-                    StatVStack(
-                        label: "Type",
-                        value: pokemon.typeString,
-                        color: .orange
-                    )
-                    StatVStack(
-                        label: "Weight",
-                        value: "\(pokemon.weight)",
-                        color: .blue
-                    )
-                    StatVStack(
-                        label: "Height",
-                        value: "\(pokemon.height)",
-                        color: .green
-                    )
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 20).fill(
-                        Color(.systemBackground)
-                    ).shadow(radius: 5)
+                PokemonStatsView(
+                    typeString: pokemon.typeString,
+                    weight: pokemon.weight,
+                    height: pokemon.height
                 )
 
                 // Pokémon Stats
@@ -171,6 +152,38 @@ struct PokemonInfoHeaderView: View {
             }
         }
 
+    }
+}
+
+struct PokemonStatsView: View {
+    let typeString: String
+    let weight: Int
+    let height: Int
+
+    var body: some View {
+        HStack(spacing: 40) {
+            StatVStack(
+                label: "Type",
+                value: typeString,
+                color: .orange
+            )
+            StatVStack(
+                label: "Weight",
+                value: "\(weight)",
+                color: .blue
+            )
+            StatVStack(
+                label: "Height",
+                value: "\(height)",
+                color: .green
+            )
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20).fill(
+                Color(.systemBackground)
+            ).shadow(radius: 5)
+        )
     }
 }
 
