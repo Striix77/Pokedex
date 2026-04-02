@@ -18,13 +18,7 @@ struct FavoritesView: View {
         NavigationStack {
             Group {
                 if favoritePokemon.isEmpty {
-                    ContentUnavailableView(
-                        "No Favorites Yet",
-                        systemImage: "heart.slash",
-                        description: Text(
-                            "Go to the list and tap the heart on your favorite Pokémon!"
-                        )
-                    )
+                    contentUnavailable
                 } else {
                     List(favoritePokemon) { pokemon in
                         NavigationLink(value: pokemon) {
@@ -50,5 +44,15 @@ struct FavoritesView: View {
                 )
             }
         }
+    }
+
+    private var contentUnavailable: some View {
+        ContentUnavailableView(
+            "No Favorites Yet",
+            systemImage: "heart.slash",
+            description: Text(
+                "Go to the list and tap the heart on your favorite Pokémon!"
+            )
+        )
     }
 }
