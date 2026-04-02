@@ -29,35 +29,12 @@ struct PokemonDetailsView: View {
                     weight: pokemon.weight,
                     height: pokemon.height
                 )
-
-                // Pokémon Stats
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Base Stats")
-                        .font(.title2)
-                        .bold()
-
-                    StatBar(
-                        label: "HP",
-                        value: pokemon.statValue(named: "hp"),
-                        color: .green
-                    )
-                    StatBar(
-                        label: "ATK",
-                        value: pokemon.statValue(named: "attack"),
-                        color: .red
-                    )
-                    StatBar(
-                        label: "DEF",
-                        value: pokemon.statValue(named: "defense"),
-                        color: .blue
-                    )
-                    StatBar(
-                        label: "SPD",
-                        value: pokemon.statValue(named: "speed"),
-                        color: .orange
-                    )
-                }
-                .padding()
+                PokemonBattleStatsView(
+                    pokemonHP: pokemon.statValue(named: "hp"),
+                    pokemonAttack: pokemon.statValue(named: "attack"),
+                    pokemonDefense: pokemon.statValue(named: "defense"),
+                    pokemonSpeed: pokemon.statValue(named: "speed")
+                )
 
                 Spacer()
             }
@@ -184,6 +161,42 @@ struct PokemonStatsView: View {
                 Color(.systemBackground)
             ).shadow(radius: 5)
         )
+    }
+}
+
+struct PokemonBattleStatsView: View {
+    let pokemonHP: Int
+    let pokemonAttack: Int
+    let pokemonDefense: Int
+    let pokemonSpeed: Int
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Base Stats")
+                .font(.title2)
+                .bold()
+
+            StatBar(
+                label: "HP",
+                value: pokemonHP,
+                color: .green
+            )
+            StatBar(
+                label: "ATK",
+                value: pokemonAttack,
+                color: .red
+            )
+            StatBar(
+                label: "DEF",
+                value: pokemonDefense,
+                color: .blue
+            )
+            StatBar(
+                label: "SPD",
+                value: pokemonSpeed,
+                color: .orange
+            )
+        }
+        .padding()
     }
 }
 
