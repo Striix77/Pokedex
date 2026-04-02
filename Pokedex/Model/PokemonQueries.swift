@@ -40,8 +40,14 @@ struct PokemonQueries {
     
     static let pokemonTypesList = """
         query samplePokeAPIquery {
-          type {
-            name
+          type{
+              name
+              TypeefficaciesByTargetTypeId(where: {damage_factor: {_neq: 100}}) {
+                  damage_factor
+                  type {
+                      name
+                  }
+              }
           }
         }
         """
