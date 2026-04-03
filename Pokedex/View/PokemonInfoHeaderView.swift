@@ -48,19 +48,20 @@ struct PokemonInfoHeaderView: View {
                 }
 
                 VStack(spacing: 12) {
-                    Button {
-                        soundManager.playCry(name: pokemonName)
-                    } label: {
-                        Image(systemName: "speaker.wave.3")
-                            .resizable()
-                            .frame(width: 32, height: 24)
-                    }
+                    
                     Text(formattedGeneration)
                         .font(.system(size: 20))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(.ultraThinMaterial)
                         .clipShape(Capsule())
+                    Button {
+                        soundManager.playCry(name: pokemonName)
+                    } label: {
+                        Image("PlayButton")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                    }
                 }
             }
         }
