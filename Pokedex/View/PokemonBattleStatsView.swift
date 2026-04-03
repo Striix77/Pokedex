@@ -12,33 +12,34 @@ struct PokemonBattleStatsView: View {
     let pokemonAttack: Int
     let pokemonDefense: Int
     let pokemonSpeed: Int
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Base Stats")
-                .font(.title2)
-                .bold()
+    let pokemonTypes: [PokemonTypes]
+    let allTypes: [PokemonType]
 
-            StatBarView(
-                label: "HP",
-                value: pokemonHP,
-                color: .green
-            )
-            StatBarView(
-                label: "ATK",
-                value: pokemonAttack,
-                color: .red
-            )
-            StatBarView(
-                label: "DEF",
-                value: pokemonDefense,
-                color: .blue
-            )
-            StatBarView(
-                label: "SPD",
-                value: pokemonSpeed,
-                color: .orange
+    var body: some View {
+        VStack {
+            PokemonBaseStatsView(
+                pokemonHP: pokemonHP,
+                pokemonAttack: pokemonAttack,
+                pokemonDefense: pokemonDefense,
+                pokemonSpeed: pokemonSpeed
             )
         }
-        .padding()
     }
+    
+            )
+
+            )
+        }
+    }
+}
+
+#Preview(traits: .sizeThatFitsLayout) {
+    PokemonBattleStatsView(
+        pokemonHP: 100,
+        pokemonAttack: 90,
+        pokemonDefense: 80,
+        pokemonSpeed: 70,
+        pokemonTypes: [],
+        allTypes: []
+    )
 }
