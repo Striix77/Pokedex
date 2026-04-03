@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PokemonDetailsView: View {
     let pokemon: Pokemon
+    let types: [PokemonType]
     let isFavorite: Bool
     let onFavoriteToggle: () -> Void
 
@@ -21,7 +22,8 @@ struct PokemonDetailsView: View {
                     name: pokemon.name,
                     onFavoriteToggle: onFavoriteToggle,
                     isFavorite: isFavorite,
-                    formattedGeneration: pokemon.formattedGeneration
+                    formattedGeneration: pokemon.formattedGeneration,
+                    pokemonName: pokemon.name
                 )
                 PokemonStatsView(
                     typeString: pokemon.typeString,
@@ -32,7 +34,9 @@ struct PokemonDetailsView: View {
                     pokemonHP: pokemon.statValue(named: "hp"),
                     pokemonAttack: pokemon.statValue(named: "attack"),
                     pokemonDefense: pokemon.statValue(named: "defense"),
-                    pokemonSpeed: pokemon.statValue(named: "speed")
+                    pokemonSpeed: pokemon.statValue(named: "speed"),
+                    pokemonTypes: pokemon.pokemontypes,
+                    allTypes: types
                 )
 
                 Spacer()

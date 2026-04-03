@@ -12,33 +12,74 @@ struct PokemonBattleStatsView: View {
     let pokemonAttack: Int
     let pokemonDefense: Int
     let pokemonSpeed: Int
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Base Stats")
-                .font(.title2)
-                .bold()
+    let pokemonTypes: [PokemonTypes]
+    let allTypes: [PokemonType]
+    
+    private let strongEfficacyTitle = "Strong against"
+    private let weakEfficacyTitle = "Weak against"
+    private let strongEfficacyValue = 50
+    private let weakEfficacyValue = 200
 
-            StatBarView(
-                label: "HP",
-                value: pokemonHP,
-                color: .green
+    var body: some View {
+        VStack {
+            PokemonBaseStatsView(
+                pokemonHP: pokemonHP,
+                pokemonAttack: pokemonAttack,
+                pokemonDefense: pokemonDefense,
+                pokemonSpeed: pokemonSpeed
             )
-            StatBarView(
-                label: "ATK",
-                value: pokemonAttack,
-                color: .red
+
+            EfficacyView(
+                title: strongEfficacyTitle,
+                efficacies: calculateEfficacies(for: strongEfficacyValue)
             )
-            StatBarView(
-                label: "DEF",
-                value: pokemonDefense,
-                color: .blue
+            EfficacyView(
+                title: weakEfficacyTitle,
+                efficacies: calculateEfficacies(for: weakEfficacyValue)
             )
-            StatBarView(
-                label: "SPD",
-                value: pokemonSpeed,
-                color: .orange
+
+        }
+    }
+
+    func getPokemonTypesWithEfficacies() -> [PokemonType] {
+        var pokemonTypesWithEfficacies: [PokemonType] = []
+        pokemonTypes.forEach { type in
+            pokemonTypesWithEfficacies.append(
+                contentsOf:
+                    allTypes.filter {
+                        $0.name == type.type.name
+                    }
             )
         }
-        .padding()
+        return pokemonTypesWithEfficacies
     }
+
+    func calculateEfficacies(for strength: Int) -> [(String, Int)] {
+        var typeStrengths: [(String, Int)] = []
+        getPokemonTypesWithEfficacies().forEach { type in
+            typeStrengths.append(
+                contentsOf: type.typeEfficaciesByTargetTypeId?
+                    .filter {
+                        $0.damage_factor == strength
+                    }
+                    .map {
+                        ($0.type.name.capitalized, $0.type.id)
+                    } ?? [("", 0)]
+            )
+        }
+        return typeStrengths
+    }
+}
+
+
+
+#Preview(traits: .sizeThatFitsLayout) {
+    PokemonBattleStatsView(
+        pokemonHP: 100,
+        pokemonAttack: 90,
+        pokemonDefense: 80,
+        pokemonSpeed: 70,
+        pokemonTypes: [],
+        allTypes: []
+    )
 }
