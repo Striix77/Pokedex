@@ -23,33 +23,17 @@ struct PokemonBattleStatsView: View {
                 pokemonDefense: pokemonDefense,
                 pokemonSpeed: pokemonSpeed
             )
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Strong against")
-                    .font(.title2)
 
-                    .bold()
-                VStack {
-                    HStack {
-                        ForEach(calculateStrengths(), id: \.1) { type in
-                            HStack {
-                                AsyncImage(url: getIconUrl(for: type.1))
-                                Text(type.0)
-                            }
-                        }
+            EfficacyView(
+                title: strongEfficacyTitle,
+                efficacies: calculateEfficacies(for: strongEfficacyValue)
+            )
+            EfficacyView(
+                title: weakEfficacyTitle,
+                efficacies: calculateEfficacies(for: weakEfficacyValue)
+            )
 
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
         }
-    }
-
-    func getIconUrl(for id: Int) -> URL? {
-        URL(
-            string:
-                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/\(id).png"
-        )
     }
 
     func getPokemonTypesWithEfficacies() -> [PokemonType] {
@@ -79,6 +63,45 @@ struct PokemonBattleStatsView: View {
             )
         }
         return typeStrengths
+    }
+}
+
+struct EfficacyView: View {
+    let title: String
+    let efficacies: [(String, Int)]
+    private let spacing: Int = 10
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: CGFloat(spacing)) {
+            Text(title)
+                .font(.title2)
+
+                .bold()
+            VStack {
+                HStack {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(efficacies, id: \.1) { type in
+                                HStack {
+                                    AsyncImage(url: getIconUrl(for: type.1))
+                                    Text(type.0)
+                                }
+                            }
+                        }
+                    }.scrollIndicators(.hidden)
+
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+    }
+
+    func getIconUrl(for id: Int) -> URL? {
+        URL(
+            string:
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/\(id).png"
+        )
     }
 }
 
