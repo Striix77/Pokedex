@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PokemonInfoHeaderView: View {
     @State private var soundManager = SoundManager()
+    @State private var canPlay = false
 
     let id: Int
     let name: String
@@ -48,20 +49,26 @@ struct PokemonInfoHeaderView: View {
                 }
 
                 VStack(spacing: 12) {
-                    
                     Text(formattedGeneration)
                         .font(.system(size: 20))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(.ultraThinMaterial)
                         .clipShape(Capsule())
-                    Button {
-                        soundManager.playCry(name: pokemonName)
-                    } label: {
-                        Image("PlayButton")
-                            .resizable()
-                            .frame(width: 40, height: 40)
+
+                    if canPlay {
+                        Button {
+                            soundManager.playCry(name: pokemonName)
+                        } label: {
+                            Image("PlayButton")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                        }
                     }
+
+                }
+                .task {
+                    canPlay = await soundManager.canPlaySound(of: pokemonName)
                 }
             }
         }
