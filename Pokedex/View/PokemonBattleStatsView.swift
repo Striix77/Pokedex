@@ -30,9 +30,13 @@ struct PokemonBattleStatsView: View {
                     .bold()
                 VStack {
                     HStack {
-                        ForEach(calculateStrengths(), id: \.self) { type in
-                            Text(type)
+                        ForEach(calculateStrengths(), id: \.1) { type in
+                            HStack {
+                                AsyncImage(url: getIconUrl(for: type.1))
+                                Text(type.0)
+                            }
                         }
+
                     }
                 }
             }
@@ -40,8 +44,15 @@ struct PokemonBattleStatsView: View {
             .padding()
         }
     }
-    
-    func getPokemonTypesWithEfficacies() -> [PokemonType]{
+
+    func getIconUrl(for id: Int) -> URL? {
+        URL(
+            string:
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/\(id).png"
+        )
+    }
+
+    func getPokemonTypesWithEfficacies() -> [PokemonType] {
         var pokemonTypesWithEfficacies: [PokemonType] = []
         pokemonTypes.forEach { type in
             pokemonTypesWithEfficacies.append(
@@ -54,8 +65,8 @@ struct PokemonBattleStatsView: View {
         return pokemonTypesWithEfficacies
     }
 
-    func calculateStrengths() -> [String] {
-        var typeStrengths: [String] = []
+    func calculateStrengths() -> [(String, Int)] {
+        var typeStrengths: [(String, Int)] = []
         getPokemonTypesWithEfficacies().forEach { type in
             typeStrengths.append(
                 contentsOf: type.typeEfficaciesByTargetTypeId?
@@ -63,8 +74,8 @@ struct PokemonBattleStatsView: View {
                         $0.damage_factor == 200
                     }
                     .map {
-                        $0.type.name
-                    } ?? [""]
+                        ($0.type.name.capitalized, $0.type.id)
+                    } ?? [("", 0)]
             )
         }
         return typeStrengths
