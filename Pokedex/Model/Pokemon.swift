@@ -16,6 +16,7 @@ struct Pokemon: Codable, Identifiable, Hashable {
     let height: Int
     let pokemonsprites: [SpriteEntry]
     let pokemonstats: [StatEntry]
+    let pokemoncries: [PokemonCries]
 
     var spriteURL: URL? {
         guard let spritesJson = pokemonsprites.first?.sprites else {

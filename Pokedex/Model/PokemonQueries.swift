@@ -33,7 +33,11 @@ struct PokemonQueries {
                 base_stat
                 stat {
                     name
-              }
+                }
+            }
+        
+            pokemoncries {
+                cries
             }
           }
         }
