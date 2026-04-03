@@ -1,3 +1,4 @@
+import AVFoundation
 //
 //  PokemonInfoHeaderView.swift
 //  Pokedex
@@ -7,11 +8,14 @@
 import SwiftUI
 
 struct PokemonInfoHeaderView: View {
+    @State private var soundManager = SoundManager()
+
     let id: Int
     let name: String
     let onFavoriteToggle: () -> Void
     let isFavorite: Bool
     let formattedGeneration: String
+    let pokemonName: String
 
     var body: some View {
         VStack(spacing: 8) {
@@ -20,7 +24,7 @@ struct PokemonInfoHeaderView: View {
                 .fontWeight(.bold)
                 .foregroundStyle(.secondary)
 
-            VStack(spacing: 10) {
+            VStack(spacing: 12) {
                 HStack {
                     Text(name.capitalized)
                         .font(
@@ -42,14 +46,37 @@ struct PokemonInfoHeaderView: View {
                     }
                     .buttonStyle(.borderless)
                 }
-                Text(formattedGeneration)
-                    .font(.system(size: 20))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.ultraThinMaterial)
-                    .clipShape(Capsule())
+
+                VStack(spacing: 12) {
+                    Button {
+                        soundManager.playCry(name: pokemonName)
+                    } label: {
+                        Image(systemName: "speaker.wave.3")
+                            .resizable()
+                            .frame(width: 32, height: 24)
+                    }
+                    Text(formattedGeneration)
+                        .font(.system(size: 20))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Capsule())
+                }
             }
         }
 
     }
+}
+
+#Preview(traits: .sizeThatFitsLayout) {
+    PokemonInfoHeaderView(
+        id: 1,
+        name: "Squirtle",
+        onFavoriteToggle: {
+
+        },
+        isFavorite: false,
+        formattedGeneration: "Gen I",
+        pokemonName: "Squirtle"
+    )
 }

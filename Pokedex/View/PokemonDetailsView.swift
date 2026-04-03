@@ -22,7 +22,8 @@ struct PokemonDetailsView: View {
                     name: pokemon.name,
                     onFavoriteToggle: onFavoriteToggle,
                     isFavorite: isFavorite,
-                    formattedGeneration: pokemon.formattedGeneration
+                    formattedGeneration: pokemon.formattedGeneration,
+                    pokemonName: pokemon.name
                 )
                 PokemonStatsView(
                     typeString: pokemon.typeString,
