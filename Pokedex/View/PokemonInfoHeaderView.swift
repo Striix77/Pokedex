@@ -26,27 +26,7 @@ struct PokemonInfoHeaderView: View {
                 .foregroundStyle(.secondary)
 
             VStack(spacing: 12) {
-                HStack {
-                    Text(name.capitalized)
-                        .font(
-                            .system(
-                                size: 44,
-                                weight: .black,
-                                design: .rounded
-                            )
-                        )
-                    Button {
-                        onFavoriteToggle()
-                    } label: {
-                        Image(
-                            systemName: isFavorite
-                                ? "heart.fill" : "heart"
-                        )
-                        .font(.system(size: 30))
-                        .foregroundStyle(isFavorite ? .red : .gray)
-                    }
-                    .buttonStyle(.borderless)
-                }
+                pokemonTitle
 
                 VStack(spacing: 12) {
                     Text(formattedGeneration)
@@ -73,6 +53,30 @@ struct PokemonInfoHeaderView: View {
             }
         }
 
+    }
+    
+    private var pokemonTitle: some View{
+        HStack {
+            Text(name.capitalized)
+                .font(
+                    .system(
+                        size: 44,
+                        weight: .black,
+                        design: .rounded
+                    )
+                )
+            Button {
+                onFavoriteToggle()
+            } label: {
+                Image(
+                    systemName: isFavorite
+                        ? "heart.fill" : "heart"
+                )
+                .font(.system(size: 30))
+                .foregroundStyle(isFavorite ? .red : .gray)
+            }
+            .buttonStyle(.borderless)
+        }
     }
 }
 
