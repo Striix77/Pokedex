@@ -9,5 +9,6 @@
 import Foundation
 
 struct AttackerType: Codable, Hashable {
+    let id: Int
     let name: String
 }

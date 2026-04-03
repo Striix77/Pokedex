@@ -8,10 +8,12 @@
 import Foundation
 
 struct PokemonType: Codable, Hashable {
+    let id: Int
     let name: String
     let typeEfficaciesByTargetTypeId: [TypeEfficacy]?
     
     enum CodingKeys: String, CodingKey{
+        case id = "id"
         case name = "name"
         case typeEfficaciesByTargetTypeId = "TypeefficaciesByTargetTypeId"
     }
