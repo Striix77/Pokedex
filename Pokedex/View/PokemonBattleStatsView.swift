@@ -14,6 +14,11 @@ struct PokemonBattleStatsView: View {
     let pokemonSpeed: Int
     let pokemonTypes: [PokemonTypes]
     let allTypes: [PokemonType]
+    
+    private let strongEfficacyTitle = "Strong against"
+    private let weakEfficacyTitle = "Weak against"
+    private let strongEfficacyValue = 50
+    private let weakEfficacyValue = 200
 
     var body: some View {
         VStack {
@@ -49,13 +54,13 @@ struct PokemonBattleStatsView: View {
         return pokemonTypesWithEfficacies
     }
 
-    func calculateStrengths() -> [(String, Int)] {
+    func calculateEfficacies(for strength: Int) -> [(String, Int)] {
         var typeStrengths: [(String, Int)] = []
         getPokemonTypesWithEfficacies().forEach { type in
             typeStrengths.append(
                 contentsOf: type.typeEfficaciesByTargetTypeId?
                     .filter {
-                        $0.damage_factor == 200
+                        $0.damage_factor == strength
                     }
                     .map {
                         ($0.type.name.capitalized, $0.type.id)
