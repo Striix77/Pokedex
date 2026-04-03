@@ -27,6 +27,7 @@ struct FavoritesView: View {
             .navigationDestination(for: Pokemon.self) { pokemon in
                 PokemonDetailsView(
                     pokemon: pokemon,
+                    types: viewModel.typeList,
                     isFavorite: viewModel.favorites.contains(pokemon.id),
                     onFavoriteToggle: {
                         viewModel.toggleFavorite(pokemon: pokemon)
