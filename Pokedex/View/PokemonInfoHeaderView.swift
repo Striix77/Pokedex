@@ -29,21 +29,9 @@ struct PokemonInfoHeaderView: View {
                 pokemonTitle
 
                 VStack(spacing: 12) {
-                    Text(formattedGeneration)
-                        .font(.system(size: 20))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Capsule())
-
+                    generationText
                     if canPlay {
-                        Button {
-                            soundManager.playCry(name: pokemonName)
-                        } label: {
-                            Image("PlayButton")
-                                .resizable()
-                                .frame(width: 40, height: 40)
-                        }
+                        soundPlayButton
                     }
 
                 }
@@ -54,8 +42,8 @@ struct PokemonInfoHeaderView: View {
         }
 
     }
-    
-    private var pokemonTitle: some View{
+
+    private var pokemonTitle: some View {
         HStack {
             Text(name.capitalized)
                 .font(
@@ -77,6 +65,27 @@ struct PokemonInfoHeaderView: View {
             }
             .buttonStyle(.borderless)
         }
+    }
+
+    private var generationText: some View {
+        Text(formattedGeneration)
+            .font(.system(size: 20))
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(.ultraThinMaterial)
+            .clipShape(Capsule())
+    }
+
+    private var soundPlayButton: some View {
+
+        return Button {
+            soundManager.playCry(name: pokemonName)
+        } label: {
+            Image("PlayButton")
+                .resizable()
+                .frame(width: 40, height: 40)
+        }
+
     }
 }
 
