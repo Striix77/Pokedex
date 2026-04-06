@@ -11,6 +11,7 @@ import Foundation
 class PokemonViewModel {
     var list = [Pokemon]()
     var typeList: [PokemonType] = []
+    var generationsList: [PokemonGeneration] = []
     var searchText = ""
     var isLoading = false
     var errorMessage: String? = nil
@@ -77,11 +78,13 @@ class PokemonViewModel {
             return
         }
 
-        let query = PokemonQueries.getPokemonList
-        let typeQuery = PokemonQueries.pokemonTypesList
+        let query = PokemonQueries.pokemonBaseQuery
+        let typeQuery = PokemonQueries.pokemonTypesQuery
+        let generationsQuery = PokemonQueries.pokemonGenerationsQuery
 
         let body: [String: Any] = ["query": query]
         let typeBody: [String: Any] = ["query": typeQuery]
+        let generationsBody: [String: Any] = ["query": generationsQuery]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -96,6 +99,16 @@ class PokemonViewModel {
         )
         typeRequest.httpBody = try? JSONSerialization.data(
             withJSONObject: typeBody
+        )
+        
+        var generationsRequest = URLRequest(url: url)
+        generationsRequest.httpMethod = "POST"
+        generationsRequest.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
+        generationsRequest.httpBody = try? JSONSerialization.data(
+            withJSONObject: generationsBody
         )
 
         do {
@@ -117,10 +130,22 @@ class PokemonViewModel {
                 from: typeData
             )
             print("decoded types")
+            
+            // Generations
+            let (generationsData, _) = try await URLSession.shared.data(
+                for: generationsRequest
+            )
+            print("got the generations")
+            let decodedGenerations = try JSONDecoder().decode(
+                GenerationResponse.self,
+                from: generationsData
+            )
+            print("decoded generations")
 
             await MainActor.run {
                 self.list = decoded.data.pokemon
                 self.typeList = decodedTypes.data.type
+                self.generationsList = decodedGenerations.data.generation
             }
         } catch {
             self.errorMessage = error.localizedDescription
