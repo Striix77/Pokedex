@@ -1,0 +1,35 @@
+//
+//  TypeColors.swift
+//  Pokedex
+//
+//  Created by Freak on 06.04.2026.
+//
+import SwiftUI
+
+enum TypeColor: String {
+    case fire, water, grass, electric, ice, fighting, poison, ground, flying,
+        psychic, bug, rock, ghost, dragon, dark, steel, fairy, normal
+
+    var color: Color {
+        switch self {
+        case .bug: return Color(red: 0.776, green: 0.82, blue: 0.549, opacity: 0.5) // #c6d18c
+        case .dark: return Color(red: 0.655, green: 0.631, blue: 0.616, opacity: 0.5) // #a7a19d
+        case .dragon: return Color(red: 0.616, green: 0.561, blue: 0.769, opacity: 0.5) // #9d8fc4
+        case .electric: return Color(red: 0.996, green: 0.878, blue: 0.545, opacity: 0.5) // #fee08b
+        case .fairy: return Color(red: 0.976, green: 0.769, blue: 0.976, opacity: 0.5) // #f9c4f9
+        case .fighting: return Color(red: 0.988, green: 0.698, blue: 0.541, opacity: 0.5) // #fcb28a
+        case .fire: return Color(red: 0.988, green: 0.62, blue: 0.612, opacity: 0.5) // #fc9e9c
+        case .flying: return Color(red: 0.722, green: 0.831, blue: 0.988, opacity: 0.5) // #b8d4fc
+        case .ghost: return Color(red: 0.627, green: 0.561, blue: 0.678, opacity: 0.5) // #a08fad
+        case .grass: return Color(red: 0.663, green: 0.859, blue: 0.616, opacity: 0.5) // #a9db9d
+        case .ground: return Color(red: 0.792, green: 0.706, blue: 0.604, opacity: 0.5) // #cab49a
+        case .ice: return Color(red: 0.635, green: 0.976, blue: 0.988, opacity: 0.5) // #a2f9fc
+        case .normal: return Color(red: 0.816, green: 0.816, blue: 0.816, opacity: 0.5) // #d0d0d0
+        case .poison: return Color(red: 0.792, green: 0.69, blue: 0.851, opacity: 0.5) // #cab0d9
+        case .psychic: return Color(red: 0.988, green: 0.722, blue: 0.847, opacity: 0.5) // #fcb8d8
+        case .rock: return Color(red: 0.859, green: 0.827, blue: 0.737, opacity: 0.5) // #dbd3bc
+        case .steel: return Color(red: 0.737, green: 0.776, blue: 0.812, opacity: 0.5) // #bcc6cf
+        case .water: return Color(red: 0.682, green: 0.871, blue: 0.992, opacity: 0.5) // #aedefd
+        }
+    }
+}
