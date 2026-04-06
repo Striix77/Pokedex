@@ -16,28 +16,30 @@ struct EfficacyView: View {
         VStack(alignment: .leading, spacing: CGFloat(spacing)) {
             Text(title)
                 .font(.title2)
-
                 .bold()
-            VStack {
-                HStack {
-                    ScrollView(.horizontal) {
-                        HStack(spacing: 24) {
-                            ForEach(efficacies, id: \.1) { efficacy in
-                                EfficacyCardView(
-                                    efficacy: efficacy,
-                                    getIconUrl: getIconUrl
-                                )
-                            }
-                        }
-                    }
-                    .scrollIndicators(.hidden)
-                    .scrollBounceBehavior(.basedOnSize, axes: [.horizontal])
+            cardScrollView
 
-                }
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
+    }
+
+    private var cardScrollView: some View {
+        HStack {
+            ScrollView(.horizontal) {
+                HStack(spacing: 24) {
+                    ForEach(efficacies, id: \.1) { efficacy in
+                        EfficacyCardView(
+                            efficacy: efficacy,
+                            getIconUrl: getIconUrl
+                        )
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+            .scrollBounceBehavior(.basedOnSize, axes: [.horizontal])
+
+        }
     }
 
     func getIconUrl(for id: Int) -> URL? {
