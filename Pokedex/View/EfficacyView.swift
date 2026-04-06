@@ -50,35 +50,6 @@ struct EfficacyView: View {
     }
 }
 
-struct EfficacyCardView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @State private var isAnimating = false
-    let efficacy: (String, Int)
-    let getIconUrl: (Int) -> URL?
-
-    var body: some View {
-        VStack {
-            AsyncImage(url: getIconUrl(efficacy.1)) { image in
-                image
-                    .image?.resizable()
-                    .aspectRatio(contentMode: .fit)
-            }
-            .frame(width: 56, height: 56)
-            .shadow(radius: 4)
-            Text(efficacy.0)
-
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-        .background(
-            TypeColor(rawValue: efficacy.0.lowercased())?.color.opacity(
-                colorScheme == .light ? 0.5 : 0.3
-            )
-                ?? .gray
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-}
 
 #Preview {
     EfficacyView(
