@@ -57,9 +57,9 @@ struct PokemonListView: View {
                 prompt: "Search Pokémon..."
             )
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
                     Menu {
-                        Picker("Filter", selection: $viewModel.selectedFilter) {
+                        Picker("Type", selection: $viewModel.selectedTypeFilter) {
                             Text("All").tag("All")
                             ForEach(viewModel.typeList, id: \.self) { type in
                                 Text(type.name.capitalized).tag(
@@ -69,25 +69,24 @@ struct PokemonListView: View {
                         }
                     } label: {
                         Label(
-                            "Filter",
+                            "Type filter",
                             systemImage: "line.3.horizontal.decrease.circle"
                         )
                     }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
+                    
                     Menu {
-                        Picker("Filter", selection: $viewModel.selectedFilter) {
+                        Picker("Generation", selection: $viewModel.selectedGenerationFilter) {
                             Text("All").tag("All")
-                            ForEach(viewModel.typeList, id: \.self) { type in
-                                Text(type.name.capitalized).tag(
-                                    type.name.capitalized
+                            ForEach(viewModel.generationsList, id: \.self) { generation in
+                                Text(generation.formattedName).tag(
+                                    generation.name
                                 )
                             }
                         }
                     } label: {
                         Label(
-                            "Filter",
-                            systemImage: "line.3.horizontal.decrease.circle"
+                            "Generation filter",
+                            systemImage: "number.circle"
                         )
                     }
                 }
@@ -110,6 +109,7 @@ struct PokemonListView: View {
         }
     }
 }
+
 
 #Preview{
     @Previewable @State var viewModel = PokemonViewModel()

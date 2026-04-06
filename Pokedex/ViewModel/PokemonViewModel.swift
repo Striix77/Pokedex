@@ -15,7 +15,8 @@ class PokemonViewModel {
     var searchText = ""
     var isLoading = false
     var errorMessage: String? = nil
-    var selectedFilter: String = "All"
+    var selectedTypeFilter: String = "All"
+    var selectedGenerationFilter: String = "All"
 
     var favorites: Set<Int> = [] {
         didSet {
@@ -52,21 +53,31 @@ class PokemonViewModel {
     var filteredPokemon: [Pokemon] {
         var searchedList: [Pokemon]
         if searchText.isEmpty {
-            searchedList =  list
+            searchedList = list
         } else {
             searchedList = list.filter {
                 $0.name.localizedCaseInsensitiveContains(searchText)
             }
         }
-        return filterByTypes(in: searchedList)
+        return filterByGenerations(in: filterByTypes(in: searchedList))
     }
 
     func filterByTypes(in pokemonList: [Pokemon]) -> [Pokemon] {
-        if selectedFilter == "All" {
+        if selectedTypeFilter == "All" {
             return pokemonList
         } else {
             return pokemonList.filter { pokemon in
-                pokemon.typeString.contains(selectedFilter)
+                pokemon.typeString.contains(selectedTypeFilter)
+            }
+        }
+    }
+
+    func filterByGenerations(in pokemonList: [Pokemon]) -> [Pokemon] {
+        if selectedGenerationFilter == "All" {
+            return pokemonList
+        } else {
+            return pokemonList.filter { pokemon in
+                pokemon.generationName.contains(selectedGenerationFilter)
             }
         }
     }
@@ -100,7 +111,7 @@ class PokemonViewModel {
         typeRequest.httpBody = try? JSONSerialization.data(
             withJSONObject: typeBody
         )
-        
+
         var generationsRequest = URLRequest(url: url)
         generationsRequest.httpMethod = "POST"
         generationsRequest.setValue(
@@ -130,7 +141,7 @@ class PokemonViewModel {
                 from: typeData
             )
             print("decoded types")
-            
+
             // Generations
             let (generationsData, _) = try await URLSession.shared.data(
                 for: generationsRequest
