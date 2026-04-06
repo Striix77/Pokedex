@@ -77,7 +77,7 @@ class PokemonViewModel {
             return pokemonList
         } else {
             return pokemonList.filter { pokemon in
-                pokemon.generationName.contains(selectedGenerationFilter)
+                pokemon.generationName == selectedGenerationFilter
             }
         }
     }
