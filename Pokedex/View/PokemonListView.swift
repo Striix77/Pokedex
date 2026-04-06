@@ -74,6 +74,23 @@ struct PokemonListView: View {
                         )
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Picker("Filter", selection: $viewModel.selectedFilter) {
+                            Text("All").tag("All")
+                            ForEach(viewModel.typeList, id: \.self) { type in
+                                Text(type.name.capitalized).tag(
+                                    type.name.capitalized
+                                )
+                            }
+                        }
+                    } label: {
+                        Label(
+                            "Filter",
+                            systemImage: "line.3.horizontal.decrease.circle"
+                        )
+                    }
+                }
             }
             .onAppear {
                 Task {
@@ -92,4 +109,9 @@ struct PokemonListView: View {
 
         }
     }
+}
+
+#Preview{
+    @Previewable @State var viewModel = PokemonViewModel()
+    PokemonListView(viewModel: viewModel)
 }

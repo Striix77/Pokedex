@@ -45,4 +45,12 @@ struct PokemonQueries {
           }
         }
         """
+    
+    static let pokemonGenerationsQuery = """
+        query getGenerations {
+          generation {
+            name
+          }
+        }
+        """
 }
