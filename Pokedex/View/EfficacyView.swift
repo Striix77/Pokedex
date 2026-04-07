@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EfficacyView: View {
     let title: String
-    let efficacies: [(String, Int)]
+    let efficacies: [TypeStrength]
     private let spacing: Int = 10
 
     var body: some View {
@@ -28,7 +28,7 @@ struct EfficacyView: View {
         HStack {
             ScrollView(.horizontal) {
                 HStack(spacing: 24) {
-                    ForEach(efficacies, id: \.1) { efficacy in
+                    ForEach(efficacies) { efficacy in
                         EfficacyCardView(
                             efficacy: efficacy,
                             getIconUrl: getIconUrl
@@ -50,14 +50,19 @@ struct EfficacyView: View {
     }
 }
 
-
 #Preview {
     EfficacyView(
         title: "Strong against",
         efficacies: [
-            ("Normal", 1), ("Fighting", 2), ("Flying", 3), ("Poison", 4),
-            ("Ground", 5), ("Rock", 6), ("Bug", 7), ("Ghost", 8),
-            ("Steel", 9),
+            TypeStrength(name: "Normal", id: 1),
+            TypeStrength(name: "Fighting", id: 2),
+            TypeStrength(name: "Flying", id: 3),
+            TypeStrength(name: "Poison", id: 4),
+            TypeStrength(name: "Ground", id: 5),
+            TypeStrength(name: "Rock", id: 6),
+            TypeStrength(name: "Bug", id: 7),
+            TypeStrength(name: "Ghost", id: 8),
+            TypeStrength(name: "Steel", id: 9),
         ]
     )
 }

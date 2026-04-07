@@ -54,8 +54,8 @@ struct PokemonBattleStatsView: View {
         return pokemonTypesWithEfficacies
     }
 
-    func calculateEfficacies(for strength: Int) -> [(String, Int)] {
-        var typeStrengths: [(String, Int)] = []
+    func calculateEfficacies(for strength: Int) -> [TypeStrength] {
+        var typeStrengths: [TypeStrength] = []
         getPokemonTypesWithEfficacies().forEach { type in
             typeStrengths.append(
                 contentsOf: type.typeEfficaciesByTargetTypeId?
@@ -63,8 +63,8 @@ struct PokemonBattleStatsView: View {
                         $0.damage_factor == strength
                     }
                     .map {
-                        ($0.type.name.capitalized, $0.type.id)
-                    } ?? [("", 0)]
+                        TypeStrength(name:$0.type.name.capitalized,id: $0.type.id)
+                    } ?? [TypeStrength(name:"", id:0)]
             )
         }
         return typeStrengths
