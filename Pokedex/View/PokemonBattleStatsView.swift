@@ -12,33 +12,44 @@ struct PokemonBattleStatsView: View {
     let pokemonAttack: Int
     let pokemonDefense: Int
     let pokemonSpeed: Int
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Base Stats")
-                .font(.title2)
-                .bold()
+    let calculator: BattleStatsCalculator
+    
+    
+    private let strongEfficacyTitle = "Strong against"
+    private let weakEfficacyTitle = "Weak against"
+    private let strongEfficacyValue = 50
+    private let weakEfficacyValue = 200
+    
 
-            StatBarView(
-                label: "HP",
-                value: pokemonHP,
-                color: .green
+    var body: some View {
+        VStack {
+            PokemonBaseStatsView(
+                pokemonHP: pokemonHP,
+                pokemonAttack: pokemonAttack,
+                pokemonDefense: pokemonDefense,
+                pokemonSpeed: pokemonSpeed
             )
-            StatBarView(
-                label: "ATK",
-                value: pokemonAttack,
-                color: .red
+
+            EfficacyView(
+                title: strongEfficacyTitle,
+                efficacies: calculator.calculateEfficacies(for: strongEfficacyValue)
             )
-            StatBarView(
-                label: "DEF",
-                value: pokemonDefense,
-                color: .blue
+            EfficacyView(
+                title: weakEfficacyTitle,
+                efficacies: calculator.calculateEfficacies(for: weakEfficacyValue)
             )
-            StatBarView(
-                label: "SPD",
-                value: pokemonSpeed,
-                color: .orange
-            )
+
         }
-        .padding()
     }
+
+}
+
+#Preview(traits: .sizeThatFitsLayout) {
+    PokemonBattleStatsView(
+        pokemonHP: 100,
+        pokemonAttack: 90,
+        pokemonDefense: 80,
+        pokemonSpeed: 70,
+        calculator: BattleStatsCalculator(pokemonTypes: [], allTypes: [])
+    )
 }

@@ -20,6 +20,9 @@ struct PokemonListView: View {
                 pokemonList
             }
         }
+        .task {
+            await viewModel.fetchPokemon()
+        }
     }
 
     private var contentUnavailable: some View {
@@ -62,14 +65,11 @@ struct PokemonListView: View {
                     generationFilteringMenu
                 }
             }
-            .onAppear {
-                Task {
-                    await viewModel.fetchPokemon()
-                }
-            }
+            
             .navigationDestination(for: Pokemon.self) { pokemon in
                 PokemonDetailsView(
                     pokemon: pokemon,
+                    types: viewModel.typeList,
                     isFavorite: viewModel.favorites.contains(pokemon.id),
                     onFavoriteToggle: {
                         viewModel.toggleFavorite(pokemon: pokemon)
