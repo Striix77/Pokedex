@@ -8,7 +8,7 @@
 import Foundation
 
 struct PokemonQueries {
-    static let getPokemonList = """
+    static let pokemonBaseQuery = """
         query getPokemon {
           pokemon {
             id
@@ -42,8 +42,8 @@ struct PokemonQueries {
           }
         }
         """
-
-    static let pokemonTypesList = """
+    
+    static let pokemonTypesQuery = """
         query samplePokeAPIquery {
           type{
               id
@@ -55,6 +55,14 @@ struct PokemonQueries {
                       name
                   }
               }
+          }
+        }
+        """
+    
+    static let pokemonGenerationsQuery = """
+        query getGenerations {
+          generation {
+            name
           }
         }
         """
