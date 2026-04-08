@@ -9,6 +9,7 @@ import AVFoundation
 
 class SoundManager {
     let audioPlayer = AVPlayer()
+    private var canPlayCache: [String:Bool] = [:]
     
     init() {
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
@@ -26,12 +27,11 @@ class SoundManager {
         audioPlayer.replaceCurrentItem(with: playerItem)
         audioPlayer.play()
     }
-
-    func canPlaySound(of name: String) async -> Bool {
+    
+    private func checkSoundExistance(of name: String) async -> Bool{
         let urlString = PokedexStrings.getPokemonCryURLString(
             for: name.lowercased()
         )
-
         guard let url = URL(string: urlString) else { return false }
         var request = URLRequest(url: url)
         request.httpMethod = "HEAD"
@@ -48,5 +48,16 @@ class SoundManager {
         }
 
         return false
+    }
+
+    func canPlaySound(of name: String) async -> Bool {
+        if let cachedResult = canPlayCache[name] {
+            return cachedResult
+        }
+        
+        let result = await checkSoundExistance(of: name)
+        
+        canPlayCache[name] = result
+        return result
     }
 }
