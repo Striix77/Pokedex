@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EfficacyView: View {
     let title: String
-    let efficacies: [(String, Int)]
+    let efficacies: [TypeStrength]
     private let spacing: Int = 10
 
     var body: some View {
@@ -18,25 +18,23 @@ struct EfficacyView: View {
                 .font(.title2)
 
                 .bold()
-            VStack {
-                if !efficacies.isEmpty {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(efficacies, id: \.1) { type in
-                                HStack {
-                                    AsyncImage(url: getIconUrl(for: type.1))
-                                    Text(type.0)
-                                }
+            if !efficacies.isEmpty {
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(efficacies) { efficacy in
+                            HStack {
+                                AsyncImage(url: getIconUrl(for: efficacy.id))
+                                Text(efficacy.name)
                             }
                         }
-                    }.scrollIndicators(.hidden)
-                } else {
-                    Spacer()
-                    Text("To be discovered...")
-                    Spacer()
-                }
-
+                    }
+                }.scrollIndicators(.hidden)
+            } else {
+                Spacer()
+                Text("To be discovered...")
+                Spacer()
             }
+
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
