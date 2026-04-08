@@ -8,5 +8,5 @@
 import Foundation
 
 struct SpeciesEntry: Codable, Hashable {
-    let generation: GenerationDetails?
+    let generation: PokemonGeneration?
 }

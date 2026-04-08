@@ -26,6 +26,7 @@ struct EfficacyView: View {
 
     private var cardScrollView: some View {
         HStack {
+          if !efficacies.isEmpty {
             ScrollView(.horizontal) {
                 HStack(spacing: 24) {
                     ForEach(efficacies) { efficacy in
@@ -38,6 +39,11 @@ struct EfficacyView: View {
             }
             .scrollIndicators(.hidden)
             .scrollBounceBehavior(.basedOnSize, axes: [.horizontal])
+           } else {
+                Spacer()
+                Text("To be discovered...")
+                Spacer()
+            }
 
         }
     }
@@ -45,7 +51,7 @@ struct EfficacyView: View {
     func getIconUrl(for id: Int) -> URL? {
         URL(
             string:
-                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/\(id).png"
+                PokedexStrings.getIconURLString(for: id)
         )
     }
 }

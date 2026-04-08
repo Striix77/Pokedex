@@ -9,6 +9,11 @@
 import Foundation
 
 struct TypeEfficacy: Codable, Hashable {
-    let damage_factor: Int
+    let damageFactor: Int
     let type: AttackerType
+    
+    enum CodingKeys: String, CodingKey {
+        case damageFactor = "damage_factor"
+        case type = "type"
+    }
 }

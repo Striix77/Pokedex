@@ -13,6 +13,13 @@ struct PokemonDetailsView: View {
     let isFavorite: Bool
     let onFavoriteToggle: () -> Void
 
+    private var calculator: BattleStatsCalculator {
+        BattleStatsCalculator(
+            pokemonTypes: pokemon.pokemontypes,
+            allTypes: types
+        )
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -22,7 +29,8 @@ struct PokemonDetailsView: View {
                     name: pokemon.name,
                     onFavoriteToggle: onFavoriteToggle,
                     isFavorite: isFavorite,
-                    formattedGeneration: pokemon.formattedGeneration
+                    formattedGeneration: pokemon.formattedGeneration,
+                    pokemonName: pokemon.name
                 )
                 PokemonStatsView(
                     typeString: pokemon.typeString,
@@ -34,8 +42,7 @@ struct PokemonDetailsView: View {
                     pokemonAttack: pokemon.statValue(named: "attack"),
                     pokemonDefense: pokemon.statValue(named: "defense"),
                     pokemonSpeed: pokemon.statValue(named: "speed"),
-                    pokemonTypes: pokemon.pokemontypes,
-                    allTypes: types
+                    calculator: calculator
                 )
 
                 Spacer()
@@ -47,5 +54,3 @@ struct PokemonDetailsView: View {
         .toolbar(.hidden, for: .tabBar)
     }
 }
-
-
