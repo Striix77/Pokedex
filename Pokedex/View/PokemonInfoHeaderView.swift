@@ -1,4 +1,3 @@
-import AVFoundation
 //
 //  PokemonInfoHeaderView.swift
 //  Pokedex
@@ -6,6 +5,7 @@ import AVFoundation
 //  Created by Freak on 02.04.2026.
 //
 import SwiftUI
+import AVFoundation
 
 struct PokemonInfoHeaderView: View {
     @State private var soundManager = SoundManager()

@@ -20,6 +20,9 @@ struct PokemonListView: View {
                 pokemonList
             }
         }
+        .task {
+            await viewModel.fetchPokemon()
+        }
     }
 
     private var contentUnavailable: some View {
@@ -75,11 +78,7 @@ struct PokemonListView: View {
                     }
                 }
             }
-            .onAppear {
-                Task {
-                    await viewModel.fetchPokemon()
-                }
-            }
+            
             .navigationDestination(for: Pokemon.self) { pokemon in
                 PokemonDetailsView(
                     pokemon: pokemon,
