@@ -20,6 +20,7 @@ struct PokemonQueries {
             }
             pokemontypes{
               type{
+                id
                 name
               }
             }
@@ -32,8 +33,28 @@ struct PokemonQueries {
                 base_stat
                 stat {
                     name
-              }
+                }
             }
+        
+            pokemoncries {
+                cries
+            }
+          }
+        }
+        """
+
+    static let pokemonTypesList = """
+        query samplePokeAPIquery {
+          type{
+              id
+              name
+              TypeefficaciesByTargetTypeId(where: {damage_factor: {_neq: 100}}) {
+                  damage_factor
+                  type {
+                      id
+                      name
+                  }
+              }
           }
         }
         """
