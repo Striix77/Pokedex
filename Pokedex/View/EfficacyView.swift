@@ -5,7 +5,6 @@
 //  Created by Freak on 03.04.2026.
 //
 
-
 import SwiftUI
 
 struct EfficacyView: View {
@@ -20,7 +19,7 @@ struct EfficacyView: View {
 
                 .bold()
             VStack {
-                HStack {
+                if !efficacies.isEmpty {
                     ScrollView(.horizontal) {
                         HStack {
                             ForEach(efficacies, id: \.1) { type in
@@ -31,8 +30,12 @@ struct EfficacyView: View {
                             }
                         }
                     }.scrollIndicators(.hidden)
-
+                } else {
+                    Spacer()
+                    Text("To be discovered...")
+                    Spacer()
                 }
+
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -41,7 +44,7 @@ struct EfficacyView: View {
 
     func getIconUrl(for id: Int) -> URL? {
         URL(
-            string:PokedexStrings.getIconURLString(for: id)
+            string: PokedexStrings.getIconURLString(for: id)
         )
     }
 }

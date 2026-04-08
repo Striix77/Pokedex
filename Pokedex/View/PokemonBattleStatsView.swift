@@ -64,7 +64,7 @@ struct PokemonBattleStatsView: View {
                     }
                     .map {
                         ($0.type.name.capitalized, $0.type.id)
-                    } ?? [("", 0)]
+                    } ?? []
             )
         }
         return typeStrengths
