@@ -12,13 +12,14 @@ struct PokemonBattleStatsView: View {
     let pokemonAttack: Int
     let pokemonDefense: Int
     let pokemonSpeed: Int
-    let pokemonTypes: [PokemonTypes]
-    let allTypes: [PokemonType]
+    let calculator: BattleStatsCalculator
+    
     
     private let strongEfficacyTitle = "Strong against"
     private let weakEfficacyTitle = "Weak against"
     private let strongEfficacyValue = 50
     private let weakEfficacyValue = 200
+    
 
     var body: some View {
         VStack {
@@ -31,47 +32,17 @@ struct PokemonBattleStatsView: View {
 
             EfficacyView(
                 title: strongEfficacyTitle,
-                efficacies: calculateEfficacies(for: strongEfficacyValue)
+                efficacies: calculator.calculateEfficacies(for: strongEfficacyValue)
             )
             EfficacyView(
                 title: weakEfficacyTitle,
-                efficacies: calculateEfficacies(for: weakEfficacyValue)
+                efficacies: calculator.calculateEfficacies(for: weakEfficacyValue)
             )
 
         }
     }
 
-    func getPokemonTypesWithEfficacies() -> [PokemonType] {
-        var pokemonTypesWithEfficacies: [PokemonType] = []
-        pokemonTypes.forEach { type in
-            pokemonTypesWithEfficacies.append(
-                contentsOf:
-                    allTypes.filter {
-                        $0.name == type.type.name
-                    }
-            )
-        }
-        return pokemonTypesWithEfficacies
-    }
-
-    func calculateEfficacies(for strength: Int) -> [(String, Int)] {
-        var typeStrengths: [(String, Int)] = []
-        getPokemonTypesWithEfficacies().forEach { type in
-            typeStrengths.append(
-                contentsOf: type.typeEfficaciesByTargetTypeId?
-                    .filter {
-                        $0.damageFactor == strength
-                    }
-                    .map {
-                        ($0.type.name.capitalized, $0.type.id)
-                    } ?? []
-            )
-        }
-        return typeStrengths
-    }
 }
-
-
 
 #Preview(traits: .sizeThatFitsLayout) {
     PokemonBattleStatsView(
@@ -79,7 +50,6 @@ struct PokemonBattleStatsView: View {
         pokemonAttack: 90,
         pokemonDefense: 80,
         pokemonSpeed: 70,
-        pokemonTypes: [],
-        allTypes: []
+        calculator: BattleStatsCalculator(pokemonTypes: [], allTypes: [])
     )
 }
