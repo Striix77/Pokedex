@@ -12,8 +12,7 @@ class SoundManager {
     var audioPlayer: AVPlayer?
 
     func playCry(name: String) {
-        let urlString =
-            "https://play.pokemonshowdown.com/audio/cries/\(name.lowercased()).mp3"
+        let urlString = PokedexStrings.getPokemonCryURLString(for: name.lowercased())
 
         guard let url = URL(string: urlString) else { return }
 
@@ -23,8 +22,7 @@ class SoundManager {
     }
 
     func canPlaySound(of name: String)async -> Bool {
-        let urlString =
-            "https://play.pokemonshowdown.com/audio/cries/\(name.lowercased()).mp3"
+        let urlString = PokedexStrings.getPokemonCryURLString(for: name.lowercased())
         
         guard let url = URL(string:urlString) else { return false }
         var request = URLRequest(url: url)

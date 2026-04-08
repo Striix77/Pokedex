@@ -73,7 +73,7 @@ class PokemonViewModel {
     func fetchPokemon() async {
         isLoading = true
         errorMessage = nil
-        guard let url = URL(string: "https://graphql.pokeapi.co/v1beta2") else {
+        guard let url = URL(string: PokedexStrings.apiURL) else {
             return
         }
 

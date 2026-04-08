@@ -41,8 +41,7 @@ struct EfficacyView: View {
 
     func getIconUrl(for id: Int) -> URL? {
         URL(
-            string:
-                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/\(id).png"
+            string:PokedexStrings.getIconURLString(for: id)
         )
     }
 }
