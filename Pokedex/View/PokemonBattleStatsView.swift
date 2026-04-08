@@ -60,7 +60,7 @@ struct PokemonBattleStatsView: View {
             typeStrengths.append(
                 contentsOf: type.typeEfficaciesByTargetTypeId?
                     .filter {
-                        $0.damage_factor == strength
+                        $0.damageFactor == strength
                     }
                     .map {
                         ($0.type.name.capitalized, $0.type.id)
