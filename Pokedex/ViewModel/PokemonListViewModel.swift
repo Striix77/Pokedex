@@ -10,8 +10,6 @@ import Foundation
 @Observable
 class PokemonListViewModel {
     var pokemonList = [PokemonListEntry]()
-    
-    var list = [Pokemon]()
     var typeList: [PokemonType] = []
     var generationsList: [PokemonGeneration] = []
     var searchText = ""
@@ -86,8 +84,6 @@ class PokemonListViewModel {
     
     func fetchPokemon() async {
         await fetchPokemonListDetails()
-        
-        await fetchAllPokemonDetails()
         await fetchPokemonTypes()
         await fetchPokemonGenerations()
     }
@@ -142,55 +138,6 @@ class PokemonListViewModel {
         isLoading = false
     }
 
-    func fetchAllPokemonDetails() async {
-        isLoading = true
-        errorMessage = nil
-        guard let url = URL(string: PokedexStrings.apiURL) else {
-            return
-        }
-
-        let query = PokemonQueries.pokemonBaseQuery
-
-        let body: [String: Any] = ["query": query]
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            print("got the data")
-            let decoded = try JSONDecoder().decode(
-                RootResponse.self,
-                from: data
-            )
-            print("decoded")
-
-            await MainActor.run {
-                self.list = decoded.data.pokemon
-            }
-        } catch {
-            self.errorMessage = error.localizedDescription
-            if let decodingError = error as? DecodingError {
-                switch decodingError {
-                case .keyNotFound(let key, _):
-                    print("❌ Missing Key: \(key.stringValue)")
-                case .typeMismatch(let type, let context):
-                    print("❌ Type Mismatch: \(type) at \(context.codingPath)")
-                case .valueNotFound(let type, let context):
-                    print("❌ Value Not Found: \(type) at \(context.codingPath)")
-                case .dataCorrupted(let context):
-                    print("❌ Data Corrupted at \(context.codingPath)")
-                @unknown default:
-                    print("❌ Unknown Decoding Error")
-                }
-            } else {
-                print("❌ Other error: \(error.localizedDescription)")
-            }
-        }
-        isLoading = false
-    }
 
     func fetchPokemonTypes() async {
         errorMessage = nil
