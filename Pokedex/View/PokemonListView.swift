@@ -66,13 +66,13 @@ struct PokemonListView: View {
                 }
             }
             
-            .navigationDestination(for: Pokemon.self) { pokemon in
+            .navigationDestination(for: PokemonListEntry.self) { pokemonEntry in
                 PokemonDetailsView(
-                    pokemon: pokemon,
+                    pokemonEntry: pokemonEntry,
                     types: viewModel.typeList,
-                    isFavorite: viewModel.favorites.contains(pokemon.id),
+                    isFavorite: viewModel.favorites.contains(pokemonEntry.id),
                     onFavoriteToggle: {
-                        viewModel.toggleFavorite(pokemon: pokemon)
+                        viewModel.toggleFavorite(pokemon: pokemonEntry)
                     }
                 )
             }

@@ -30,7 +30,7 @@ class PokemonListViewModel {
         loadFavorites()
     }
 
-    func toggleFavorite(pokemon: Pokemon) {
+    func toggleFavorite(pokemon: PokemonListEntry) {
         let pokemonId = pokemon.id
         if favorites.contains(pokemonId) {
             favorites.remove(pokemonId)
@@ -111,9 +111,6 @@ class PokemonListViewModel {
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             print("got the list data")
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("RAW JSON: \(jsonString)") // Copy this into a JSON formatter
-            }
             let decoded = try JSONDecoder().decode(
                 ListResponse.self,
                 from: data
@@ -164,9 +161,6 @@ class PokemonListViewModel {
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             print("got the data")
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("RAW JSON: \(jsonString)") // Copy this into a JSON formatter
-            }
             let decoded = try JSONDecoder().decode(
                 RootResponse.self,
                 from: data
