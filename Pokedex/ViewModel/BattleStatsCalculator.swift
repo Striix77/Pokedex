@@ -33,7 +33,7 @@ struct BattleStatsCalculator {
                         }
                         .map {
                             TypeStrength(name:$0.type.name.capitalized,id: $0.type.id)
-                        } ?? [TypeStrength(name:"", id:0)]
+                        } ?? []
                 )
             }
             return typeStrengths
