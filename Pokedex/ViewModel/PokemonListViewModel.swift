@@ -14,10 +14,10 @@ class PokemonListViewModel {
     var generationsList: [PokemonGeneration] = []
     var isLoading = false
     var errorMessage: String? = nil
-    
+
     var favoritesManager = FavoritesManager()
     var filterService = FilterService()
-    
+
     var filteredPokemon: [PokemonListEntry] {
         filterService.filterPokemon(pokemonList: pokemonList)
     }
@@ -28,28 +28,10 @@ class PokemonListViewModel {
         guard let url = URL(string: PokedexStrings.apiURL) else {
             return
         }
-        do {
+        errorMessage = await ErrorHandler.handleFetching {
             try await fetchPokemonListDetails(url: url)
             try await fetchPokemonTypes(url: url)
             try await fetchPokemonGenerations(url: url)
-        } catch {
-            self.errorMessage = error.localizedDescription
-            if let decodingError = error as? DecodingError {
-                switch decodingError {
-                case .keyNotFound(let key, _):
-                    print("❌ Missing Key: \(key.stringValue)")
-                case .typeMismatch(let type, let context):
-                    print("❌ Type Mismatch: \(type) at \(context.codingPath)")
-                case .valueNotFound(let type, let context):
-                    print("❌ Value Not Found: \(type) at \(context.codingPath)")
-                case .dataCorrupted(let context):
-                    print("❌ Data Corrupted at \(context.codingPath)")
-                @unknown default:
-                    print("❌ Unknown Decoding Error")
-                }
-            } else {
-                print("❌ Other error: \(error.localizedDescription)")
-            }
         }
         isLoading = false
     }
