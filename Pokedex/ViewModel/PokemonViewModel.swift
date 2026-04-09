@@ -81,8 +81,14 @@ class PokemonViewModel {
             }
         }
     }
-
+    
     func fetchPokemon() async {
+        await fetchPokemonListDetails()
+        await fetchPokemonTypes()
+        await fetchPokemonGenerations()
+    }
+
+    func fetchPokemonListDetails() async {
         isLoading = true
         errorMessage = nil
         guard let url = URL(string: PokedexStrings.apiURL) else {
@@ -90,73 +96,28 @@ class PokemonViewModel {
         }
 
         let query = PokemonQueries.pokemonBaseQuery
-        let typeQuery = PokemonQueries.pokemonTypesQuery
-        let generationsQuery = PokemonQueries.pokemonGenerationsQuery
 
         let body: [String: Any] = ["query": query]
-        let typeBody: [String: Any] = ["query": typeQuery]
-        let generationsBody: [String: Any] = ["query": generationsQuery]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
-        var typeRequest = URLRequest(url: url)
-        typeRequest.httpMethod = "POST"
-        typeRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        typeRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: typeBody
-        )
-
-        var generationsRequest = URLRequest(url: url)
-        generationsRequest.httpMethod = "POST"
-        generationsRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        generationsRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: generationsBody
-        )
-
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             print("got the data")
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("RAW JSON: \(jsonString)") // Copy this into a JSON formatter
+            }
             let decoded = try JSONDecoder().decode(
                 RootResponse.self,
                 from: data
             )
             print("decoded")
 
-            // Types
-            let (typeData, _) = try await URLSession.shared.data(
-                for: typeRequest
-            )
-            print("got the types")
-            let decodedTypes = try JSONDecoder().decode(
-                TypeResponse.self,
-                from: typeData
-            )
-            print("decoded types")
-
-            // Generations
-            let (generationsData, _) = try await URLSession.shared.data(
-                for: generationsRequest
-            )
-            print("got the generations")
-            let decodedGenerations = try JSONDecoder().decode(
-                GenerationResponse.self,
-                from: generationsData
-            )
-            print("decoded generations")
-
             await MainActor.run {
                 self.list = decoded.data.pokemon
-                self.typeList = decodedTypes.data.type
-                self.generationsList = decodedGenerations.data.generation
             }
         } catch {
             self.errorMessage = error.localizedDescription
@@ -178,6 +139,110 @@ class PokemonViewModel {
             }
         }
         isLoading = false
+    }
+
+    func fetchPokemonTypes() async {
+        errorMessage = nil
+        guard let url = URL(string: PokedexStrings.apiURL) else {
+            return
+        }
+
+        let typeQuery = PokemonQueries.pokemonTypesQuery
+        let typeBody: [String: Any] = ["query": typeQuery]
+        var typeRequest = URLRequest(url: url)
+        typeRequest.httpMethod = "POST"
+        typeRequest.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
+        typeRequest.httpBody = try? JSONSerialization.data(
+            withJSONObject: typeBody
+        )
+        do {
+            let (typeData, _) = try await URLSession.shared.data(
+                for: typeRequest
+            )
+            print("got the types")
+            let decodedTypes = try JSONDecoder().decode(
+                TypeResponse.self,
+                from: typeData
+            )
+            print("decoded types")
+
+            await MainActor.run {
+                self.typeList = decodedTypes.data.type
+            }
+        } catch {
+            self.errorMessage = error.localizedDescription
+            if let decodingError = error as? DecodingError {
+                switch decodingError {
+                case .keyNotFound(let key, _):
+                    print("❌ Missing Key: \(key.stringValue)")
+                case .typeMismatch(let type, let context):
+                    print("❌ Type Mismatch: \(type) at \(context.codingPath)")
+                case .valueNotFound(let type, let context):
+                    print("❌ Value Not Found: \(type) at \(context.codingPath)")
+                case .dataCorrupted(let context):
+                    print("❌ Data Corrupted at \(context.codingPath)")
+                @unknown default:
+                    print("❌ Unknown Decoding Error")
+                }
+            } else {
+                print("❌ Other error: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func fetchPokemonGenerations() async {
+        errorMessage = nil
+        guard let url = URL(string: PokedexStrings.apiURL) else {
+            return
+        }
+        let generationsQuery = PokemonQueries.pokemonGenerationsQuery
+        let generationsBody: [String: Any] = ["query": generationsQuery]
+        var generationsRequest = URLRequest(url: url)
+        generationsRequest.httpMethod = "POST"
+        generationsRequest.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
+        generationsRequest.httpBody = try? JSONSerialization.data(
+            withJSONObject: generationsBody
+        )
+        do {
+            let (generationsData, _) = try await URLSession.shared.data(
+                for: generationsRequest
+            )
+            print("got the generations")
+            let decodedGenerations = try JSONDecoder().decode(
+                GenerationResponse.self,
+                from: generationsData
+            )
+            print("decoded generations")
+
+            await MainActor.run {
+                self.generationsList = decodedGenerations.data.generation
+            }
+        } catch {
+            self.errorMessage = error.localizedDescription
+            if let decodingError = error as? DecodingError {
+                switch decodingError {
+                case .keyNotFound(let key, _):
+                    print("❌ Missing Key: \(key.stringValue)")
+                case .typeMismatch(let type, let context):
+                    print("❌ Type Mismatch: \(type) at \(context.codingPath)")
+                case .valueNotFound(let type, let context):
+                    print("❌ Value Not Found: \(type) at \(context.codingPath)")
+                case .dataCorrupted(let context):
+                    print("❌ Data Corrupted at \(context.codingPath)")
+                @unknown default:
+                    print("❌ Unknown Decoding Error")
+                }
+            } else {
+                print("❌ Other error: \(error.localizedDescription)")
+            }
+        }
+
     }
 
 }
