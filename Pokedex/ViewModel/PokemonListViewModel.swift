@@ -29,7 +29,7 @@ class PokemonListViewModel {
     init() {
         loadFavorites()
     }
-
+    
     func toggleFavorite(pokemon: PokemonListEntry) {
         let pokemonId = pokemon.id
         if favorites.contains(pokemonId) {
@@ -51,7 +51,7 @@ class PokemonListViewModel {
             favorites = Set(array)
         }
     }
-
+    
     var filteredPokemon: [PokemonListEntry] {
         var searchedList: [PokemonListEntry]
         if searchText.isEmpty {

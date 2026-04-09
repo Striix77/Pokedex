@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    var viewModel: PokemonListViewModel
+    @State var viewModel: PokemonListViewModel
 
-    var favoritePokemon: [Pokemon] {
-        viewModel.list.filter { viewModel.favorites.contains($0.id) }
+    var favoritePokemon: [PokemonListEntry] {
+        viewModel.pokemonList.filter { viewModel.favorites.contains($0.id) }
     }
 
     var body: some View {
@@ -24,16 +24,16 @@ struct FavoritesView: View {
                 }
             }
             .navigationTitle("My Favorites")
-//            .navigationDestination(for: Pokemon.self) { pokemon in
-//                PokemonDetailsView(
-//                    pokemonEntry:
-//                    types: viewModel.typeList,
-//                    isFavorite: viewModel.favorites.contains(pokemon.id),
-//                    onFavoriteToggle: {
-//                        viewModel.toggleFavorite(pokemon: pokemon)
-//                    }
-//                )
-//            }
+            .navigationDestination(for: PokemonListEntry.self) { pokemonEntry in
+                PokemonDetailsView(
+                    pokemonEntry: pokemonEntry,
+                    types: viewModel.typeList,
+                    isFavorite: viewModel.favorites.contains(pokemonEntry.id),
+                    onFavoriteToggle: {
+                        viewModel.toggleFavorite(pokemon: pokemonEntry)
+                    }
+                )
+            }
         }
     }
 

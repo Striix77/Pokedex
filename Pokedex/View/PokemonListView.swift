@@ -12,33 +12,9 @@ struct PokemonListView: View {
 
     var body: some View {
         NavigationStack {
-            if viewModel.isLoading && viewModel.pokemonList.isEmpty {
-                ProgressView("Catching 'em all...")
-            } else if viewModel.errorMessage != nil {
-                contentUnavailable
-            } else {
                 pokemonList
-            }
         }
-        .task {
-            await viewModel.fetchPokemon()
-        }
-    }
-
-    private var contentUnavailable: some View {
-        ContentUnavailableView {
-            Label("Connection Lost", systemImage: "wifi.exclamationmark")
-        } description: {
-            Text(
-                "Looks like Team Rocket is at it again...\nMaybe try again later!"
-            )
-        } actions: {
-            Button("Try Again") {
-                Task { await viewModel.fetchPokemon() }
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-        }
+        
     }
 
     private var pokemonList: some View {
