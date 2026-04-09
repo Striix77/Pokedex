@@ -18,7 +18,7 @@ class PokemonListViewModel {
     var selectedTypeFilter: String = "All"
     var selectedGenerationFilter: String = "All"
     var favoritesManager = FavoritesManager()
-    
+
     var filteredPokemon: [PokemonListEntry] {
         var searchedList: [PokemonListEntry]
         if searchText.isEmpty {
@@ -31,7 +31,8 @@ class PokemonListViewModel {
         return filterByGenerations(in: filterByTypes(in: searchedList))
     }
 
-    func filterByTypes(in pokemonList: [PokemonListEntry]) -> [PokemonListEntry] {
+    func filterByTypes(in pokemonList: [PokemonListEntry]) -> [PokemonListEntry]
+    {
         if selectedTypeFilter == "All" {
             return pokemonList
         } else {
@@ -41,7 +42,9 @@ class PokemonListViewModel {
         }
     }
 
-    func filterByGenerations(in pokemonList: [PokemonListEntry]) -> [PokemonListEntry] {
+    func filterByGenerations(in pokemonList: [PokemonListEntry])
+        -> [PokemonListEntry]
+    {
         if selectedGenerationFilter == "All" {
             return pokemonList
         } else {
@@ -50,41 +53,17 @@ class PokemonListViewModel {
             }
         }
     }
-    
+
     func fetchPokemon() async {
-        await fetchPokemonListDetails()
-        await fetchPokemonTypes()
-        await fetchPokemonGenerations()
-    }
-    
-    func fetchPokemonListDetails() async {
         isLoading = true
         errorMessage = nil
         guard let url = URL(string: PokedexStrings.apiURL) else {
             return
         }
-
-        let query = PokemonQueries.pokemonListQuery
-
-        let body: [String: Any] = ["query": query]
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
         do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            print("got the list data")
-            let decoded = try JSONDecoder().decode(
-                ListResponse.self,
-                from: data
-            )
-            print("decoded")
-
-            await MainActor.run {
-                self.pokemonList = decoded.data.pokemon
-            }
+            try await fetchPokemonListDetails(url: url)
+            try await fetchPokemonTypes(url: url)
+            try await fetchPokemonGenerations(url: url)
         } catch {
             self.errorMessage = error.localizedDescription
             if let decodingError = error as? DecodingError {
@@ -107,13 +86,28 @@ class PokemonListViewModel {
         isLoading = false
     }
 
+    func fetchPokemonListDetails(url: URL) async throws {
+        let query = PokemonQueries.pokemonListQuery
+        let body: [String: Any] = ["query": query]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
-    func fetchPokemonTypes() async {
-        errorMessage = nil
-        guard let url = URL(string: PokedexStrings.apiURL) else {
-            return
+        let (data, _) = try await URLSession.shared.data(for: request)
+        print("got the list data")
+        let decoded = try JSONDecoder().decode(
+            ListResponse.self,
+            from: data
+        )
+        print("decoded")
+
+        await MainActor.run {
+            self.pokemonList = decoded.data.pokemon
         }
+    }
 
+    func fetchPokemonTypes(url: URL) async throws {
         let typeQuery = PokemonQueries.pokemonTypesQuery
         let typeBody: [String: Any] = ["query": typeQuery]
         var typeRequest = URLRequest(url: url)
@@ -125,46 +119,22 @@ class PokemonListViewModel {
         typeRequest.httpBody = try? JSONSerialization.data(
             withJSONObject: typeBody
         )
-        do {
-            let (typeData, _) = try await URLSession.shared.data(
-                for: typeRequest
-            )
-            print("got the types")
-            let decodedTypes = try JSONDecoder().decode(
-                TypeResponse.self,
-                from: typeData
-            )
-            print("decoded types")
+        let (typeData, _) = try await URLSession.shared.data(
+            for: typeRequest
+        )
+        print("got the types")
+        let decodedTypes = try JSONDecoder().decode(
+            TypeResponse.self,
+            from: typeData
+        )
+        print("decoded types")
 
-            await MainActor.run {
-                self.typeList = decodedTypes.data.type
-            }
-        } catch {
-            self.errorMessage = error.localizedDescription
-            if let decodingError = error as? DecodingError {
-                switch decodingError {
-                case .keyNotFound(let key, _):
-                    print("❌ Missing Key: \(key.stringValue)")
-                case .typeMismatch(let type, let context):
-                    print("❌ Type Mismatch: \(type) at \(context.codingPath)")
-                case .valueNotFound(let type, let context):
-                    print("❌ Value Not Found: \(type) at \(context.codingPath)")
-                case .dataCorrupted(let context):
-                    print("❌ Data Corrupted at \(context.codingPath)")
-                @unknown default:
-                    print("❌ Unknown Decoding Error")
-                }
-            } else {
-                print("❌ Other error: \(error.localizedDescription)")
-            }
+        await MainActor.run {
+            self.typeList = decodedTypes.data.type
         }
     }
 
-    func fetchPokemonGenerations() async {
-        errorMessage = nil
-        guard let url = URL(string: PokedexStrings.apiURL) else {
-            return
-        }
+    func fetchPokemonGenerations(url: URL) async throws {
         let generationsQuery = PokemonQueries.pokemonGenerationsQuery
         let generationsBody: [String: Any] = ["query": generationsQuery]
         var generationsRequest = URLRequest(url: url)
@@ -176,38 +146,18 @@ class PokemonListViewModel {
         generationsRequest.httpBody = try? JSONSerialization.data(
             withJSONObject: generationsBody
         )
-        do {
-            let (generationsData, _) = try await URLSession.shared.data(
-                for: generationsRequest
-            )
-            print("got the generations")
-            let decodedGenerations = try JSONDecoder().decode(
-                GenerationResponse.self,
-                from: generationsData
-            )
-            print("decoded generations")
+        let (generationsData, _) = try await URLSession.shared.data(
+            for: generationsRequest
+        )
+        print("got the generations")
+        let decodedGenerations = try JSONDecoder().decode(
+            GenerationResponse.self,
+            from: generationsData
+        )
+        print("decoded generations")
 
-            await MainActor.run {
-                self.generationsList = decodedGenerations.data.generation
-            }
-        } catch {
-            self.errorMessage = error.localizedDescription
-            if let decodingError = error as? DecodingError {
-                switch decodingError {
-                case .keyNotFound(let key, _):
-                    print("❌ Missing Key: \(key.stringValue)")
-                case .typeMismatch(let type, let context):
-                    print("❌ Type Mismatch: \(type) at \(context.codingPath)")
-                case .valueNotFound(let type, let context):
-                    print("❌ Value Not Found: \(type) at \(context.codingPath)")
-                case .dataCorrupted(let context):
-                    print("❌ Data Corrupted at \(context.codingPath)")
-                @unknown default:
-                    print("❌ Unknown Decoding Error")
-                }
-            } else {
-                print("❌ Other error: \(error.localizedDescription)")
-            }
+        await MainActor.run {
+            self.generationsList = decodedGenerations.data.generation
         }
 
     }
