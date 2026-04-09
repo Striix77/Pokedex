@@ -12,7 +12,7 @@ struct PokemonListView: View {
 
     var body: some View {
         NavigationStack {
-            if viewModel.isLoading && viewModel.list.isEmpty {
+            if viewModel.isLoading && viewModel.pokemonList.isEmpty {
                 ProgressView("Catching 'em all...")
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
