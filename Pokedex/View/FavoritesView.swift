@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    var viewModel: PokemonViewModel
+    var viewModel: PokemonListViewModel
 
     var favoritePokemon: [Pokemon] {
         viewModel.list.filter { viewModel.favorites.contains($0.id) }
