@@ -19,7 +19,7 @@ struct PokemonListView: View {
 
     private var pokemonList: some View {
         VStack {
-            List(viewModel.filteredPokemon) { pokemon in
+            List(viewModel.filteredPokemon, id:\.id) { pokemon in
                 NavigationLink(value: pokemon) {
                     HStack {
                         Text("\(pokemon.id)")
@@ -41,14 +41,13 @@ struct PokemonListView: View {
                     generationFilteringMenu
                 }
             }
-            
             .navigationDestination(for: PokemonListEntry.self) { pokemonEntry in
                 PokemonDetailsView(
                     pokemonEntry: pokemonEntry,
                     types: viewModel.typeList,
-                    isFavorite: viewModel.favorites.contains(pokemonEntry.id),
+                    isFavorite: viewModel.favoritesManager.favorites.contains(pokemonEntry.id),
                     onFavoriteToggle: {
-                        viewModel.toggleFavorite(pokemon: pokemonEntry)
+                        viewModel.favoritesManager.toggleFavorite(pokemon: pokemonEntry)
                     }
                 )
             }
