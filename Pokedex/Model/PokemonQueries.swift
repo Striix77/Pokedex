@@ -8,6 +8,30 @@
 import Foundation
 
 struct PokemonQueries {
+    static func getPokemonDetailsQuery(for id: Int) -> String {
+        """
+        query getPokemonDetails {
+            pokemon(where: {id: {_eq: \(id)}}) {
+              weight
+              height
+              pokemonsprites {
+                    sprites
+                  }
+              pokemonstats {
+                  base_stat
+                  stat {
+                      name
+                  }
+              }
+          
+              pokemoncries {
+                  cries
+              }
+            }
+        }
+        """
+    }
+
     static let pokemonListQuery = """
         query getPokemonList {
           pokemon {
@@ -27,7 +51,7 @@ struct PokemonQueries {
           }
         }
         """
-    
+
     static let pokemonBaseQuery = """
         query getPokemon {
           pokemon {
@@ -55,14 +79,14 @@ struct PokemonQueries {
                     name
                 }
             }
-        
+
             pokemoncries {
                 cries
             }
           }
         }
         """
-    
+
     static let pokemonTypesQuery = """
         query samplePokeAPIquery {
           type{
@@ -78,7 +102,7 @@ struct PokemonQueries {
           }
         }
         """
-    
+
     static let pokemonGenerationsQuery = """
         query getGenerations {
           generation {
