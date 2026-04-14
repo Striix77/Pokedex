@@ -47,7 +47,7 @@ struct PokemonListView: View {
                     types: viewModel.typeList,
                     isFavorite: viewModel.favoritesManager.favorites.contains(pokemonEntry.id),
                     onFavoriteToggle: {
-                        viewModel.favoritesManager.toggleFavorite(pokemon: pokemonEntry)
+                        viewModel.favoritesManager.toggleFavorite(pokemonId: pokemonEntry.id)
                     }
                 )
             }

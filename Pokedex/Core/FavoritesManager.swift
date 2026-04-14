@@ -18,8 +18,7 @@ class FavoritesManager{
         loadFavorites()
     }
     
-    func toggleFavorite(pokemon: PokemonListEntry) {
-        let pokemonId = pokemon.id
+    func toggleFavorite(pokemonId: Int) {
         if favorites.contains(pokemonId) {
             favorites.remove(pokemonId)
         } else {
