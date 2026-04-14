@@ -32,7 +32,7 @@ struct PokemonListView: View {
             }
             .navigationTitle("Pokédex")
             .searchable(
-                text: $viewModel.filterService.searchText,
+                text: $viewModel.filteringManager.searchText,
                 prompt: "Search Pokémon..."
             )
             .toolbar {
@@ -63,7 +63,7 @@ struct PokemonListView: View {
         Menu {
             Picker(
                 "Type",
-                selection: $viewModel.filterService.selectedTypeFilter
+                selection: $viewModel.filteringManager.selectedTypeFilter
             ) {
                 Text("All").tag("All")
                 ForEach(viewModel.typeList, id: \.self) { type in
@@ -84,7 +84,7 @@ struct PokemonListView: View {
         Menu {
             Picker(
                 "Generation",
-                selection: $viewModel.filterService.selectedGenerationFilter
+                selection: $viewModel.filteringManager.selectedGenerationFilter
             ) {
                 Text("All").tag("All")
                 ForEach(viewModel.generationsList, id: \.self) { generation in

@@ -17,10 +17,10 @@ class PokemonListViewModel {
 
     private let dataService: PokemonDataService
     let favoritesManager : FavoritesManaging
-    var filterService = FilterService()
+    var filteringManager = FilteringManager()
 
     var filteredPokemon: [PokemonListEntry] {
-        filterService.filterPokemon(pokemonList: pokemonList)
+        filteringManager.filterPokemon(pokemonList: pokemonList)
     }
 
     init(dataService: PokemonDataService, favoritesManager: FavoritesManaging) {
