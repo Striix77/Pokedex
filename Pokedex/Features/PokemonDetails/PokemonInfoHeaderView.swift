@@ -8,7 +8,7 @@ import SwiftUI
 import AVFoundation
 
 struct PokemonInfoHeaderView: View {
-    @State private var soundManager = SoundManager()
+    @Environment(SoundManager.self) var soundManager
     @State private var canPlay = false
 
     let id: Int

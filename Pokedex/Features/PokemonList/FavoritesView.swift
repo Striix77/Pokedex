@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    @State var viewModel: PokemonListViewModel
+    @Bindable var viewModel: PokemonListViewModel
 
     var favoritePokemon: [PokemonListEntry] {
         viewModel.pokemonList.filter { viewModel.favoritesManager.favorites.contains($0.id) }

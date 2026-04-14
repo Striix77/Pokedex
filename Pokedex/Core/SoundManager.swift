@@ -7,6 +7,7 @@
 import SwiftUI
 import AVFoundation
 
+@Observable
 class SoundManager {
     let audioPlayer = AVPlayer()
     private var canPlayCache: [String:Bool] = [:]
