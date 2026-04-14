@@ -6,7 +6,7 @@
 //
 import Foundation
 
-protocol PokemonListDisplayable: FavoritesDisplayable,AnyObject {
+protocol PokemonFetchingService {
     var isLoading: Bool {get}
     var errorMessage: String? {get}
     func fetchPokemon() async

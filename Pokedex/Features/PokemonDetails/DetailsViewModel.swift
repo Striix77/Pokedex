@@ -11,6 +11,11 @@ class DetailsViewModel {
     var isLoading = true
     var errorMessage: String? = nil
     private var pokemonDetailsArray = [PokemonDetails]()
+    private var detailsService: DetailsDataService
+    
+    init(detailsService: DetailsDataService){
+        self.detailsService = detailsService
+    }
 
     var pokemonDetails: PokemonDetails? {
         pokemonDetailsArray.first
@@ -23,29 +28,7 @@ class DetailsViewModel {
         }
 
         errorMessage = await ErrorHandler.handleFetching {
-            let query = PokemonQueries.getPokemonDetailsQuery(for: id)
-
-            let body: [String: Any] = ["query": query]
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue(
-                "application/json",
-                forHTTPHeaderField: "Content-Type"
-            )
-            request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-            let (data, _) = try await URLSession.shared.data(for: request)
-            print("got the list data")
-            let decoded = try JSONDecoder().decode(
-                DetailsResponse.self,
-                from: data
-            )
-            print("decoded")
-
-            await MainActor.run {
-                self.pokemonDetailsArray = decoded.data.pokemon
-            }
+            pokemonDetailsArray = try await detailsService.fetchPokemonDetails(id: id, url: url)
         }
 
         isLoading = false

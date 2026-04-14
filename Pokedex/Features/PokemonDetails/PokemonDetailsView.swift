@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct PokemonDetailsView: View {
-    @State private var viewModel = DetailsViewModel()
+    @State private var viewModel = DetailsViewModel(
+        detailsService: DetailsManager()
+    )
     let pokemonEntry: PokemonListEntry
     let types: [PokemonType]
     let isFavorite: Bool
