@@ -31,8 +31,7 @@ struct EfficacyView: View {
                 HStack(spacing: 24) {
                     ForEach(efficacies) { efficacy in
                         EfficacyCardView(
-                            efficacy: efficacy,
-                            getIconUrl: getIconUrl
+                            efficacy: efficacy
                         )
                     }
                 }
@@ -46,13 +45,6 @@ struct EfficacyView: View {
             }
 
         }
-    }
-
-    func getIconUrl(for id: Int) -> URL? {
-        URL(
-            string:
-                PokedexStrings.getIconURLString(for: id)
-        )
     }
 }
 

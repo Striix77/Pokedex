@@ -12,11 +12,10 @@ struct EfficacyCardView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var isAnimating = false
     let efficacy: TypeStrength
-    let getIconUrl: (Int) -> URL?
 
     var body: some View {
         VStack {
-            AsyncImage(url: getIconUrl(efficacy.id)) { image in
+            AsyncImage(url: EfficacyCardHelper.getIconUrl(for: efficacy.id)) { image in
                 image
                     .image?.resizable()
                     .aspectRatio(contentMode: .fit)
@@ -29,10 +28,7 @@ struct EfficacyCardView: View {
         .padding(.horizontal, 8)
         .padding(.vertical, 6)
         .background(
-            TypeColor(rawValue: efficacy.name.lowercased())?.color.opacity(
-                colorScheme == .light ? 0.5 : 0.3
-            )
-                ?? .gray
+            EfficacyCardHelper.getBackgroundColor(for: efficacy, colorScheme: colorScheme)
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
