@@ -94,6 +94,6 @@ struct PokemonListView: View {
 
 
 #Preview{
-    @Previewable @State var viewModel = PokemonListViewModel()
+    @Previewable @State var viewModel = PokemonListViewModel(dataService: APIService())
     PokemonListView(viewModel: viewModel)
 }

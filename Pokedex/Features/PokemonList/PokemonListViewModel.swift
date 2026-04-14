@@ -15,11 +15,16 @@ class PokemonListViewModel {
     var isLoading = false
     var errorMessage: String? = nil
 
+    private let dataService: PokemonDataService
     var favoritesManager = FavoritesManager()
     var filterService = FilterService()
 
     var filteredPokemon: [PokemonListEntry] {
         filterService.filterPokemon(pokemonList: pokemonList)
+    }
+
+    init(dataService: PokemonDataService) {
+        self.dataService = dataService
     }
 
     func fetchPokemon() async {
@@ -29,87 +34,14 @@ class PokemonListViewModel {
             return
         }
         errorMessage = await ErrorHandler.handleFetching {
-            try await fetchPokemonListDetails(url: url)
-            try await fetchPokemonTypes(url: url)
-            try await fetchPokemonGenerations(url: url)
+            self.pokemonList = try await dataService.fetchPokemonListDetails(
+                url: url
+            )
+            self.typeList = try await dataService.fetchPokemonTypes(url: url)
+            self.generationsList =
+                try await dataService.fetchPokemonGenerations(url: url)
         }
         isLoading = false
-    }
-
-    func fetchPokemonListDetails(url: URL) async throws {
-        let query = PokemonQueries.pokemonListQuery
-        let body: [String: Any] = ["query": query]
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-        print("got the list data")
-        let decoded = try JSONDecoder().decode(
-            ListResponse.self,
-            from: data
-        )
-        print("decoded")
-
-        await MainActor.run {
-            self.pokemonList = decoded.data.pokemon
-        }
-    }
-
-    func fetchPokemonTypes(url: URL) async throws {
-        let typeQuery = PokemonQueries.pokemonTypesQuery
-        let typeBody: [String: Any] = ["query": typeQuery]
-        var typeRequest = URLRequest(url: url)
-        typeRequest.httpMethod = "POST"
-        typeRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        typeRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: typeBody
-        )
-        let (typeData, _) = try await URLSession.shared.data(
-            for: typeRequest
-        )
-        print("got the types")
-        let decodedTypes = try JSONDecoder().decode(
-            TypeResponse.self,
-            from: typeData
-        )
-        print("decoded types")
-
-        await MainActor.run {
-            self.typeList = decodedTypes.data.type
-        }
-    }
-
-    func fetchPokemonGenerations(url: URL) async throws {
-        let generationsQuery = PokemonQueries.pokemonGenerationsQuery
-        let generationsBody: [String: Any] = ["query": generationsQuery]
-        var generationsRequest = URLRequest(url: url)
-        generationsRequest.httpMethod = "POST"
-        generationsRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        generationsRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: generationsBody
-        )
-        let (generationsData, _) = try await URLSession.shared.data(
-            for: generationsRequest
-        )
-        print("got the generations")
-        let decodedGenerations = try JSONDecoder().decode(
-            GenerationResponse.self,
-            from: generationsData
-        )
-        print("decoded generations")
-
-        await MainActor.run {
-            self.generationsList = decodedGenerations.data.generation
-        }
-
     }
 
 }
