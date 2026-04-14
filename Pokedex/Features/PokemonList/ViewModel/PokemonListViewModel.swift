@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class PokemonListViewModel {
+class PokemonListViewModel: PokemonListDisplayable {
     var pokemonList = [PokemonListEntry]()
     var typeList: [PokemonType] = []
     var generationsList: [PokemonGeneration] = []
