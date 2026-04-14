@@ -16,15 +16,16 @@ class PokemonListViewModel {
     var errorMessage: String? = nil
 
     private let dataService: PokemonDataService
-    var favoritesManager = FavoritesManager()
+    let favoritesManager : FavoritesManaging
     var filterService = FilterService()
 
     var filteredPokemon: [PokemonListEntry] {
         filterService.filterPokemon(pokemonList: pokemonList)
     }
 
-    init(dataService: PokemonDataService) {
+    init(dataService: PokemonDataService, favoritesManager: FavoritesManaging) {
         self.dataService = dataService
+        self.favoritesManager = favoritesManager
     }
 
     func fetchPokemon() async {

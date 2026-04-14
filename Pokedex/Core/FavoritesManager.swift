@@ -7,7 +7,7 @@
 import SwiftUI
 
 @Observable
-class FavoritesManager{
+class FavoritesManager: FavoritesManaging{
     var favorites: Set<Int> = [] {
         didSet {
             saveFavorites()

@@ -7,6 +7,6 @@
 import Foundation
 
 protocol FavoritesManaging {
-    var favoriteIDs: Set<Int> { get }
-    func toggle(_ id: Int)
+    var favorites: Set<Int> { get }
+    func toggleFavorite(pokemonId: Int)
 }

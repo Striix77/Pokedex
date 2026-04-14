@@ -9,7 +9,8 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var viewModel = PokemonListViewModel(
-        dataService: APIService()
+        dataService: APIService(),
+        favoritesManager: FavoritesManager()
     )
     @State private var soundManager = SoundManager()
 
