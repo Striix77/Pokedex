@@ -7,11 +7,11 @@
 import SwiftUI
 
 @Observable
-class FilteringManager {
+class FilteringManager: FilteringService {
     var searchText = ""
     var selectedTypeFilter: String = "All"
     var selectedGenerationFilter: String = "All"
-    
+
     func filterPokemon(pokemonList: [PokemonListEntry]) -> [PokemonListEntry] {
         var searchedList: [PokemonListEntry]
         if searchText.isEmpty {
@@ -24,7 +24,8 @@ class FilteringManager {
         return filterByGenerations(in: filterByTypes(in: searchedList))
     }
 
-    private func filterByTypes(in pokemonList: [PokemonListEntry]) -> [PokemonListEntry]
+    private func filterByTypes(in pokemonList: [PokemonListEntry])
+        -> [PokemonListEntry]
     {
         if selectedTypeFilter == "All" {
             return pokemonList

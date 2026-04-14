@@ -1,5 +1,5 @@
 //
-//  FavoritesManaging.swift
+//  FavoritesManagingService.swift
 //  Pokedex
 //
 //  Created by Freak on 14.04.2026.
