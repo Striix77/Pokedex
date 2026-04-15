@@ -14,6 +14,7 @@ struct PokemonListView: View {
         NavigationStack {
            ZStack {
                 PokemonListBackgroundView()
+                    
                 if viewModel.isLoading && viewModel.list.isEmpty {
                     ProgressView("Catching 'em all...")
                 } else if viewModel.errorMessage != nil {
@@ -114,6 +115,7 @@ struct PokemonListView: View {
                 systemImage: "number.circle"
             )
         }
+        .scrollContentBackground(.hidden)
     }
 }
 
