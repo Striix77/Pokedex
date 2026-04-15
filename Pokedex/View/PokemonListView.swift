@@ -12,16 +12,16 @@ struct PokemonListView: View {
 
     var body: some View {
         NavigationStack {
-            if viewModel.isLoading && viewModel.list.isEmpty {
-                ProgressView("Catching 'em all...")
-            } else if viewModel.errorMessage != nil {
-                contentUnavailable
-            } else {
-                pokemonList
+           ZStack {
+                PokemonListBackgroundView()
+                if viewModel.isLoading && viewModel.list.isEmpty {
+                    ProgressView("Catching 'em all...")
+                } else if viewModel.errorMessage != nil {
+                    contentUnavailable
+                } else {
+                    pokemonList
+                }
             }
-        }
-        .task {
-            await viewModel.fetchPokemon()
         }
     }
 
