@@ -12,12 +12,15 @@ struct PokemonListView: View {
 
     var body: some View {
         NavigationStack {
-            if viewModel.isLoading && viewModel.list.isEmpty {
-                ProgressView("Catching 'em all...")
-            } else if viewModel.errorMessage != nil {
-                contentUnavailable
-            } else {
-                pokemonList
+            ZStack {
+                PokemonListBackgroundView()
+                if viewModel.isLoading && viewModel.list.isEmpty {
+                    ProgressView("Catching 'em all...")
+                } else if viewModel.errorMessage != nil {
+                    contentUnavailable
+                } else {
+                    pokemonList
+                }
             }
         }
     }
@@ -37,8 +40,8 @@ struct PokemonListView: View {
             .controlSize(.large)
         }
     }
-    
-    private var pokemonList: some View{
+
+    private var pokemonList: some View {
         List(viewModel.filteredPokemon) { pokemon in
             NavigationLink(value: pokemon) {
                 HStack {
@@ -70,4 +73,9 @@ struct PokemonListView: View {
             )
         }
     }
+}
+
+#Preview {
+    @Previewable @State var viewModel = PokemonViewModel()
+    PokemonListView(viewModel: viewModel)
 }
