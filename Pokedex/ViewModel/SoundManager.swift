@@ -28,7 +28,7 @@ class SoundManager {
         audioPlayer.play()
     }
     
-    private func checkSoundExistance(of name: String) async -> Bool{
+    private func checkSoundExistence(of name: String) async -> Bool{
         let urlString = PokedexStrings.getPokemonCryURLString(
             for: name.lowercased()
         )
@@ -55,7 +55,7 @@ class SoundManager {
             return cachedResult
         }
         
-        let result = await checkSoundExistance(of: name)
+        let result = await checkSoundExistence(of: name)
         
         canPlayCache[name] = result
         return result
