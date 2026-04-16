@@ -78,8 +78,11 @@ class PokemonViewModel {
         }
 
         do {
-            try await fetchPokemonListDetails(url: url)
-            try await fetchPokemonTypes(url: url)
+            async let fetchList: () = fetchPokemonListDetails(url: url)
+            async let fetchTypes: () = fetchPokemonTypes(url: url)
+            
+            try await fetchList
+            try await fetchTypes
         } catch {
             self.errorMessage = error.localizedDescription
             if let decodingError = error as? DecodingError {
