@@ -10,13 +10,12 @@ import SwiftUI
 
 struct EfficacyCardView: View {
     @Environment(\.colorScheme) var colorScheme
-    @State private var isAnimating = false
     let efficacy: TypeStrength
-    let getIconUrl: (Int) -> URL?
+    let iconURL: URL?
 
     var body: some View {
         VStack {
-            AsyncImage(url: getIconUrl(efficacy.id)) { image in
+            AsyncImage(url: iconURL) { image in
                 image
                     .image?.resizable()
                     .aspectRatio(contentMode: .fit)

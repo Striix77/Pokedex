@@ -32,7 +32,7 @@ struct EfficacyView: View {
                     ForEach(efficacies) { efficacy in
                         EfficacyCardView(
                             efficacy: efficacy,
-                            getIconUrl: getIconUrl
+                            iconURL: getIconUrl(for: efficacy.id)
                         )
                     }
                 }
