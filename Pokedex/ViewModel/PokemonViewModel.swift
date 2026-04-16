@@ -89,75 +89,14 @@ class PokemonViewModel {
             return
         }
 
-        let query = PokemonQueries.pokemonBaseQuery
-        let typeQuery = PokemonQueries.pokemonTypesQuery
-        let generationsQuery = PokemonQueries.pokemonGenerationsQuery
-
-        let body: [String: Any] = ["query": query]
-        let typeBody: [String: Any] = ["query": typeQuery]
-        let generationsBody: [String: Any] = ["query": generationsQuery]
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        var typeRequest = URLRequest(url: url)
-        typeRequest.httpMethod = "POST"
-        typeRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        typeRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: typeBody
-        )
-
-        var generationsRequest = URLRequest(url: url)
-        generationsRequest.httpMethod = "POST"
-        generationsRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        generationsRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: generationsBody
-        )
-
         do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            print("got the data")
-            let decoded = try JSONDecoder().decode(
-                RootResponse.self,
-                from: data
-            )
-            print("decoded")
-
-            // Types
-            let (typeData, _) = try await URLSession.shared.data(
-                for: typeRequest
-            )
-            print("got the types")
-            let decodedTypes = try JSONDecoder().decode(
-                TypeResponse.self,
-                from: typeData
-            )
-            print("decoded types")
-
-            // Generations
-            let (generationsData, _) = try await URLSession.shared.data(
-                for: generationsRequest
-            )
-            print("got the generations")
-            let decodedGenerations = try JSONDecoder().decode(
-                GenerationResponse.self,
-                from: generationsData
-            )
-            print("decoded generations")
-
-            await MainActor.run {
-                self.list = decoded.data.pokemon
-                self.typeList = decodedTypes.data.type
-                self.generationsList = decodedGenerations.data.generation
-            }
+            async let fetchList: () = fetchPokemonListDetails(url: url)
+            async let fetchTypes: () = fetchPokemonTypes(url: url)
+            async let fetchGenerations: () = fetchPokemonGenerations(url: url)
+            
+            try await fetchList
+            try await fetchTypes
+            try await fetchGenerations
         } catch {
             self.errorMessage = error.localizedDescription
             if let decodingError = error as? DecodingError {
@@ -179,5 +118,84 @@ class PokemonViewModel {
         }
         isLoading = false
     }
+
+    func fetchPokemonListDetails(url: URL) async throws {
+        let query = PokemonQueries.pokemonBaseQuery
+        let body: [String: Any] = ["query": query]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+        print("got the list data")
+        let decoded = try JSONDecoder().decode(
+            RootResponse.self,
+            from: data
+        )
+        print("decoded")
+
+        await MainActor.run {
+            self.list = decoded.data.pokemon
+        }
+
+    }
+
+    func fetchPokemonTypes(url: URL) async throws {
+        let typeQuery = PokemonQueries.pokemonTypesQuery
+        let typeBody: [String: Any] = ["query": typeQuery]
+        var typeRequest = URLRequest(url: url)
+        typeRequest.httpMethod = "POST"
+        typeRequest.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
+        typeRequest.httpBody = try? JSONSerialization.data(
+            withJSONObject: typeBody
+        )
+        let (typeData, _) = try await URLSession.shared.data(
+            for: typeRequest
+        )
+        print("got the types")
+        let decodedTypes = try JSONDecoder().decode(
+            TypeResponse.self,
+            from: typeData
+        )
+        print("decoded types")
+
+        await MainActor.run {
+            self.typeList = decodedTypes.data.type
+        }
+
+    }
+    
+    func fetchPokemonGenerations(url: URL) async throws {
+            let generationsQuery = PokemonQueries.pokemonGenerationsQuery
+            let generationsBody: [String: Any] = ["query": generationsQuery]
+            var generationsRequest = URLRequest(url: url)
+            generationsRequest.httpMethod = "POST"
+            generationsRequest.setValue(
+                "application/json",
+                forHTTPHeaderField: "Content-Type"
+            )
+            generationsRequest.httpBody = try? JSONSerialization.data(
+                withJSONObject: generationsBody
+            )
+            let (generationsData, _) = try await URLSession.shared.data(
+                for: generationsRequest
+            )
+            print("got the generations")
+            let decodedGenerations = try JSONDecoder().decode(
+                GenerationResponse.self,
+                from: generationsData
+            )
+            print("decoded generations")
+
+        await MainActor.run {
+            self.generationsList = decodedGenerations.data.generation
+        }
+            
+
+        }
 
 }
