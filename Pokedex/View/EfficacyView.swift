@@ -46,3 +46,20 @@ struct EfficacyView: View {
         )
     }
 }
+
+#Preview {
+    EfficacyView(
+        title: "Strong against",
+        efficacies: [
+            TypeStrength(name: "Normal", id: 1),
+            TypeStrength(name: "Fighting", id: 2),
+            TypeStrength(name: "Flying", id: 3),
+            TypeStrength(name: "Poison", id: 4),
+            TypeStrength(name: "Ground", id: 5),
+            TypeStrength(name: "Rock", id: 6),
+            TypeStrength(name: "Bug", id: 7),
+            TypeStrength(name: "Ghost", id: 8),
+            TypeStrength(name: "Steel", id: 9),
+        ]
+    )
+}
