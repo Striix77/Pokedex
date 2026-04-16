@@ -28,10 +28,7 @@ struct EfficacyCardView: View {
         .padding(.horizontal, 8)
         .padding(.vertical, 6)
         .background(
-            TypeColor(rawValue: efficacy.name.lowercased())?.color.opacity(
-                colorScheme == .light ? 0.5 : 0.3
-            )
-                ?? .gray
+            TypeColor.getSafeColor(for: efficacy.name, scheme: colorScheme)
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }

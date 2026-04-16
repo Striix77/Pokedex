@@ -60,9 +60,9 @@ struct EfficacyView: View {
     EfficacyView(
         title: "Strong against",
         efficacies: [
-            TypeStrength(name: "Normal", id: 1),
-            TypeStrength(name: "Fighting", id: 2),
-            TypeStrength(name: "Flying", id: 3),
+            TypeStrength(name: "Stellar", id: 19),
+            TypeStrength(name: "Unknown", id: 10001),
+            TypeStrength(name: "Shadow", id: 10002),
             TypeStrength(name: "Poison", id: 4),
             TypeStrength(name: "Ground", id: 5),
             TypeStrength(name: "Rock", id: 6),

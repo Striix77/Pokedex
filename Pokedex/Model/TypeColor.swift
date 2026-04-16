@@ -1,5 +1,5 @@
 //
-//  TypeColors.swift
+//  TypeColor.swift
 //  Pokedex
 //
 //  Created by Freak on 06.04.2026.
@@ -8,7 +8,7 @@ import SwiftUI
 
 enum TypeColor: String {
     case fire, water, grass, electric, ice, fighting, poison, ground, flying,
-        psychic, bug, rock, ghost, dragon, dark, steel, fairy, normal
+        psychic, bug, rock, ghost, dragon, dark, steel, fairy, normal, stellar, unknown, shadow
 
     var color: Color {
         switch self {
@@ -30,6 +30,13 @@ enum TypeColor: String {
         case .rock: return Color(red: 0.859, green: 0.827, blue: 0.737) // #dbd3bc
         case .steel: return Color(red: 0.737, green: 0.776, blue: 0.812) // #bcc6cf
         case .water: return Color(red: 0.682, green: 0.871, blue: 0.992) // #aedefd
+        default: return Color(red: 0.8784, green: 0.8784, blue: 0.8784) // light gray
         }
+    }
+    
+    static func getSafeColor(for typeName: String, scheme: ColorScheme) -> Color {
+        let type = TypeColor(rawValue: typeName.lowercased()) ?? .normal
+        
+        return type.color.opacity(scheme == .light ? 0.5 : 0.3)
     }
 }
