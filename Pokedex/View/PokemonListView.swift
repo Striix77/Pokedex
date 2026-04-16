@@ -85,8 +85,11 @@ struct PokemonListView: View {
                 .padding(8)
                 }
             .listRowBackground(
-                Rectangle()
-                    .fill(.clear)
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(.white)
+                    .opacity(0.1)
+                    .padding(8)
+                    .blur(radius: 5)
             )
             .listRowSeparator(.hidden)
 
