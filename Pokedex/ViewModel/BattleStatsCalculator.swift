@@ -23,7 +23,7 @@ struct BattleStatsCalculator {
         return typesWithEfficacies
     }
 
-    func calculateEfficacies(for strength: Int) -> [TypeStrength] {
+    func calculateEfficacies(for strength: Int) -> [TypeStrength]? {
             var typeStrengths: [TypeStrength] = []
             pokemonTypesWithEfficacies.forEach { type in
                 typeStrengths.append(
@@ -36,6 +36,6 @@ struct BattleStatsCalculator {
                         } ?? []
                 )
             }
-            return typeStrengths
+        return !typeStrengths.isEmpty ? typeStrengths : nil
         }
 }

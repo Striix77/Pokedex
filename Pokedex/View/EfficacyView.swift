@@ -26,7 +26,6 @@ struct EfficacyView: View {
 
     private var cardScrollView: some View {
         HStack {
-          if !efficacies.isEmpty {
             ScrollView(.horizontal) {
                 HStack(spacing: 24) {
                     ForEach(efficacies) { efficacy in
@@ -39,11 +38,6 @@ struct EfficacyView: View {
             }
             .scrollIndicators(.hidden)
             .scrollBounceBehavior(.basedOnSize, axes: [.horizontal])
-           } else {
-                Spacer()
-                Text("To be discovered...")
-                Spacer()
-            }
 
         }
     }
