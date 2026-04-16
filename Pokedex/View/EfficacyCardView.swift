@@ -15,6 +15,7 @@ struct EfficacyCardView: View {
 
     var body: some View {
         VStack {
+            //TODO: Replace with Kingfisher
             AsyncImage(url: iconURL) { image in
                 image
                     .image?.resizable()

@@ -21,6 +21,7 @@ struct PokemonImageView: View {
                     .resizable()
                     .frame(width: 250, height: 250)
             } else {
+                //TODO: Replace with Kingfisher
                 WebImage(url: spriteURL)
                     .onSuccess { image, data, cacheType in
                         print(
