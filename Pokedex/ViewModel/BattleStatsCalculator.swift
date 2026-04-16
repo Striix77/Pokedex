@@ -23,19 +23,29 @@ struct BattleStatsCalculator {
         return typesWithEfficacies
     }
 
-    func calculateEfficacies(for strength: Int) -> [TypeStrength] {
-            var typeStrengths: [TypeStrength] = []
-            pokemonTypesWithEfficacies.forEach { type in
-                typeStrengths.append(
-                    contentsOf: type.typeEfficaciesByTargetTypeId?
-                        .filter {
-                            $0.damageFactor == strength && !typeStrengths.contains                       (TypeStrength(name:$0.type.name.capitalized, id: $0.type.id))
-                        }
-                        .map {
-                            TypeStrength(name:$0.type.name.capitalized,id: $0.type.id)
-                        } ?? []
-                )
-            }
-            return typeStrengths
+    func calculateEfficacies(for strength: Int) -> [TypeStrength]? {
+        var typeStrengths: [TypeStrength] = []
+        pokemonTypesWithEfficacies.forEach { type in
+            typeStrengths.append(
+                contentsOf: type.typeEfficaciesByTargetTypeId?
+                    .filter {
+                        $0.damageFactor == strength
+                            && !typeStrengths.contains(
+                                TypeStrength(
+                                    name: $0.type.name.capitalized,
+                                    id: $0.type.id
+                                )
+                            )
+                    }
+                    .map {
+                        TypeStrength(
+                            name: $0.type.name.capitalized,
+                            id: $0.type.id
+                        )
+                    } ?? []
+            )
         }
+        return !typeStrengths.isEmpty ? typeStrengths : nil
+
+    }
 }

@@ -18,22 +18,16 @@ struct EfficacyView: View {
                 .font(.title2)
 
                 .bold()
-            if !efficacies.isEmpty {
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(efficacies) { efficacy in
-                            HStack {
-                                AsyncImage(url: getIconUrl(for: efficacy.id))
-                                Text(efficacy.name)
-                            }
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(efficacies) { efficacy in
+                        HStack {
+                            AsyncImage(url: getIconUrl(for: efficacy.id))
+                            Text(efficacy.name)
                         }
                     }
-                }.scrollIndicators(.hidden)
-            } else {
-                Spacer()
-                Text("To be discovered...")
-                Spacer()
-            }
+                }
+            }.scrollIndicators(.hidden)
 
         }
         .frame(maxWidth: .infinity, alignment: .leading)
