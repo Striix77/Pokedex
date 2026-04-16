@@ -22,7 +22,8 @@ struct PokemonListBackgroundView: View {
                     Spacer()
                     Image("PokeballIcon")
                         .resizable()
-                        .frame(width:280, height:180)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width:350)
                         .opacity(0.3)
                         .rotationEffect(Angle(degrees: -30))
                         
