@@ -28,7 +28,7 @@ class SoundManager {
         audioPlayer.play()
     }
     
-    private func checkSoundExistance(of name: String) async -> Bool{
+    private func checkSoundExistence(of name: String) async -> Bool{
         let urlString = PokedexStrings.getPokemonCryURLString(
             for: name.lowercased()
         )
@@ -36,18 +36,10 @@ class SoundManager {
         var request = URLRequest(url: url)
         request.httpMethod = "HEAD"
         request.timeoutInterval = 5.0
+        
+        let response = try? await URLSession.shared.data(for: request).1
+        return (response as? HTTPURLResponse)?.statusCode == 200
 
-        do {
-            let (_, response) = try await URLSession.shared.data(for: request)
-
-            if let httpResponse = response as? HTTPURLResponse {
-                return httpResponse.statusCode == 200
-            }
-        } catch {
-            return false
-        }
-
-        return false
     }
 
     func canPlaySound(of name: String) async -> Bool {
@@ -55,7 +47,7 @@ class SoundManager {
             return cachedResult
         }
         
-        let result = await checkSoundExistance(of: name)
+        let result = await checkSoundExistence(of: name)
         
         canPlayCache[name] = result
         return result
