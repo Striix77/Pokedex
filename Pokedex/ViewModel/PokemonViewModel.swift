@@ -74,6 +74,8 @@ class PokemonViewModel {
         isLoading = true
         errorMessage = nil
         guard let url = URL(string: PokedexStrings.apiURL) else {
+            isLoading = false
+            errorMessage = "URL does not exist or is not accessible!"
             return
         }
 

@@ -27,7 +27,7 @@ struct PokemonListView: View {
 
     private var contentUnavailable: some View {
         ContentUnavailableView {
-            Label("Connection Lost", systemImage: "wifi.exclamationmark")
+            Label(viewModel.errorMessage ?? "Connection Lost", systemImage: "wifi.exclamationmark")
         } description: {
             Text(
                 "Looks like Team Rocket is at it again...\nMaybe try again later!"
