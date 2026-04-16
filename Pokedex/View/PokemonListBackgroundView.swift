@@ -7,20 +7,16 @@
 import SwiftUI
 
 struct PokemonListBackgroundView: View {
+    var stops: [Gradient.Stop]
+    
     var body: some View {
-        LinearGradient(
-            stops: [
-                Gradient.Stop(
-                    color: Color(red: 0.898, green: 0.4196, blue: 0.4275),
-                    location: 0.0
-                ),
-                Gradient.Stop(color: Color(red: 0.4471, green: 0.1529, blue: 0.2784), location: 1.0)
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .ignoresSafeArea()
         ZStack{
+            LinearGradient(
+                stops: stops,
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
             VStack{
                 HStack {
                     Spacer()
