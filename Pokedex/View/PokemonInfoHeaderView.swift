@@ -12,7 +12,6 @@ struct PokemonInfoHeaderView: View {
     @State private var canPlay = false
 
     let id: Int
-    let name: String
     let onFavoriteToggle: () -> Void
     let isFavorite: Bool
     let formattedGeneration: String
@@ -45,7 +44,7 @@ struct PokemonInfoHeaderView: View {
 
     private var pokemonTitle: some View {
         HStack {
-            Text(name.capitalized)
+            Text(pokemonName.capitalized)
                 .font(
                     .system(
                         size: 44,
@@ -92,7 +91,6 @@ struct PokemonInfoHeaderView: View {
 #Preview(traits: .sizeThatFitsLayout) {
     PokemonInfoHeaderView(
         id: 1,
-        name: "Squirtle",
         onFavoriteToggle: {
 
         },

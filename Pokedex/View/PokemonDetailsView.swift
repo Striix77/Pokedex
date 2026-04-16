@@ -26,7 +26,6 @@ struct PokemonDetailsView: View {
                 PokemonImageView(spriteURL: pokemon.spriteURL)
                 PokemonInfoHeaderView(
                     id: pokemon.id,
-                    name: pokemon.name,
                     onFavoriteToggle: onFavoriteToggle,
                     isFavorite: isFavorite,
                     formattedGeneration: pokemon.formattedGeneration,
