@@ -1,10 +1,10 @@
 //
-//  BattleStatsViewModel.swift
+//  BattleStatsCalculator.swift
 //  Pokedex
 //
 //  Created by Freak on 08.04.2026.
 //
-import SwiftUI
+import Foundation
 
 struct BattleStatsCalculator {
     let pokemonTypes: [PokemonTypes]
@@ -33,7 +33,7 @@ struct BattleStatsCalculator {
                         }
                         .map {
                             TypeStrength(name:$0.type.name.capitalized,id: $0.type.id)
-                        } ?? [TypeStrength(name:"", id:0)]
+                        } ?? []
                 )
             }
             return typeStrengths
