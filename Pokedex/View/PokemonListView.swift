@@ -14,7 +14,7 @@ struct PokemonListView: View {
         NavigationStack {
             ZStack {
                 PokemonListBackgroundView()
-                    
+
                 if viewModel.isLoading && viewModel.list.isEmpty {
                     ProgressView("Catching 'em all...")
                 } else if viewModel.errorMessage != nil {
@@ -46,13 +46,37 @@ struct PokemonListView: View {
         List(viewModel.filteredPokemon) { pokemon in
             NavigationLink(value: pokemon) {
                 HStack {
-                    Text("\(pokemon.id)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Text("#\(pokemon.id)")
+                        .font(
+                            .system(
+                                size: 16,
+                                weight: .semibold,
+                                design: .monospaced
+                            )
+                        )
+                        .padding(6)
+
                     Text(pokemon.name.capitalized)
+                        .font(
+                            .system(
+                                size: 20,
+                                weight: .bold
+                            )
+                        )
                         .bold()
+
+                    Spacer()
+                    Spacer()
+
                 }
+                .padding(8)
             }
+            .listRowBackground(
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+            )
+            .listRowSeparator(.hidden)
+
         }
         .navigationTitle("Pokédex")
         .searchable(
