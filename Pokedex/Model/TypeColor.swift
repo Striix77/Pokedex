@@ -42,22 +42,22 @@ enum TypeColor: String {
         return type.color.opacity(scheme == .light ? 0.5 : 0.3)
     }
 
-    static func getDoubleTypeColors(for pokemon: Pokemon) {
-        var typeColors: (Color?, Color?) {
-            var colors: (Color?, Color?)
-            colors.0 =
+    static func getDoubleTypeColors(for pokemon: Pokemon) -> (Color?, Color?) {
+
+        var colors: (Color?, Color?)
+        colors.0 =
+            TypeColor(
+                rawValue: pokemon.pokemontypes[0].type
+                    .name
+            )?.color
+        if pokemon.pokemontypes.count > 1 {
+            colors.1 =
                 TypeColor(
-                    rawValue: pokemon.pokemontypes[0].type
-                        .name
+                    rawValue: pokemon.pokemontypes[1]
+                        .type.name
                 )?.color
-            if pokemon.pokemontypes.count > 1 {
-                colors.1 =
-                    TypeColor(
-                        rawValue: pokemon.pokemontypes[1]
-                            .type.name
-                    )?.color
-            }
-            return colors
         }
+        return colors
     }
+
 }
