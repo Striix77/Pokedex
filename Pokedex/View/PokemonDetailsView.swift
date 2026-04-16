@@ -12,37 +12,53 @@ struct PokemonDetailsView: View {
     let isFavorite: Bool
     let onFavoriteToggle: () -> Void
 
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                PokemonImageView(spriteURL: pokemon.spriteURL)
-                PokemonInfoHeaderView(
-                    id: pokemon.id,
-                    name: pokemon.name,
-                    onFavoriteToggle: onFavoriteToggle,
-                    isFavorite: isFavorite,
-                    formattedGeneration: pokemon.formattedGeneration
-                )
-                PokemonStatsView(
-                    typeString: pokemon.typeString,
-                    weight: pokemon.weight,
-                    height: pokemon.height
-                )
-                PokemonBattleStatsView(
-                    pokemonHP: pokemon.statValue(named: "hp"),
-                    pokemonAttack: pokemon.statValue(named: "attack"),
-                    pokemonDefense: pokemon.statValue(named: "defense"),
-                    pokemonSpeed: pokemon.statValue(named: "speed")
-                )
+    private var typeColors: (Color?, Color?) {
+        TypeColor.getDoubleTypeColors(for: pokemon)
+    }
 
-                Spacer()
+    var body: some View {
+        ZStack {
+            backgroundGradient
+            ScrollView {
+                VStack(spacing: 20) {
+                    PokemonImageView(spriteURL: pokemon.spriteURL)
+                    PokemonInfoHeaderView(
+                        id: pokemon.id,
+                        name: pokemon.name,
+                        onFavoriteToggle: onFavoriteToggle,
+                        isFavorite: isFavorite,
+                        formattedGeneration: pokemon.formattedGeneration
+                    )
+                    PokemonStatsView(
+                        typeString: pokemon.typeString,
+                        weight: pokemon.weight,
+                        height: pokemon.height
+                    )
+                    PokemonBattleStatsView(
+                        pokemonHP: pokemon.statValue(named: "hp"),
+                        pokemonAttack: pokemon.statValue(named: "attack"),
+                        pokemonDefense: pokemon.statValue(named: "defense"),
+                        pokemonSpeed: pokemon.statValue(named: "speed")
+                    )
+
+                    Spacer()
+                }
+                .padding()
             }
-            .padding()
+            .navigationTitle(pokemon.name.capitalized)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .tabBar)
         }
-        .navigationTitle(pokemon.name.capitalized)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .tabBar)
+    }
+    
+    private var backgroundGradient: some View{
+        LinearGradient(
+            colors: [
+                typeColors.0 ?? Color.white, typeColors.1 ?? Color.white,
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
     }
 }
-
-

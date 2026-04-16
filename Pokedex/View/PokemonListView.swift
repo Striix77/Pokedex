@@ -9,16 +9,32 @@ import SwiftUI
 
 struct PokemonListView: View {
     @State var viewModel: PokemonViewModel
+    private let stops = [
+        Gradient.Stop(
+            color: Color(red: 0.898, green: 0.4196, blue: 0.4275),
+            location: 0.0
+        ),
+        Gradient.Stop(
+            color: Color(red: 0.4471, green: 0.1529, blue: 0.2784),
+            location: 1.0
+        ),
+    ]
 
     var body: some View {
         NavigationStack {
-            if viewModel.isLoading && viewModel.list.isEmpty {
-                ProgressView("Catching 'em all...")
-            } else if viewModel.errorMessage != nil {
-                contentUnavailable
-            } else {
-                pokemonList
+            ZStack {
+                PokemonListBackgroundView(stops: stops)
+                if viewModel.isLoading && viewModel.list.isEmpty {
+                    ProgressView("Catching 'em all...")
+                } else if viewModel.errorMessage != nil {
+                    contentUnavailable
+                } else {
+                    pokemonList
+                }
             }
+        }
+        .task {
+            await viewModel.fetchPokemon()
         }
     }
 
@@ -37,29 +53,49 @@ struct PokemonListView: View {
             .controlSize(.large)
         }
     }
-    
-    private var pokemonList: some View{
+
+    private var pokemonList: some View {
         List(viewModel.filteredPokemon) { pokemon in
             NavigationLink(value: pokemon) {
                 HStack {
-                    Text("\(pokemon.id)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Text("#\(pokemon.id)")
+                        .font(
+                            .system(
+                                size: 16,
+                                weight: .semibold,
+                                design: .monospaced
+                            )
+                        )
+                        .padding(6)
+
                     Text(pokemon.name.capitalized)
+                        .font(
+                            .system(
+                                size: 20,
+                                weight: .bold
+                            )
+                        )
                         .bold()
+
+                    Spacer()
+                    Spacer()
+
                 }
+                .padding(8)
             }
+            .listRowBackground(
+                Rectangle()
+                    .fill(.clear)
+            )
+            .listRowSeparator(.hidden)
+
         }
         .navigationTitle("Pokédex")
+        .navigationBarTitleDisplayMode(.inline)
         .searchable(
             text: $viewModel.searchText,
             prompt: "Search Pokémon..."
         )
-        .onAppear {
-            Task {
-                await viewModel.fetchPokemon()
-            }
-        }
         .navigationDestination(for: Pokemon.self) { pokemon in
             PokemonDetailsView(
                 pokemon: pokemon,
@@ -69,5 +105,11 @@ struct PokemonListView: View {
                 }
             )
         }
+        .scrollContentBackground(.hidden)
     }
+}
+
+#Preview {
+    @Previewable @State var viewModel = PokemonViewModel()
+    PokemonListView(viewModel: viewModel)
 }
