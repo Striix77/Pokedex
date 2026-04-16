@@ -36,18 +36,10 @@ class SoundManager {
         var request = URLRequest(url: url)
         request.httpMethod = "HEAD"
         request.timeoutInterval = 5.0
+        
+        let response = try? await URLSession.shared.data(for: request).1
+        return (response as? HTTPURLResponse)?.statusCode == 200
 
-        do {
-            let (_, response) = try await URLSession.shared.data(for: request)
-
-            if let httpResponse = response as? HTTPURLResponse {
-                return httpResponse.statusCode == 200
-            }
-        } catch {
-            return false
-        }
-
-        return false
     }
 
     func canPlaySound(of name: String) async -> Bool {
