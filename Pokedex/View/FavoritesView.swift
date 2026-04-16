@@ -13,25 +13,38 @@ struct FavoritesView: View {
     var favoritePokemon: [Pokemon] {
         viewModel.list.filter { viewModel.favorites.contains($0.id) }
     }
+    
+    private let stops = [
+        Gradient.Stop(
+            color: Color(red: 0.898, green: 0.4196, blue: 0.4275),
+            location: 0.0
+        ),
+        Gradient.Stop(color: Color(red: 0.4471, green: 0.1529, blue: 0.2784), location: 1.0)
+    ]
 
     var body: some View {
         NavigationStack {
-            Group {
-                if favoritePokemon.isEmpty {
-                    contentUnavailable
-                } else {
-                    pokemonList
-                }
-            }
-            .navigationTitle("My Favorites")
-            .navigationDestination(for: Pokemon.self) { pokemon in
-                PokemonDetailsView(
-                    pokemon: pokemon,
-                    isFavorite: viewModel.favorites.contains(pokemon.id),
-                    onFavoriteToggle: {
-                        viewModel.toggleFavorite(pokemon: pokemon)
+            
+            ZStack{
+                PokemonListBackgroundView(stops: stops)
+                Group {
+                    if favoritePokemon.isEmpty {
+                        contentUnavailable
+                    } else {
+                        pokemonList
                     }
-                )
+                }
+//                .navigationTitle("My Favorites")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationDestination(for: Pokemon.self) { pokemon in
+                    PokemonDetailsView(
+                        pokemon: pokemon,
+                        isFavorite: viewModel.favorites.contains(pokemon.id),
+                        onFavoriteToggle: {
+                            viewModel.toggleFavorite(pokemon: pokemon)
+                        }
+                    )
+                }
             }
         }
     }
@@ -59,4 +72,9 @@ struct FavoritesView: View {
             }
         }
     }
+}
+
+#Preview {
+    @Previewable @State var viewModel = PokemonViewModel()
+    FavoritesView(viewModel: viewModel)
 }
