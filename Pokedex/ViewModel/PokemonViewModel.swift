@@ -51,7 +51,7 @@ class PokemonViewModel {
     var filteredPokemon: [Pokemon] {
         var searchedList: [Pokemon]
         if searchText.isEmpty {
-            searchedList =  list
+            searchedList = list
         } else {
             searchedList = list.filter {
                 $0.name.localizedCaseInsensitiveContains(searchText)
@@ -77,51 +77,9 @@ class PokemonViewModel {
             return
         }
 
-        let query = PokemonQueries.getPokemonList
-        let typeQuery = PokemonQueries.pokemonTypesList
-
-        let body: [String: Any] = ["query": query]
-        let typeBody: [String: Any] = ["query": typeQuery]
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        var typeRequest = URLRequest(url: url)
-        typeRequest.httpMethod = "POST"
-        typeRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        typeRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: typeBody
-        )
-
         do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            print("got the data")
-            let decoded = try JSONDecoder().decode(
-                RootResponse.self,
-                from: data
-            )
-            print("decoded")
-
-            // Types
-            let (typeData, _) = try await URLSession.shared.data(
-                for: typeRequest
-            )
-            print("got the types")
-            let decodedTypes = try JSONDecoder().decode(
-                TypeResponse.self,
-                from: typeData
-            )
-            print("decoded types")
-
-            await MainActor.run {
-                self.list = decoded.data.pokemon
-                self.typeList = decodedTypes.data.type
-            }
+            try await fetchPokemonListDetails(url: url)
+            try await fetchPokemonTypes(url: url)
         } catch {
             self.errorMessage = error.localizedDescription
             if let decodingError = error as? DecodingError {
@@ -142,6 +100,56 @@ class PokemonViewModel {
             }
         }
         isLoading = false
+    }
+
+    func fetchPokemonListDetails(url: URL) async throws {
+        let query = PokemonQueries.getPokemonList
+        let body: [String: Any] = ["query": query]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+        print("got the list data")
+        let decoded = try JSONDecoder().decode(
+            RootResponse.self,
+            from: data
+        )
+        print("decoded")
+
+        await MainActor.run {
+            self.list = decoded.data.pokemon
+        }
+
+    }
+
+    func fetchPokemonTypes(url: URL) async throws {
+        let typeQuery = PokemonQueries.pokemonTypesList
+        let typeBody: [String: Any] = ["query": typeQuery]
+        var typeRequest = URLRequest(url: url)
+        typeRequest.httpMethod = "POST"
+        typeRequest.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
+        typeRequest.httpBody = try? JSONSerialization.data(
+            withJSONObject: typeBody
+        )
+        let (typeData, _) = try await URLSession.shared.data(
+            for: typeRequest
+        )
+        print("got the types")
+        let decodedTypes = try JSONDecoder().decode(
+            TypeResponse.self,
+            from: typeData
+        )
+        print("decoded types")
+
+        await MainActor.run {
+            self.typeList = decodedTypes.data.type
+        }
+
     }
 
 }
