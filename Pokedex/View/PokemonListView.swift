@@ -33,6 +33,9 @@ struct PokemonListView: View {
                 }
             }
         }
+        .task {
+            await viewModel.fetchPokemon()
+        }
     }
 
     private var contentUnavailable: some View {
@@ -82,21 +85,17 @@ struct PokemonListView: View {
             }
             .listRowBackground(
                 Rectangle()
-                    .fill(.ultraThinMaterial)
+                    .fill(.clear)
             )
             .listRowSeparator(.hidden)
 
         }
         .navigationTitle("Pokédex")
+        .navigationBarTitleDisplayMode(.inline)
         .searchable(
             text: $viewModel.searchText,
             prompt: "Search Pokémon..."
         )
-        .onAppear {
-            Task {
-                await viewModel.fetchPokemon()
-            }
-        }
         .navigationDestination(for: Pokemon.self) { pokemon in
             PokemonDetailsView(
                 pokemon: pokemon,
