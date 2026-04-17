@@ -12,44 +12,14 @@ class PokemonListViewModel {
     var pokemonList = [PokemonListEntry]()
     var typeList: [PokemonType] = []
     var generationsList: [PokemonGeneration] = []
-    var searchText = ""
     var isLoading = false
     var errorMessage: String? = nil
-    var selectedTypeFilter: String = "All"
-    var selectedGenerationFilter: String = "All"
 
     var favoritesManager = FavoritesManager()
+    var filterService = FilterManager()
 
     var filteredPokemon: [PokemonListEntry] {
-        var searchedList: [PokemonListEntry]
-        if searchText.isEmpty {
-            searchedList = pokemonList
-        } else {
-            searchedList = pokemonList.filter {
-                $0.name.localizedCaseInsensitiveContains(searchText)
-            }
-        }
-        return filterByGenerations(in: filterByTypes(in: searchedList))
-    }
-
-    func filterByTypes(in pokemonList: [PokemonListEntry]) -> [PokemonListEntry] {
-        if selectedTypeFilter == "All" {
-            return pokemonList
-        } else {
-            return pokemonList.filter { pokemon in
-                pokemon.typeString.contains(selectedTypeFilter)
-            }
-        }
-    }
-
-    func filterByGenerations(in pokemonList: [PokemonListEntry]) -> [PokemonListEntry] {
-        if selectedGenerationFilter == "All" {
-            return pokemonList
-        } else {
-            return pokemonList.filter { pokemon in
-                pokemon.generationName == selectedGenerationFilter
-            }
-        }
+        filterService.filterPokemon(pokemonList: pokemonList)
     }
 
     func fetchPokemon() async {

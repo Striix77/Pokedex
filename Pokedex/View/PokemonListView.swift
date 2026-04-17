@@ -18,7 +18,7 @@ struct PokemonListView: View {
 
     private var pokemonList: some View {
         VStack {
-            List(viewModel.filteredPokemon, id: \.id) { pokemon in
+            List(viewModel.filteredPokemon) { pokemon in
                 NavigationLink(value: pokemon) {
                     HStack {
                         Text("\(pokemon.id)")
@@ -31,7 +31,7 @@ struct PokemonListView: View {
             }
             .navigationTitle("Pokédex")
             .searchable(
-                text: $viewModel.searchText,
+                text: $viewModel.filterService.searchText,
                 prompt: "Search Pokémon..."
             )
             .toolbar {
@@ -60,7 +60,7 @@ struct PokemonListView: View {
 
     private var typeFilteringMenu: some View {
         Menu {
-            Picker("Type", selection: $viewModel.selectedTypeFilter) {
+            Picker("Type", selection: $viewModel.filterService.selectedTypeFilter) {
                 Text("All").tag("All")
                 ForEach(viewModel.typeList, id: \.self) { type in
                     Text(type.name.capitalized).tag(
@@ -78,7 +78,7 @@ struct PokemonListView: View {
 
     private var generationFilteringMenu: some View {
         Menu {
-            Picker("Generation", selection: $viewModel.selectedGenerationFilter)
+            Picker("Generation", selection: $viewModel.filterService.selectedGenerationFilter)
             {
                 Text("All").tag("All")
                 ForEach(viewModel.generationsList, id: \.self) { generation in
