@@ -198,6 +198,6 @@ class PokemonViewModel {
         }
             
 
-        }
+    }
 
 }

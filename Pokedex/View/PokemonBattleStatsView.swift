@@ -39,7 +39,6 @@ struct PokemonBattleStatsView: View {
                 pokemonSpeed: pokemonSpeed
             )
             efficacyViews
-
         }
     }
 
