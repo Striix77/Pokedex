@@ -4,7 +4,6 @@
 //
 //  Created by Freak on 26.02.2026.
 //
-
 import Foundation
 
 struct PokemonQueries {
@@ -51,42 +50,6 @@ struct PokemonQueries {
             }
             """
         }
-    
-    
-    static let pokemonBaseQuery = """
-        query getPokemon {
-          pokemon {
-            id
-            name
-            pokemonspecy {
-              generation {
-                name
-              }
-            }
-            pokemontypes{
-              type{
-                id
-                name
-              }
-            }
-            weight
-            height
-            pokemonsprites {
-                  sprites
-                }
-            pokemonstats {
-                base_stat
-                stat {
-                    name
-                }
-            }
-        
-            pokemoncries {
-                cries
-            }
-          }
-        }
-        """
     
     static let pokemonTypesQuery = """
         query samplePokeAPIquery {
