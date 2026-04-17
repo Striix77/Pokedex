@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var viewModel = PokemonListViewModel()
+    @State private var soundManager = SoundManager()
 
     var body: some View {
         TabView {
@@ -30,6 +31,7 @@ struct MainTabView: View {
         .task {
             await viewModel.fetchPokemon()
         }
+        .environment(soundManager)
     }
 
     private var contentUnavailable: some View {
