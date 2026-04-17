@@ -8,36 +8,11 @@
 import SwiftUI
 
 struct PokemonListView: View {
-    @State var viewModel: PokemonListViewModel
+    @Bindable var viewModel: PokemonListViewModel
 
     var body: some View {
         NavigationStack {
-            if viewModel.isLoading && viewModel.pokemonList.isEmpty {
-                ProgressView("Catching 'em all...")
-            } else if viewModel.errorMessage != nil {
-                contentUnavailable
-            } else {
-                pokemonList
-            }
-        }
-        .task {
-            await viewModel.fetchPokemon()
-        }
-    }
-
-    private var contentUnavailable: some View {
-        ContentUnavailableView {
-            Label(viewModel.errorMessage ?? "Connection Lost", systemImage: "wifi.exclamationmark")
-        } description: {
-            Text(
-                "Looks like Team Rocket is at it again...\nMaybe try again later!"
-            )
-        } actions: {
-            Button("Try Again") {
-                Task { await viewModel.fetchPokemon() }
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+            pokemonList
         }
     }
 
@@ -65,12 +40,15 @@ struct PokemonListView: View {
                     generationFilteringMenu
                 }
             }
-            
-            .navigationDestination(for: PokemonListEntry.self) { pokemonListEntry in
+
+            .navigationDestination(for: PokemonListEntry.self) {
+                pokemonListEntry in
                 PokemonDetailsView(
                     pokemonListEntry: pokemonListEntry,
                     types: viewModel.typeList,
-                    isFavorite: viewModel.favorites.contains(pokemonListEntry.id),
+                    isFavorite: viewModel.favorites.contains(
+                        pokemonListEntry.id
+                    ),
                     onFavoriteToggle: {
                         viewModel.toggleFavorite(pokemon: pokemonListEntry)
                     }
@@ -79,8 +57,8 @@ struct PokemonListView: View {
 
         }
     }
-    
-    private var typeFilteringMenu: some View{
+
+    private var typeFilteringMenu: some View {
         Menu {
             Picker("Type", selection: $viewModel.selectedTypeFilter) {
                 Text("All").tag("All")
@@ -97,10 +75,11 @@ struct PokemonListView: View {
             )
         }
     }
-    
-    private var generationFilteringMenu: some View{
+
+    private var generationFilteringMenu: some View {
         Menu {
-            Picker("Generation", selection: $viewModel.selectedGenerationFilter) {
+            Picker("Generation", selection: $viewModel.selectedGenerationFilter)
+            {
                 Text("All").tag("All")
                 ForEach(viewModel.generationsList, id: \.self) { generation in
                     Text(generation.formattedName).tag(
@@ -117,8 +96,7 @@ struct PokemonListView: View {
     }
 }
 
-
-#Preview{
+#Preview {
     @Previewable @State var viewModel = PokemonListViewModel()
     PokemonListView(viewModel: viewModel)
 }
