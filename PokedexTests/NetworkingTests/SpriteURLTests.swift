@@ -15,7 +15,7 @@ struct SpriteURLTests {
 
     @Test("Verify sprite URLs are correctly formatted")
     func testSpriteURLs() async throws {
-        let viewModel = PokemonViewModel()
+        let viewModel = PokemonListViewModel()
         await viewModel.fetchPokemon()
 
         let pokemon = try #require(viewModel.list.first)

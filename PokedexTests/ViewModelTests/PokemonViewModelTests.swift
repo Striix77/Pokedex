@@ -16,7 +16,7 @@ struct PokemonViewModelTests {
         arguments: ["PIKA", "pika", "PikA"]
     )
     func searchFiltering(query: String) {
-        let viewModel = PokemonViewModel()
+        let viewModel = PokemonListViewModel()
         viewModel.list = [Pokemon.mock(id: 25, name: "Pikachu")]
 
         viewModel.searchText = query
@@ -27,7 +27,7 @@ struct PokemonViewModelTests {
 
     @Test("Toggling favorites updates the collection")
     func favoriteToggle() {
-        let viewModel = PokemonViewModel()
+        let viewModel = PokemonListViewModel()
         let pika = Pokemon.mock(id: 25, name: "Pikachu")
 
         viewModel.toggleFavorite(pokemon:pika)

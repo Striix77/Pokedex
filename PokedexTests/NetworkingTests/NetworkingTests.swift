@@ -15,7 +15,7 @@ struct APITests {
 
     @Test("Fetch successfully downloads data from PokeAPI")
     func liveFetch() async throws {
-        let viewModel = PokemonViewModel()
+        let viewModel = PokemonListViewModel()
 
         // Wait for the network
         await viewModel.fetchPokemon()

@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class PokemonViewModel {
+class PokemonListViewModel {
     var list = [Pokemon]()
     var typeList: [PokemonType] = []
     var generationsList: [PokemonGeneration] = []
@@ -95,7 +95,7 @@ class PokemonViewModel {
             async let fetchList: () = fetchPokemonListDetails(url: url)
             async let fetchTypes: () = fetchPokemonTypes(url: url)
             async let fetchGenerations: () = fetchPokemonGenerations(url: url)
-            
+
             try await fetchList
             try await fetchTypes
             try await fetchGenerations
@@ -170,33 +170,32 @@ class PokemonViewModel {
         }
 
     }
-    
+
     func fetchPokemonGenerations(url: URL) async throws {
-            let generationsQuery = PokemonQueries.pokemonGenerationsQuery
-            let generationsBody: [String: Any] = ["query": generationsQuery]
-            var generationsRequest = URLRequest(url: url)
-            generationsRequest.httpMethod = "POST"
-            generationsRequest.setValue(
-                "application/json",
-                forHTTPHeaderField: "Content-Type"
-            )
-            generationsRequest.httpBody = try? JSONSerialization.data(
-                withJSONObject: generationsBody
-            )
-            let (generationsData, _) = try await URLSession.shared.data(
-                for: generationsRequest
-            )
-            print("got the generations")
-            let decodedGenerations = try JSONDecoder().decode(
-                GenerationResponse.self,
-                from: generationsData
-            )
-            print("decoded generations")
+        let generationsQuery = PokemonQueries.pokemonGenerationsQuery
+        let generationsBody: [String: Any] = ["query": generationsQuery]
+        var generationsRequest = URLRequest(url: url)
+        generationsRequest.httpMethod = "POST"
+        generationsRequest.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
+        generationsRequest.httpBody = try? JSONSerialization.data(
+            withJSONObject: generationsBody
+        )
+        let (generationsData, _) = try await URLSession.shared.data(
+            for: generationsRequest
+        )
+        print("got the generations")
+        let decodedGenerations = try JSONDecoder().decode(
+            GenerationResponse.self,
+            from: generationsData
+        )
+        print("decoded generations")
 
         await MainActor.run {
             self.generationsList = decodedGenerations.data.generation
         }
-            
 
     }
 
