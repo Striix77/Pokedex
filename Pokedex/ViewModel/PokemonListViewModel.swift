@@ -15,21 +15,25 @@ class PokemonListViewModel {
     var isLoading = false
     var errorMessage: String? = nil
 
-    var favoritesManager: FavoritesManagerProtocol
-    var filterService = FilterManager()
+    var favoritesService: FavoritesServiceProtocol
+    var filteringService: FilteringServiceProtocol
 
     var filteredPokemon: [PokemonListEntry] {
-        filterService.filterPokemon(pokemonList: pokemonList)
+        filteringService.filterPokemon(pokemonList: pokemonList)
     }
 
     private let apiService: PokemonAPIProtocol
 
-    init(apiService: PokemonAPIProtocol, favoritesManager: FavoritesManagerProtocol) {
+    init(
+        apiService: PokemonAPIProtocol,
+        favoritesService: FavoritesServiceProtocol,
+        filteringService: FilteringServiceProtocol
+    ) {
         self.apiService = apiService
-        self.favoritesManager = favoritesManager
+        self.favoritesService = favoritesService
+        self.filteringService = filteringService
     }
 
-    
     func fetchPokemon() async {
         isLoading = true
         errorMessage = nil
@@ -42,13 +46,13 @@ class PokemonListViewModel {
             async let fetchList = apiService.fetchPokemonList(url: url)
             async let fetchTypes = apiService.fetchPokemonTypes(url: url)
             async let fetchGenerations = apiService.fetchPokemonGenerations(
-                    url: url
-                )
+                url: url
+            )
 
             let list = try await fetchList
             let types = try await fetchTypes
             let generations = try await fetchGenerations
-            
+
             await MainActor.run {
                 self.pokemonList = list
                 self.typeList = types

@@ -31,7 +31,7 @@ struct PokemonListView: View {
             }
             .navigationTitle("Pokédex")
             .searchable(
-                text: $viewModel.filterService.searchText,
+                text: $viewModel.filteringService.searchText,
                 prompt: "Search Pokémon..."
             )
             .toolbar {
@@ -46,11 +46,11 @@ struct PokemonListView: View {
                 PokemonDetailsView(
                     pokemonListEntry: pokemonListEntry,
                     types: viewModel.typeList,
-                    isFavorite: viewModel.favoritesManager.favoriteIDs.contains(
+                    isFavorite: viewModel.favoritesService.favoriteIDs.contains(
                         pokemonListEntry.id
                     ),
                     onFavoriteToggle: {
-                        viewModel.favoritesManager.toggle(
+                        viewModel.favoritesService.toggle(
                             pokemonListEntry.id
                         )
                     }
@@ -64,7 +64,7 @@ struct PokemonListView: View {
         Menu {
             Picker(
                 "Type",
-                selection: $viewModel.filterService.selectedTypeFilter
+                selection: $viewModel.filteringService.selectedTypeFilter
             ) {
                 Text("All").tag("All")
                 ForEach(viewModel.typeList, id: \.self) { type in
@@ -85,7 +85,7 @@ struct PokemonListView: View {
         Menu {
             Picker(
                 "Generation",
-                selection: $viewModel.filterService.selectedGenerationFilter
+                selection: $viewModel.filteringService.selectedGenerationFilter
             ) {
                 Text("All").tag("All")
                 ForEach(viewModel.generationsList, id: \.self) { generation in
@@ -106,7 +106,8 @@ struct PokemonListView: View {
 #Preview {
     @Previewable @State var viewModel = PokemonListViewModel(
         apiService: PokemonAPIService(),
-        favoritesManager: FavoritesManager()
+        favoritesService: FavoritesService(),
+        filteringService: FilteringService()
     )
     PokemonListView(viewModel: viewModel)
 }

@@ -7,7 +7,7 @@
 import SwiftUI
 
 @Observable
-class FilterManager {
+class FilteringService: FilteringServiceProtocol {
     var searchText = ""
     var selectedTypeFilter: String = "All"
     var selectedGenerationFilter: String = "All"

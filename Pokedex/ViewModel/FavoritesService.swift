@@ -7,7 +7,7 @@
 import SwiftUI
 
 @Observable
-class FavoritesManager: FavoritesManagerProtocol {
+class FavoritesService: FavoritesServiceProtocol {
     var favoriteIDs: Set<Int> = [] {
         didSet {
             saveFavorites()

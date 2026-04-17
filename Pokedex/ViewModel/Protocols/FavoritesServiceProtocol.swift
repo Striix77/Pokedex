@@ -6,7 +6,7 @@
 //
 import Foundation
 
-protocol FavoritesManagerProtocol {
+protocol FavoritesServiceProtocol {
     var favoriteIDs: Set<Int> { get }
     func toggle(_ pokemonId: Int)
 }
