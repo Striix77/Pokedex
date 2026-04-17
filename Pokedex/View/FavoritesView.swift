@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct FavoritesView: View {
+    @Environment(FavoritesService.self) var favoritesService
     var viewModel: PokemonListViewModel
 
     var favoritePokemon: [PokemonListEntry] {
         viewModel.pokemonList.filter {
-            viewModel.favoritesService.favoriteIDs.contains($0.id)
+            favoritesService.favoriteIDs.contains($0.id)
         }
     }
 
@@ -30,15 +31,7 @@ struct FavoritesView: View {
                 pokemonListEntry in
                 PokemonDetailsView(
                     pokemonListEntry: pokemonListEntry,
-                    types: viewModel.typeList,
-                    isFavorite: viewModel.favoritesService.favoriteIDs.contains(
-                        pokemonListEntry.id
-                    ),
-                    onFavoriteToggle: {
-                        viewModel.favoritesService.toggle(
-                            pokemonListEntry.id
-                        )
-                    }
+                    types: viewModel.typeList
                 )
             }
         }

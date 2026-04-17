@@ -9,12 +9,10 @@ import SwiftUI
 
 struct PokemonDetailsView: View {
     @State private var viewModel = PokemonDetailsViewModel()
-    let pokemonListEntry: PokemonListEntry
     
+    let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
-    let isFavorite: Bool
-    let onFavoriteToggle: () -> Void
-
+    
     private var calculator: BattleStatsCalculator {
         BattleStatsCalculator(
             pokemonTypes: pokemonListEntry.pokemontypes,
@@ -29,8 +27,6 @@ struct PokemonDetailsView: View {
                     PokemonImageView(spriteURL: details.spriteURL)
                     PokemonInfoHeaderView(
                         id: pokemonListEntry.id,
-                        onFavoriteToggle: onFavoriteToggle,
-                        isFavorite: isFavorite,
                         formattedGeneration: pokemonListEntry.formattedGeneration,
                         pokemonName: pokemonListEntry.name
                     )

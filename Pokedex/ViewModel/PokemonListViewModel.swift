@@ -9,15 +9,14 @@ import Foundation
 
 @Observable
 class PokemonListViewModel {
-    var pokemonList = [PokemonListEntry]()
-    var typeList: [PokemonType] = []
-    var generationsList: [PokemonGeneration] = []
+    var pokemonList: Array<PokemonListEntry>
+    var typeList: Array<PokemonType>
+    var generationsList: Array<PokemonGeneration>
+    
     var isLoading = false
     var errorMessage: String? = nil
-
-    var favoritesService: FavoritesServiceProtocol
+    
     var filteringService: FilteringServiceProtocol
-
     var filteredPokemon: [PokemonListEntry] {
         filteringService.filterPokemon(pokemonList: pokemonList)
     }
@@ -26,12 +25,14 @@ class PokemonListViewModel {
 
     init(
         apiService: PokemonAPIProtocol,
-        favoritesService: FavoritesServiceProtocol,
         filteringService: FilteringServiceProtocol
     ) {
         self.apiService = apiService
-        self.favoritesService = favoritesService
         self.filteringService = filteringService
+        
+        pokemonList = [PokemonListEntry]()
+        typeList = [PokemonType]()
+        generationsList = [PokemonGeneration]()
     }
 
     func fetchPokemon() async {

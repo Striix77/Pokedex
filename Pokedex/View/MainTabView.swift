@@ -10,10 +10,10 @@ import SwiftUI
 struct MainTabView: View {
     @State private var viewModel = PokemonListViewModel(
         apiService: PokemonAPIService(),
-        favoritesService: FavoritesService(),
         filteringService: FilteringService()
     )
     @State private var soundManager = SoundManager()
+    @State private var favoritesService = FavoritesService()
 
     var body: some View {
         TabView {
@@ -36,6 +36,7 @@ struct MainTabView: View {
             await viewModel.fetchPokemon()
         }
         .environment(soundManager)
+        .environment(favoritesService)
     }
 
     private var contentUnavailable: some View {

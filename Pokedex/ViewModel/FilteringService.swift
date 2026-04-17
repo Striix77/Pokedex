@@ -9,8 +9,8 @@ import SwiftUI
 @Observable
 class FilteringService: FilteringServiceProtocol {
     var searchText = ""
-    var selectedTypeFilter: String = "All"
-    var selectedGenerationFilter: String = "All"
+    var selectedTypeFilter = "All"
+    var selectedGenerationFilter = "All"
 
     func filterPokemon(pokemonList: [PokemonListEntry]) -> [PokemonListEntry] {
         var searchedList: [PokemonListEntry]

@@ -10,10 +10,14 @@ import SwiftUI
 class PokemonDetailsViewModel {
     var isLoading = true
     var errorMessage: String? = nil
-    private var pokemonDetailsArray = [PokemonDetailsEntry]()
+    private var pokemonDetailsArray: Array<PokemonDetailsEntry>
 
     var pokemonDetails: PokemonDetailsEntry? {
         pokemonDetailsArray.first
+    }
+    
+    init(){
+        pokemonDetailsArray = [PokemonDetailsEntry]()
     }
 
     func fetchPokemonDetails(id: Int) async {
