@@ -1,5 +1,5 @@
 //
-//  BattleStatsViewModel.swift
+//  BattleStatsCalculator.swift
 //  Pokedex
 //
 //  Created by Freak on 08.04.2026.

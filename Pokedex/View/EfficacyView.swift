@@ -41,7 +41,7 @@ struct EfficacyView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sizeThatFitsLayout) {
     EfficacyView(
         title: "Strong against",
         efficacies: [

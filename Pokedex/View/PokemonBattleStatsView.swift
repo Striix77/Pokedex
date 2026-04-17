@@ -63,7 +63,7 @@ struct PokemonBattleStatsView: View {
             }
         }
     }
-
+    
     private var noEfficacySubview: some View {
         Text("Other stats to be discovered...")
             .font(.title3)
