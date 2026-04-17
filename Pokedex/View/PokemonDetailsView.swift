@@ -8,47 +8,50 @@
 import SwiftUI
 
 struct PokemonDetailsView: View {
-    let pokemon: Pokemon
+    @State private var viewModel = PokemonDetailsViewModel()
+    
+    let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
-    let isFavorite: Bool
-    let onFavoriteToggle: () -> Void
-
+    
     private var calculator: BattleStatsCalculator {
         BattleStatsCalculator(
-            pokemonTypes: pokemon.pokemontypes,
+            pokemonTypes: pokemonListEntry.pokemontypes,
             allTypes: types
         )
     }
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                PokemonImageView(spriteURL: pokemon.spriteURL)
-                PokemonInfoHeaderView(
-                    id: pokemon.id,
-                    onFavoriteToggle: onFavoriteToggle,
-                    isFavorite: isFavorite,
-                    formattedGeneration: pokemon.formattedGeneration,
-                    pokemonName: pokemon.name
-                )
-                PokemonStatsView(
-                    typeString: pokemon.typeString,
-                    weight: pokemon.weight,
-                    height: pokemon.height
-                )
-                PokemonBattleStatsView(
-                    pokemonHP: pokemon.statValue(named: "hp"),
-                    pokemonAttack: pokemon.statValue(named: "attack"),
-                    pokemonDefense: pokemon.statValue(named: "defense"),
-                    pokemonSpeed: pokemon.statValue(named: "speed"),
-                    calculator: calculator
-                )
-
-                Spacer()
+            if let details = viewModel.pokemonDetails {
+                VStack(spacing: 20) {
+                    PokemonImageView(spriteURL: details.spriteURL)
+                    PokemonInfoHeaderView(
+                        id: pokemonListEntry.id,
+                        formattedGeneration: pokemonListEntry.formattedGeneration,
+                        pokemonName: pokemonListEntry.name
+                    )
+                    PokemonStatsView(
+                        typeString: pokemonListEntry.typeString,
+                        weight: details.weight,
+                        height: details.height
+                    )
+                    PokemonBattleStatsView(
+                        pokemonHP: details.statValue(named: "hp"),
+                        pokemonAttack: details.statValue(named: "attack"),
+                        pokemonDefense: details.statValue(named: "defense"),
+                        pokemonSpeed: details.statValue(named: "speed"),
+                        calculator: calculator
+                    )
+                    
+                    Spacer()
+                }
+                .padding()
             }
-            .padding()
         }
-        .navigationTitle(pokemon.name.capitalized)
+        .task{
+            await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
+        }
+        .navigationTitle(pokemonListEntry.name.capitalized)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
     }

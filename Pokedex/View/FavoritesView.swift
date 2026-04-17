@@ -4,14 +4,16 @@
 //
 //  Created by Freak on 26.02.2026.
 //
-
 import SwiftUI
 
 struct FavoritesView: View {
-    var viewModel: PokemonViewModel
+    @Environment(FavoritesService.self) var favoritesService
+    var viewModel: PokemonListViewModel
 
-    var favoritePokemon: [Pokemon] {
-        viewModel.list.filter { viewModel.favorites.contains($0.id) }
+    var favoritePokemon: [PokemonListEntry] {
+        viewModel.pokemonList.filter {
+            favoritesService.favoriteIDs.contains($0.id)
+        }
     }
 
     var body: some View {
@@ -24,14 +26,11 @@ struct FavoritesView: View {
                 }
             }
             .navigationTitle("My Favorites")
-            .navigationDestination(for: Pokemon.self) { pokemon in
+            .navigationDestination(for: PokemonListEntry.self) {
+                pokemonListEntry in
                 PokemonDetailsView(
-                    pokemon: pokemon,
-                    types: viewModel.typeList,
-                    isFavorite: viewModel.favorites.contains(pokemon.id),
-                    onFavoriteToggle: {
-                        viewModel.toggleFavorite(pokemon: pokemon)
-                    }
+                    pokemonListEntry: pokemonListEntry,
+                    types: viewModel.typeList
                 )
             }
         }
