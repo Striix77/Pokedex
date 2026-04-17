@@ -30,7 +30,7 @@ class PokemonListViewModel {
         loadFavorites()
     }
 
-    func toggleFavorite(pokemon: Pokemon) {
+    func toggleFavorite(pokemon: PokemonListEntry) {
         let pokemonId = pokemon.id
         if favorites.contains(pokemonId) {
             favorites.remove(pokemonId)

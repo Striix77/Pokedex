@@ -28,6 +28,30 @@ struct PokemonQueries {
             }
             """
     
+    static func getPokemonDetailsQuery(for id: Int) -> String {
+            """
+            query getPokemonDetails {
+                pokemon(where: {id: {_eq: \(id)}}) {
+                  weight
+                  height
+                  pokemonsprites {
+                        sprites
+                      }
+                  pokemonstats {
+                      base_stat
+                      stat {
+                          name
+                      }
+                  }
+              
+                  pokemoncries {
+                      cries
+                  }
+                }
+            }
+            """
+        }
+    
     
     static let pokemonBaseQuery = """
         query getPokemon {

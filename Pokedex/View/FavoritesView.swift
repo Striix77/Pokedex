@@ -24,13 +24,13 @@ struct FavoritesView: View {
                 }
             }
             .navigationTitle("My Favorites")
-            .navigationDestination(for: Pokemon.self) { pokemon in
+            .navigationDestination(for: PokemonListEntry.self) { pokemonListEntry in
                 PokemonDetailsView(
-                    pokemon: pokemon,
+                    pokemonListEntry: pokemonListEntry,
                     types: viewModel.typeList,
-                    isFavorite: viewModel.favorites.contains(pokemon.id),
+                    isFavorite: viewModel.favorites.contains(pokemonListEntry.id),
                     onFavoriteToggle: {
-                        viewModel.toggleFavorite(pokemon: pokemon)
+                        viewModel.toggleFavorite(pokemon: pokemonListEntry)
                     }
                 )
             }
