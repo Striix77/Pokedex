@@ -11,10 +11,12 @@ import Foundation
 class PokemonViewModel {
     var list = [Pokemon]()
     var typeList: [PokemonType] = []
+    var generationsList: [PokemonGeneration] = []
     var searchText = ""
     var isLoading = false
     var errorMessage: String? = nil
-    var selectedFilter: String = "All"
+    var selectedTypeFilter: String = "All"
+    var selectedGenerationFilter: String = "All"
 
     var favorites: Set<Int> = [] {
         didSet {
@@ -57,15 +59,25 @@ class PokemonViewModel {
                 $0.name.localizedCaseInsensitiveContains(searchText)
             }
         }
-        return filterByTypes(in: searchedList)
+        return filterByGenerations(in: filterByTypes(in: searchedList))
     }
 
     func filterByTypes(in pokemonList: [Pokemon]) -> [Pokemon] {
-        if selectedFilter == "All" {
+        if selectedTypeFilter == "All" {
             return pokemonList
         } else {
             return pokemonList.filter { pokemon in
-                pokemon.typeString.contains(selectedFilter)
+                pokemon.typeString.contains(selectedTypeFilter)
+            }
+        }
+    }
+
+    func filterByGenerations(in pokemonList: [Pokemon]) -> [Pokemon] {
+        if selectedGenerationFilter == "All" {
+            return pokemonList
+        } else {
+            return pokemonList.filter { pokemon in
+                pokemon.generationName == selectedGenerationFilter
             }
         }
     }
@@ -82,9 +94,11 @@ class PokemonViewModel {
         do {
             async let fetchList: () = fetchPokemonListDetails(url: url)
             async let fetchTypes: () = fetchPokemonTypes(url: url)
+            async let fetchGenerations: () = fetchPokemonGenerations(url: url)
             
             try await fetchList
             try await fetchTypes
+            try await fetchGenerations
         } catch {
             self.errorMessage = error.localizedDescription
             if let decodingError = error as? DecodingError {
@@ -108,7 +122,7 @@ class PokemonViewModel {
     }
 
     func fetchPokemonListDetails(url: URL) async throws {
-        let query = PokemonQueries.getPokemonList
+        let query = PokemonQueries.pokemonBaseQuery
         let body: [String: Any] = ["query": query]
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -130,7 +144,7 @@ class PokemonViewModel {
     }
 
     func fetchPokemonTypes(url: URL) async throws {
-        let typeQuery = PokemonQueries.pokemonTypesList
+        let typeQuery = PokemonQueries.pokemonTypesQuery
         let typeBody: [String: Any] = ["query": typeQuery]
         var typeRequest = URLRequest(url: url)
         typeRequest.httpMethod = "POST"
@@ -156,5 +170,34 @@ class PokemonViewModel {
         }
 
     }
+    
+    func fetchPokemonGenerations(url: URL) async throws {
+            let generationsQuery = PokemonQueries.pokemonGenerationsQuery
+            let generationsBody: [String: Any] = ["query": generationsQuery]
+            var generationsRequest = URLRequest(url: url)
+            generationsRequest.httpMethod = "POST"
+            generationsRequest.setValue(
+                "application/json",
+                forHTTPHeaderField: "Content-Type"
+            )
+            generationsRequest.httpBody = try? JSONSerialization.data(
+                withJSONObject: generationsBody
+            )
+            let (generationsData, _) = try await URLSession.shared.data(
+                for: generationsRequest
+            )
+            print("got the generations")
+            let decodedGenerations = try JSONDecoder().decode(
+                GenerationResponse.self,
+                from: generationsData
+            )
+            print("decoded generations")
+
+        await MainActor.run {
+            self.generationsList = decodedGenerations.data.generation
+        }
+            
+
+        }
 
 }

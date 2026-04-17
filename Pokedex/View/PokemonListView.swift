@@ -60,22 +60,9 @@ struct PokemonListView: View {
                 prompt: "Search Pokémon..."
             )
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Picker("Filter", selection: $viewModel.selectedFilter) {
-                            Text("All").tag("All")
-                            ForEach(viewModel.typeList, id: \.self) { type in
-                                Text(type.name.capitalized).tag(
-                                    type.name.capitalized
-                                )
-                            }
-                        }
-                    } label: {
-                        Label(
-                            "Filter",
-                            systemImage: "line.3.horizontal.decrease.circle"
-                        )
-                    }
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    typeFilteringMenu
+                    generationFilteringMenu
                 }
             }
             
@@ -92,4 +79,46 @@ struct PokemonListView: View {
 
         }
     }
+    
+    private var typeFilteringMenu: some View{
+        Menu {
+            Picker("Type", selection: $viewModel.selectedTypeFilter) {
+                Text("All").tag("All")
+                ForEach(viewModel.typeList, id: \.self) { type in
+                    Text(type.name.capitalized).tag(
+                        type.name.capitalized
+                    )
+                }
+            }
+        } label: {
+            Label(
+                "Type filter",
+                systemImage: "line.3.horizontal.decrease.circle"
+            )
+        }
+    }
+    
+    private var generationFilteringMenu: some View{
+        Menu {
+            Picker("Generation", selection: $viewModel.selectedGenerationFilter) {
+                Text("All").tag("All")
+                ForEach(viewModel.generationsList, id: \.self) { generation in
+                    Text(generation.formattedName).tag(
+                        generation.name
+                    )
+                }
+            }
+        } label: {
+            Label(
+                "Generation filter",
+                systemImage: "number.circle"
+            )
+        }
+    }
+}
+
+
+#Preview{
+    @Previewable @State var viewModel = PokemonViewModel()
+    PokemonListView(viewModel: viewModel)
 }

@@ -13,13 +13,12 @@ struct PokemonBattleStatsView: View {
     let pokemonDefense: Int
     let pokemonSpeed: Int
     let calculator: BattleStatsCalculator
-    
-    
+
     private let strongEfficacyTitle = "Strong against"
     private let weakEfficacyTitle = "Weak against"
     private let strongEfficacyValue = 50
     private let weakEfficacyValue = 200
-    
+
     private var strengthEfficacies: [TypeStrength]? {
         calculator.calculateEfficacies(
             for: strongEfficacyValue
@@ -39,12 +38,11 @@ struct PokemonBattleStatsView: View {
                 pokemonDefense: pokemonDefense,
                 pokemonSpeed: pokemonSpeed
             )
-
             efficacyViews
 
         }
     }
-    
+
     private var efficacyViews: some View {
         VStack {
             if let efficacies = strengthEfficacies {
@@ -55,7 +53,7 @@ struct PokemonBattleStatsView: View {
             } else {
                 noEfficacySubview
             }
-            if let efficacies = weaknessEfficacies{
+            if let efficacies = weaknessEfficacies {
                 EfficacyView(
                     title: weakEfficacyTitle,
                     efficacies: efficacies
@@ -65,18 +63,16 @@ struct PokemonBattleStatsView: View {
             }
         }
     }
-
+    
     private var noEfficacySubview: some View {
         Text("Other stats to be discovered...")
             .font(.title3)
             .bold()
-            .padding(.horizontal,8)
-            .padding(.vertical,4)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
             .background(Color(red: 1, green: 0.9373, blue: 0.6588))
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }
-
-
 
 }
 
