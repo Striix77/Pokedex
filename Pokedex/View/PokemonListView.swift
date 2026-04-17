@@ -46,11 +46,13 @@ struct PokemonListView: View {
                 PokemonDetailsView(
                     pokemonListEntry: pokemonListEntry,
                     types: viewModel.typeList,
-                    isFavorite: viewModel.favoritesManager.favorites.contains(
+                    isFavorite: viewModel.favoritesManager.favoriteIDs.contains(
                         pokemonListEntry.id
                     ),
                     onFavoriteToggle: {
-                        viewModel.favoritesManager.toggleFavorite(pokemon: pokemonListEntry)
+                        viewModel.favoritesManager.toggle(
+                            pokemonListEntry.id
+                        )
                     }
                 )
             }
@@ -60,7 +62,10 @@ struct PokemonListView: View {
 
     private var typeFilteringMenu: some View {
         Menu {
-            Picker("Type", selection: $viewModel.filterService.selectedTypeFilter) {
+            Picker(
+                "Type",
+                selection: $viewModel.filterService.selectedTypeFilter
+            ) {
                 Text("All").tag("All")
                 ForEach(viewModel.typeList, id: \.self) { type in
                     Text(type.name.capitalized).tag(
@@ -78,8 +83,10 @@ struct PokemonListView: View {
 
     private var generationFilteringMenu: some View {
         Menu {
-            Picker("Generation", selection: $viewModel.filterService.selectedGenerationFilter)
-            {
+            Picker(
+                "Generation",
+                selection: $viewModel.filterService.selectedGenerationFilter
+            ) {
                 Text("All").tag("All")
                 ForEach(viewModel.generationsList, id: \.self) { generation in
                     Text(generation.formattedName).tag(
@@ -97,6 +104,9 @@ struct PokemonListView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = PokemonListViewModel(apiService: PokemonAPIService())
+    @Previewable @State var viewModel = PokemonListViewModel(
+        apiService: PokemonAPIService(),
+        favoritesManager: FavoritesManager()
+    )
     PokemonListView(viewModel: viewModel)
 }

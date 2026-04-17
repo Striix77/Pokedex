@@ -7,8 +7,8 @@
 import SwiftUI
 
 @Observable
-class FavoritesManager {
-    var favorites: Set<Int> = [] {
+class FavoritesManager: FavoritesManagerProtocol {
+    var favoriteIDs: Set<Int> = [] {
         didSet {
             saveFavorites()
         }
@@ -18,17 +18,16 @@ class FavoritesManager {
         loadFavorites()
     }
 
-    func toggleFavorite(pokemon: PokemonListEntry) {
-        let pokemonId = pokemon.id
-        if favorites.contains(pokemonId) {
-            favorites.remove(pokemonId)
+    func toggle(_ pokemonId: Int) {
+        if favoriteIDs.contains(pokemonId) {
+            favoriteIDs.remove(pokemonId)
         } else {
-            favorites.insert(pokemonId)
+            favoriteIDs.insert(pokemonId)
         }
     }
 
     private func saveFavorites() {
-        let array = Array(favorites)
+        let array = Array(favoriteIDs)
         UserDefaults.standard.set(array, forKey: "favorite_pokemon")
     }
 
@@ -36,7 +35,7 @@ class FavoritesManager {
         if let array = UserDefaults.standard.array(forKey: "favorite_pokemon")
             as? [Int]
         {
-            favorites = Set(array)
+            favoriteIDs = Set(array)
         }
     }
 }

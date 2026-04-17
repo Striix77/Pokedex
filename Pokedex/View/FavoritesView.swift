@@ -12,7 +12,7 @@ struct FavoritesView: View {
 
     var favoritePokemon: [PokemonListEntry] {
         viewModel.pokemonList.filter {
-            viewModel.favoritesManager.favorites.contains($0.id)
+            viewModel.favoritesManager.favoriteIDs.contains($0.id)
         }
     }
 
@@ -31,12 +31,12 @@ struct FavoritesView: View {
                 PokemonDetailsView(
                     pokemonListEntry: pokemonListEntry,
                     types: viewModel.typeList,
-                    isFavorite: viewModel.favoritesManager.favorites.contains(
+                    isFavorite: viewModel.favoritesManager.favoriteIDs.contains(
                         pokemonListEntry.id
                     ),
                     onFavoriteToggle: {
-                        viewModel.favoritesManager.toggleFavorite(
-                            pokemon: pokemonListEntry
+                        viewModel.favoritesManager.toggle(
+                            pokemonListEntry.id
                         )
                     }
                 )

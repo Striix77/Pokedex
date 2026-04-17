@@ -15,7 +15,7 @@ class PokemonListViewModel {
     var isLoading = false
     var errorMessage: String? = nil
 
-    var favoritesManager = FavoritesManager()
+    var favoritesManager: FavoritesManagerProtocol
     var filterService = FilterManager()
 
     var filteredPokemon: [PokemonListEntry] {
@@ -24,8 +24,9 @@ class PokemonListViewModel {
 
     private let apiService: PokemonAPIProtocol
 
-    init(apiService: PokemonAPIProtocol) {
+    init(apiService: PokemonAPIProtocol, favoritesManager: FavoritesManagerProtocol) {
         self.apiService = apiService
+        self.favoritesManager = favoritesManager
     }
 
     
