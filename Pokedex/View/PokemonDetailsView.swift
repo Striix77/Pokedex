@@ -9,8 +9,16 @@ import SwiftUI
 
 struct PokemonDetailsView: View {
     let pokemon: Pokemon
+    let types: [PokemonType]
     let isFavorite: Bool
     let onFavoriteToggle: () -> Void
+
+    private var calculator: BattleStatsCalculator {
+        BattleStatsCalculator(
+            pokemonTypes: pokemon.pokemontypes,
+            allTypes: types
+        )
+    }
 
     var body: some View {
         ScrollView {
@@ -18,10 +26,10 @@ struct PokemonDetailsView: View {
                 PokemonImageView(spriteURL: pokemon.spriteURL)
                 PokemonInfoHeaderView(
                     id: pokemon.id,
-                    name: pokemon.name,
                     onFavoriteToggle: onFavoriteToggle,
                     isFavorite: isFavorite,
-                    formattedGeneration: pokemon.formattedGeneration
+                    formattedGeneration: pokemon.formattedGeneration,
+                    pokemonName: pokemon.name
                 )
                 PokemonStatsView(
                     typeString: pokemon.typeString,
@@ -32,7 +40,8 @@ struct PokemonDetailsView: View {
                     pokemonHP: pokemon.statValue(named: "hp"),
                     pokemonAttack: pokemon.statValue(named: "attack"),
                     pokemonDefense: pokemon.statValue(named: "defense"),
-                    pokemonSpeed: pokemon.statValue(named: "speed")
+                    pokemonSpeed: pokemon.statValue(named: "speed"),
+                    calculator: calculator
                 )
 
                 Spacer()
@@ -44,5 +53,3 @@ struct PokemonDetailsView: View {
         .toolbar(.hidden, for: .tabBar)
     }
 }
-
-
