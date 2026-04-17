@@ -30,8 +30,7 @@ struct EfficacyView: View {
                 HStack(spacing: 24) {
                     ForEach(efficacies) { efficacy in
                         EfficacyCardView(
-                            efficacy: efficacy,
-                            iconURL: getIconUrl(for: efficacy.id)
+                            efficacy: efficacy
                         )
                     }
                 }
@@ -40,13 +39,6 @@ struct EfficacyView: View {
             .scrollBounceBehavior(.basedOnSize, axes: [.horizontal])
 
         }
-    }
-
-    func getIconUrl(for id: Int) -> URL? {
-        URL(
-            string:
-                PokedexStrings.getIconURLString(for: id)
-        )
     }
 }
 
