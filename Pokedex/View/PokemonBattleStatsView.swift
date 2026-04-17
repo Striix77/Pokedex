@@ -39,7 +39,6 @@ struct PokemonBattleStatsView: View {
                 pokemonSpeed: pokemonSpeed
             )
             efficacyViews
-
         }
     }
 
@@ -70,6 +69,16 @@ struct PokemonBattleStatsView: View {
             .bold()
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
+            .background(Color(red: 1, green: 0.9373, blue: 0.6588))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var noEfficacySubview: some View {
+        Text("Other stats to be discovered...")
+            .font(.title3)
+            .bold()
+            .padding(.horizontal,8)
+            .padding(.vertical,4)
             .background(Color(red: 1, green: 0.9373, blue: 0.6588))
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }

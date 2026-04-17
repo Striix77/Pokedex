@@ -2,7 +2,7 @@
 //  EfficacyView.swift
 //  Pokedex
 //
-//  Created by Freak on 03.04.2026.
+//  Created by Freak on 06.04.2026.
 //
 
 import SwiftUI
@@ -16,38 +16,47 @@ struct EfficacyView: View {
         VStack(alignment: .leading, spacing: CGFloat(spacing)) {
             Text(title)
                 .font(.title2)
-
                 .bold()
-            ScrollView(.horizontal) {
-                HStack {
-                    ForEach(efficacies) { efficacy in
-                        HStack {
-                            AsyncImage(url: getIconUrl(for: efficacy.id))
-                            Text(efficacy.name)
-                        }
-                    }
-                }
-            }.scrollIndicators(.hidden)
+            cardScrollView
 
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
     }
 
+    private var cardScrollView: some View {
+        HStack {
+            ScrollView(.horizontal) {
+                HStack(spacing: 24) {
+                    ForEach(efficacies) { efficacy in
+                        EfficacyCardView(
+                            efficacy: efficacy,
+                            iconURL: getIconUrl(for: efficacy.id)
+                        )
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+            .scrollBounceBehavior(.basedOnSize, axes: [.horizontal])
+
+        }
+    }
+
     func getIconUrl(for id: Int) -> URL? {
         URL(
-            string: PokedexStrings.getIconURLString(for: id)
+            string:
+                PokedexStrings.getIconURLString(for: id)
         )
     }
 }
 
-#Preview(traits: .sizeThatFitsLayout) {
+#Preview {
     EfficacyView(
         title: "Strong against",
         efficacies: [
-            TypeStrength(name: "Normal", id: 1),
-            TypeStrength(name: "Fighting", id: 2),
-            TypeStrength(name: "Flying", id: 3),
+            TypeStrength(name: "Stellar", id: 19),
+            TypeStrength(name: "Unknown", id: 10001),
+            TypeStrength(name: "Shadow", id: 10002),
             TypeStrength(name: "Poison", id: 4),
             TypeStrength(name: "Ground", id: 5),
             TypeStrength(name: "Rock", id: 6),
