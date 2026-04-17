@@ -4,7 +4,7 @@
 //
 //  Created by Freak on 03.04.2026.
 //
-import SwiftUI
+import Foundation
 import AVFoundation
 
 @Observable

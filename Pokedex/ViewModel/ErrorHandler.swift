@@ -4,7 +4,7 @@
 //
 //  Created by Freak on 17.04.2026.
 //
-import SwiftUI
+import Foundation
 
 struct ErrorHandler {
     static func handleFetching(_ function: () async throws -> Void) async

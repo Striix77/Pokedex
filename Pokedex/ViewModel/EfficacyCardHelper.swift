@@ -4,7 +4,7 @@
 //
 //  Created by Freak on 17.04.2026.
 //
-import SwiftUI
+import Foundation
 
 struct EfficacyCardHelper {
 
