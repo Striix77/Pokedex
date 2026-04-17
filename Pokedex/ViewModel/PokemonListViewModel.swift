@@ -10,11 +10,6 @@ import Foundation
 @Observable
 class PokemonListViewModel {
     var pokemonList = [PokemonListEntry]()
-    {
-        didSet{
-//            print(pokemonList)
-        }
-    }
 
     var list = [Pokemon]()
     var typeList: [PokemonType] = []
@@ -57,19 +52,19 @@ class PokemonListViewModel {
         }
     }
 
-    var filteredPokemon: [Pokemon] {
-        var searchedList: [Pokemon]
+    var filteredPokemon: [PokemonListEntry] {
+        var searchedList: [PokemonListEntry]
         if searchText.isEmpty {
-            searchedList = list
+            searchedList = pokemonList
         } else {
-            searchedList = list.filter {
+            searchedList = pokemonList.filter {
                 $0.name.localizedCaseInsensitiveContains(searchText)
             }
         }
         return filterByGenerations(in: filterByTypes(in: searchedList))
     }
 
-    func filterByTypes(in pokemonList: [Pokemon]) -> [Pokemon] {
+    func filterByTypes(in pokemonList: [PokemonListEntry]) -> [PokemonListEntry] {
         if selectedTypeFilter == "All" {
             return pokemonList
         } else {
@@ -79,7 +74,7 @@ class PokemonListViewModel {
         }
     }
 
-    func filterByGenerations(in pokemonList: [Pokemon]) -> [Pokemon] {
+    func filterByGenerations(in pokemonList: [PokemonListEntry]) -> [PokemonListEntry] {
         if selectedGenerationFilter == "All" {
             return pokemonList
         } else {
