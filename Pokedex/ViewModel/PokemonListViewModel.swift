@@ -11,7 +11,6 @@ import Foundation
 class PokemonListViewModel {
     var pokemonList = [PokemonListEntry]()
 
-    var list = [Pokemon]()
     var typeList: [PokemonType] = []
     var generationsList: [PokemonGeneration] = []
     var searchText = ""
@@ -96,13 +95,11 @@ class PokemonListViewModel {
         do {
             async let fetchList: () = fetchPokemonList(url: url)
 
-            async let fetchAll: () = fetchAllPokemonDetails(url: url)
             async let fetchTypes: () = fetchPokemonTypes(url: url)
             async let fetchGenerations: () = fetchPokemonGenerations(url: url)
 
             try await fetchList
 
-            try await fetchAll
             try await fetchTypes
             try await fetchGenerations
         } catch {
@@ -127,27 +124,6 @@ class PokemonListViewModel {
         isLoading = false
     }
 
-    func fetchAllPokemonDetails(url: URL) async throws {
-        let query = PokemonQueries.pokemonBaseQuery
-        let body: [String: Any] = ["query": query]
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-        print("got all data")
-        let decoded = try JSONDecoder().decode(
-            RootResponse.self,
-            from: data
-        )
-        print("decoded")
-
-        await MainActor.run {
-            self.list = decoded.data.pokemon
-        }
-
-    }
 
     func fetchPokemonList(url: URL) async throws {
         let query = PokemonQueries.pokemonListQuery
