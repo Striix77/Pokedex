@@ -1,5 +1,5 @@
 //
-//  BattleStatsViewModel.swift
+//  BattleStatsCalculator.swift
 //  Pokedex
 //
 //  Created by Freak on 08.04.2026.
@@ -24,18 +24,28 @@ struct BattleStatsCalculator {
     }
 
     func calculateEfficacies(for strength: Int) -> [TypeStrength]? {
-            var typeStrengths: [TypeStrength] = []
-            pokemonTypesWithEfficacies.forEach { type in
-                typeStrengths.append(
-                    contentsOf: type.typeEfficaciesByTargetTypeId?
-                        .filter {
-                            $0.damageFactor == strength && !typeStrengths.contains                       (TypeStrength(name:$0.type.name.capitalized, id: $0.type.id))
-                        }
-                        .map {
-                            TypeStrength(name:$0.type.name.capitalized,id: $0.type.id)
-                        } ?? []
-                )
-            }
-        return !typeStrengths.isEmpty ? typeStrengths : nil
+        var typeStrengths: [TypeStrength] = []
+        pokemonTypesWithEfficacies.forEach { type in
+            typeStrengths.append(
+                contentsOf: type.typeEfficaciesByTargetTypeId?
+                    .filter {
+                        $0.damageFactor == strength
+                            && !typeStrengths.contains(
+                                TypeStrength(
+                                    name: $0.type.name.capitalized,
+                                    id: $0.type.id
+                                )
+                            )
+                    }
+                    .map {
+                        TypeStrength(
+                            name: $0.type.name.capitalized,
+                            id: $0.type.id
+                        )
+                    } ?? []
+            )
         }
+        return !typeStrengths.isEmpty ? typeStrengths : nil
+
+    }
 }

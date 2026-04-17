@@ -52,7 +52,7 @@ struct PokemonBattleStatsView: View {
             } else {
                 noEfficacySubview
             }
-            if let efficacies = weaknessEfficacies{
+            if let efficacies = weaknessEfficacies {
                 EfficacyView(
                     title: weakEfficacyTitle,
                     efficacies: efficacies
@@ -61,6 +61,16 @@ struct PokemonBattleStatsView: View {
                 noEfficacySubview
             }
         }
+    }
+    
+    private var noEfficacySubview: some View {
+        Text("Other stats to be discovered...")
+            .font(.title3)
+            .bold()
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(Color(red: 1, green: 0.9373, blue: 0.6588))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     private var noEfficacySubview: some View {

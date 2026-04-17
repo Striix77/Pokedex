@@ -9,8 +9,6 @@ import Foundation
 struct PokedexStrings{
     static let apiURL = "https://graphql.pokeapi.co/v1beta2"
     
-    
-    
     static func getIconURLString(for id: Int) -> String {
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/\(id).png"
     }
