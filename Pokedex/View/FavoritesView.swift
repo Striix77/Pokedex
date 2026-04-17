@@ -11,7 +11,9 @@ struct FavoritesView: View {
     var viewModel: PokemonListViewModel
 
     var favoritePokemon: [PokemonListEntry] {
-        viewModel.pokemonList.filter { viewModel.favorites.contains($0.id) }
+        viewModel.pokemonList.filter {
+            viewModel.favoritesManager.favorites.contains($0.id)
+        }
     }
 
     var body: some View {
@@ -24,13 +26,18 @@ struct FavoritesView: View {
                 }
             }
             .navigationTitle("My Favorites")
-            .navigationDestination(for: PokemonListEntry.self) { pokemonListEntry in
+            .navigationDestination(for: PokemonListEntry.self) {
+                pokemonListEntry in
                 PokemonDetailsView(
                     pokemonListEntry: pokemonListEntry,
                     types: viewModel.typeList,
-                    isFavorite: viewModel.favorites.contains(pokemonListEntry.id),
+                    isFavorite: viewModel.favoritesManager.favorites.contains(
+                        pokemonListEntry.id
+                    ),
                     onFavoriteToggle: {
-                        viewModel.toggleFavorite(pokemon: pokemonListEntry)
+                        viewModel.favoritesManager.toggleFavorite(
+                            pokemon: pokemonListEntry
+                        )
                     }
                 )
             }
