@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var viewModel = PokemonListViewModel()
+    @State private var viewModel = PokemonListViewModel(apiService: PokemonAPIService())
     @State private var soundManager = SoundManager()
 
     var body: some View {

@@ -22,6 +22,13 @@ class PokemonListViewModel {
         filterService.filterPokemon(pokemonList: pokemonList)
     }
 
+    private let apiService: PokemonAPIProtocol
+
+    init(apiService: PokemonAPIProtocol) {
+        self.apiService = apiService
+    }
+
+    
     func fetchPokemon() async {
         isLoading = true
         errorMessage = nil
@@ -31,93 +38,22 @@ class PokemonListViewModel {
             return
         }
         errorMessage = await ErrorHandler.handleFetching {
-            async let fetchList: () = fetchPokemonList(url: url)
-            async let fetchTypes: () = fetchPokemonTypes(url: url)
-            async let fetchGenerations: () = fetchPokemonGenerations(url: url)
+            async let fetchList = apiService.fetchPokemonList(url: url)
+            async let fetchTypes = apiService.fetchPokemonTypes(url: url)
+            async let fetchGenerations = apiService.fetchPokemonGenerations(
+                    url: url
+                )
 
-            try await fetchList
-            try await fetchTypes
-            try await fetchGenerations
+            let list = try await fetchList
+            let types = try await fetchTypes
+            let generations = try await fetchGenerations
+            
+            await MainActor.run {
+                self.pokemonList = list
+                self.typeList = types
+                self.generationsList = generations
+            }
         }
         isLoading = false
     }
-
-    func fetchPokemonList(url: URL) async throws {
-        let query = PokemonQueries.pokemonListQuery
-        let body: [String: Any] = ["query": query]
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-        print("got the list data")
-        let decoded = try JSONDecoder().decode(
-            ListResponse.self,
-            from: data
-        )
-        print("decoded list data")
-
-        await MainActor.run {
-            self.pokemonList = decoded.data.pokemon
-        }
-
-    }
-
-    func fetchPokemonTypes(url: URL) async throws {
-        let typeQuery = PokemonQueries.pokemonTypesQuery
-        let typeBody: [String: Any] = ["query": typeQuery]
-        var typeRequest = URLRequest(url: url)
-        typeRequest.httpMethod = "POST"
-        typeRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        typeRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: typeBody
-        )
-        let (typeData, _) = try await URLSession.shared.data(
-            for: typeRequest
-        )
-        print("got the types")
-        let decodedTypes = try JSONDecoder().decode(
-            TypeResponse.self,
-            from: typeData
-        )
-        print("decoded types")
-
-        await MainActor.run {
-            self.typeList = decodedTypes.data.type
-        }
-
-    }
-
-    func fetchPokemonGenerations(url: URL) async throws {
-        let generationsQuery = PokemonQueries.pokemonGenerationsQuery
-        let generationsBody: [String: Any] = ["query": generationsQuery]
-        var generationsRequest = URLRequest(url: url)
-        generationsRequest.httpMethod = "POST"
-        generationsRequest.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        generationsRequest.httpBody = try? JSONSerialization.data(
-            withJSONObject: generationsBody
-        )
-        let (generationsData, _) = try await URLSession.shared.data(
-            for: generationsRequest
-        )
-        print("got the generations")
-        let decodedGenerations = try JSONDecoder().decode(
-            GenerationResponse.self,
-            from: generationsData
-        )
-        print("decoded generations")
-
-        await MainActor.run {
-            self.generationsList = decodedGenerations.data.generation
-        }
-
-    }
-
 }
