@@ -8,6 +8,27 @@
 import Foundation
 
 struct PokemonQueries {
+    static let pokemonListQuery = """
+            query getPokemonList {
+              pokemon {
+                id
+                name
+                pokemonspecy {
+                  generation {
+                    name
+                  }
+                }
+                pokemontypes{
+                  type{
+                    id
+                    name
+                  }
+                }
+              }
+            }
+            """
+    
+    
     static let pokemonBaseQuery = """
         query getPokemon {
           pokemon {
