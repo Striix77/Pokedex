@@ -40,7 +40,10 @@ struct PokemonListView: View {
 
     private var contentUnavailable: some View {
         ContentUnavailableView {
-            Label(viewModel.errorMessage ?? "Connection Lost", systemImage: "wifi.exclamationmark")
+            Label(
+                viewModel.errorMessage ?? "Connection Lost",
+                systemImage: "wifi.exclamationmark"
+            )
         } description: {
             Text(
                 "Looks like Team Rocket is at it again...\nMaybe try again later!"
@@ -61,37 +64,37 @@ struct PokemonListView: View {
                     HStack {
                         Text("#\(pokemon.id)")
                             .font(
-                            .system(
-                                size: 16,
-                                weight: .semibold,
-                                design: .monospaced
+                                .system(
+                                    size: 16,
+                                    weight: .semibold,
+                                    design: .monospaced
+                                )
                             )
-                        )
                             .padding(6)
 
                         Text(pokemon.name.capitalized)
-                        .font(
-                            .system(
-                                size: 20,
-                                weight: .bold
+                            .font(
+                                .system(
+                                    size: 20,
+                                    weight: .bold
+                                )
                             )
-                        )
                             .bold()
 
-                    Spacer()
-                    Spacer()
+                        Spacer()
+                        Spacer()
 
                     }
-                .padding(8)
-                }
-            .listRowBackground(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(.white)
-                    .opacity(0.1)
                     .padding(8)
-                    .blur(radius: 5)
-            )
-            .listRowSeparator(.hidden)
+                }
+                .listRowBackground(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(.white)
+                        .opacity(0.1)
+                        .padding(8)
+                        .blur(radius: 5)
+                )
+                .listRowSeparator(.hidden)
 
             }
             .navigationTitle("Pokédex")
@@ -106,7 +109,7 @@ struct PokemonListView: View {
                     generationFilteringMenu
                 }
             }
-            
+            .scrollContentBackground(.hidden)
             .navigationDestination(for: Pokemon.self) { pokemon in
                 PokemonDetailsView(
                     pokemon: pokemon,
@@ -120,8 +123,8 @@ struct PokemonListView: View {
 
         }
     }
-    
-    private var typeFilteringMenu: some View{
+
+    private var typeFilteringMenu: some View {
         Menu {
             Picker("Type", selection: $viewModel.selectedTypeFilter) {
                 Text("All").tag("All")
@@ -138,10 +141,11 @@ struct PokemonListView: View {
             )
         }
     }
-    
-    private var generationFilteringMenu: some View{
+
+    private var generationFilteringMenu: some View {
         Menu {
-            Picker("Generation", selection: $viewModel.selectedGenerationFilter) {
+            Picker("Generation", selection: $viewModel.selectedGenerationFilter)
+            {
                 Text("All").tag("All")
                 ForEach(viewModel.generationsList, id: \.self) { generation in
                     Text(generation.formattedName).tag(
@@ -159,8 +163,7 @@ struct PokemonListView: View {
     }
 }
 
-
-#Preview{
+#Preview {
     @Previewable @State var viewModel = PokemonViewModel()
     PokemonListView(viewModel: viewModel)
 }
