@@ -98,7 +98,7 @@ struct PokemonListView: View {
 #Preview {
     @Previewable @State var viewModel = PokemonListViewModel(
         pokemonListDataUseCase: PokemonListDataUseCase(
-            apiService: PokemonAPIService()
+            apiService: PokemonListAPIService()
         ),
         filteringService: FilteringService()
     )

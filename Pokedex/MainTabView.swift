@@ -10,7 +10,7 @@ import SwiftUI
 struct MainTabView: View {
     @State private var viewModel = PokemonListViewModel(
         pokemonListDataUseCase: PokemonListDataUseCase(
-            apiService: PokemonAPIService(),
+            apiService: PokemonListAPIService(),
         ),
         filteringService: FilteringService()
     )

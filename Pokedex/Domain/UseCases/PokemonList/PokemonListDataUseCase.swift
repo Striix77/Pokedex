@@ -7,9 +7,9 @@
 import Foundation
 
 class PokemonListDataUseCase: PokemonListDataUseCaseProtocol {
-    private let apiService: PokemonAPIProtocol
+    private let apiService: PokemonListAPIProtocol
 
-    init(apiService: PokemonAPIProtocol) {
+    init(apiService: PokemonListAPIProtocol) {
         self.apiService = apiService
     }
 

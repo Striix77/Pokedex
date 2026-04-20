@@ -37,7 +37,6 @@ class PokemonListViewModel {
 
     func fetchPokemon() async {
         isLoading = true
-        errorMessage = nil
         errorMessage = await ErrorHandler.handleFetching {
             let data = try await pokemonListDataUseCase.execute()
             
