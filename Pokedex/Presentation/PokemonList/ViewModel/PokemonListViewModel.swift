@@ -21,13 +21,13 @@ class PokemonListViewModel {
         filteringService.filterPokemon(pokemonList: pokemonList)
     }
 
-    private let apiService: PokemonAPIProtocol
+    private let pokemonListDataUseCase: PokemonListDataUseCaseProtocol
 
     init(
-        apiService: PokemonAPIProtocol,
+        pokemonListDataUseCase: PokemonListDataUseCaseProtocol,
         filteringService: FilteringServiceProtocol
     ) {
-        self.apiService = apiService
+        self.pokemonListDataUseCase = pokemonListDataUseCase
         self.filteringService = filteringService
         
         pokemonList = [PokemonListEntry]()
@@ -38,26 +38,13 @@ class PokemonListViewModel {
     func fetchPokemon() async {
         isLoading = true
         errorMessage = nil
-        guard let url = URL(string: PokedexStrings.apiURL) else {
-            isLoading = false
-            errorMessage = "URL does not exist or is not accessible!"
-            return
-        }
         errorMessage = await ErrorHandler.handleFetching {
-            async let fetchList = apiService.fetchPokemonList(url: url)
-            async let fetchTypes = apiService.fetchPokemonTypes(url: url)
-            async let fetchGenerations = apiService.fetchPokemonGenerations(
-                url: url
-            )
-
-            let list = try await fetchList
-            let types = try await fetchTypes
-            let generations = try await fetchGenerations
-
+            let data = try await pokemonListDataUseCase.execute()
+            
             await MainActor.run {
-                self.pokemonList = list
-                self.typeList = types
-                self.generationsList = generations
+                self.pokemonList = data.list
+                self.typeList = data.types
+                self.generationsList = data.generations
             }
         }
         isLoading = false
