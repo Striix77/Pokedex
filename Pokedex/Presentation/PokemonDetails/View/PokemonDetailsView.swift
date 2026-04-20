@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct PokemonDetailsView: View {
-    @State private var viewModel = PokemonDetailsViewModel()
-    
+    @State private var viewModel = PokemonDetailsViewModel(
+        pokemonDetailsUseCase: PokemonDetailsUseCase(
+            apiService: PokemonDetailsAPIService()
+        )
+    )
+
     let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
-    
+
     private var calculator: BattleStatsCalculator {
         BattleStatsCalculator(
             pokemonTypes: pokemonListEntry.pokemontypes,
@@ -27,7 +31,8 @@ struct PokemonDetailsView: View {
                     PokemonImageView(spriteURL: details.spriteURL)
                     PokemonInfoHeaderView(
                         id: pokemonListEntry.id,
-                        formattedGeneration: pokemonListEntry.formattedGeneration,
+                        formattedGeneration: pokemonListEntry
+                            .formattedGeneration,
                         pokemonName: pokemonListEntry.name
                     )
                     PokemonStatsView(
@@ -42,13 +47,13 @@ struct PokemonDetailsView: View {
                         pokemonSpeed: details.statValue(named: "speed"),
                         calculator: calculator
                     )
-                    
+
                     Spacer()
                 }
                 .padding()
             }
         }
-        .task{
+        .task {
             await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
         }
         .navigationTitle(pokemonListEntry.name.capitalized)
