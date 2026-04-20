@@ -6,10 +6,6 @@
 //
 import Foundation
 
-protocol PokemonListDataUseCaseProtocol {
-    func execute() async throws -> (list: [PokemonListEntry], types: [PokemonType], generations: [PokemonGeneration])
-}
-
 class PokemonListDataUseCase: PokemonListDataUseCaseProtocol {
     private let apiService: PokemonAPIProtocol
 
