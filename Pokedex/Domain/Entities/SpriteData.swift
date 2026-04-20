@@ -9,7 +9,3 @@ import Foundation
 struct SpriteData: Codable, Hashable {
     let other: OtherSprites?
 }
-
-
-
-
