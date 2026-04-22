@@ -33,7 +33,7 @@ struct PokemonStatsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 20).fill(
-                Color(.clear)
+                .ultraThinMaterial
             ).shadow(radius: 5)
         )
     }
