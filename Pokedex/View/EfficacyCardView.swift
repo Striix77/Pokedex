@@ -29,8 +29,25 @@ struct EfficacyCardView: View {
         .padding(.horizontal, 8)
         .padding(.vertical, 6)
         .background(
-            TypeColor.getSafeColor(for: efficacy.name, scheme: colorScheme)
+            TypeColor(rawValue:efficacy.name.lowercased())?.color.opacity(0.7)
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
+}
+
+#Preview {
+    EfficacyView(
+        title: "Strong against",
+        efficacies: [
+            TypeStrength(name: "Poison", id: 4),
+            TypeStrength(name: "Ground", id: 5),
+            TypeStrength(name: "Rock", id: 6),
+            TypeStrength(name: "Bug", id: 7),
+            TypeStrength(name: "Ghost", id: 8),
+            TypeStrength(name: "Steel", id: 9),
+            TypeStrength(name: "Stellar", id: 19),
+            TypeStrength(name: "Unknown", id: 10001),
+            TypeStrength(name: "Shadow", id: 10002),
+        ]
+    )
 }

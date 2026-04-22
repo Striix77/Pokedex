@@ -9,15 +9,32 @@ import SwiftUI
 
 struct PokemonListView: View {
     @State var viewModel: PokemonViewModel
+    private let stops = [
+        Gradient.Stop(
+            color: Color.listViewBackground1,
+            location: 0.0
+        ),
+        Gradient.Stop(
+            color: Color.listViewBackground2,
+            location: 0.4
+        ),
+        Gradient.Stop(
+            color: Color.listViewBackground2,
+            location: 1.0
+        ),
+    ]
 
     var body: some View {
         NavigationStack {
-            if viewModel.isLoading && viewModel.list.isEmpty {
-                ProgressView("Catching 'em all...")
-            } else if viewModel.errorMessage != nil {
-                contentUnavailable
-            } else {
-                pokemonList
+            ZStack {
+                PokemonListBackgroundView(stops: stops)
+                if viewModel.isLoading && viewModel.list.isEmpty {
+                    ProgressView("Catching 'em all...")
+                } else if viewModel.errorMessage != nil {
+                    contentUnavailable
+                } else {
+                    pokemonList
+                }
             }
         }
         .task {
@@ -27,7 +44,10 @@ struct PokemonListView: View {
 
     private var contentUnavailable: some View {
         ContentUnavailableView {
-            Label(viewModel.errorMessage ?? "Connection Lost", systemImage: "wifi.exclamationmark")
+            Label(
+                viewModel.errorMessage ?? "Connection Lost",
+                systemImage: "wifi.exclamationmark"
+            )
         } description: {
             Text(
                 "Looks like Team Rocket is at it again...\nMaybe try again later!"
@@ -46,15 +66,42 @@ struct PokemonListView: View {
             List(viewModel.filteredPokemon) { pokemon in
                 NavigationLink(value: pokemon) {
                     HStack {
-                        Text("\(pokemon.id)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        ZStack {
+                            Text("#\(pokemon.id)")
+                                .font(.caption)
+                                .fontDesign(.monospaced)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(.ultraThinMaterial.opacity(0.5))
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule().stroke(
+                                        .white.opacity(0.2),
+                                        lineWidth: 1
+                                    )
+                                )
+
+                        }
+
                         Text(pokemon.name.capitalized)
                             .bold()
+
                     }
+                    .frame(alignment: .leading)
+                    .font(.title3)
+                    .padding(8)
                 }
+                .listRowBackground(
+                    RoundedRectangle(cornerRadius: 8).fill(
+                        .ultraThinMaterial.opacity(0.5)
+                    )
+                )
+                .listRowSeparator(.hidden)
+
             }
+            .listRowSpacing(8)
             .navigationTitle("Pokédex")
+            .navigationBarTitleDisplayMode(.inline)
             .searchable(
                 text: $viewModel.searchText,
                 prompt: "Search Pokémon..."
@@ -65,7 +112,7 @@ struct PokemonListView: View {
                     generationFilteringMenu
                 }
             }
-            
+            .scrollContentBackground(.hidden)
             .navigationDestination(for: Pokemon.self) { pokemon in
                 PokemonDetailsView(
                     pokemon: pokemon,
@@ -79,8 +126,8 @@ struct PokemonListView: View {
 
         }
     }
-    
-    private var typeFilteringMenu: some View{
+
+    private var typeFilteringMenu: some View {
         Menu {
             Picker("Type", selection: $viewModel.selectedTypeFilter) {
                 Text("All").tag("All")
@@ -97,10 +144,11 @@ struct PokemonListView: View {
             )
         }
     }
-    
-    private var generationFilteringMenu: some View{
+
+    private var generationFilteringMenu: some View {
         Menu {
-            Picker("Generation", selection: $viewModel.selectedGenerationFilter) {
+            Picker("Generation", selection: $viewModel.selectedGenerationFilter)
+            {
                 Text("All").tag("All")
                 ForEach(viewModel.generationsList, id: \.self) { generation in
                     Text(generation.formattedName).tag(
@@ -114,11 +162,11 @@ struct PokemonListView: View {
                 systemImage: "number.circle"
             )
         }
+        .scrollContentBackground(.hidden)
     }
 }
 
-
-#Preview{
+#Preview {
     @Previewable @State var viewModel = PokemonViewModel()
     PokemonListView(viewModel: viewModel)
 }
