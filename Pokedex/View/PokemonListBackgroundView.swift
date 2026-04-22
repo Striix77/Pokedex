@@ -17,20 +17,17 @@ struct PokemonListBackgroundView: View {
                 endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
-            VStack{
-                HStack {
-                    Spacer()
+            ZStack{
                     Image("PokeballIcon")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width:350)
                         .opacity(0.3)
                         .rotationEffect(Angle(degrees: -30))
-                        
-                }
-                .padding(.top, 75)
-                Spacer()
+               
             }
+            .frame(maxWidth: .infinity,maxHeight: .infinity, alignment: .topTrailing)
+            .offset(x: 50)
         }
     }
 }

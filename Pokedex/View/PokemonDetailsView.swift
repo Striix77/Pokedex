@@ -32,10 +32,10 @@ struct PokemonDetailsView: View {
                     PokemonImageView(spriteURL: pokemon.spriteURL)
                     PokemonInfoHeaderView(
                         id: pokemon.id,
-                            onFavoriteToggle: onFavoriteToggle,
+                        onFavoriteToggle: onFavoriteToggle,
                         isFavorite: isFavorite,
                         formattedGeneration: pokemon.formattedGeneration,
-                    pokemonName: pokemon.name
+                        pokemonName: pokemon.name
                     )
                     PokemonStatsView(
                         typeString: pokemon.typeString,
@@ -47,7 +47,7 @@ struct PokemonDetailsView: View {
                         pokemonAttack: pokemon.statValue(named: "attack"),
                         pokemonDefense: pokemon.statValue(named: "defense"),
                         pokemonSpeed: pokemon.statValue(named: "speed"),
-                    calculator: calculator
+                        calculator: calculator
                     )
 
                     Spacer()
@@ -73,4 +73,20 @@ struct PokemonDetailsView: View {
         )
         .ignoresSafeArea()
     }
+}
+
+#Preview {
+    PokemonDetailsView(
+        pokemon: Pokemon.mock(id: 7, name: "Squirtle"),
+        types: [
+            PokemonType(
+                id: 11,
+                name: "water",
+                typeEfficaciesByTargetTypeId: nil
+            )
+        ],
+        isFavorite: false,
+        onFavoriteToggle: {}
+         
+    )
 }

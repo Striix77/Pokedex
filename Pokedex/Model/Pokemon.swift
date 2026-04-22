@@ -52,3 +52,25 @@ struct Pokemon: Codable, Identifiable, Hashable {
         return "Gen \(raw.uppercased())"
     }
 }
+
+extension Pokemon {
+    static func mock(id: Int, name: String) -> Pokemon {
+        return Pokemon(
+            id: id,
+            name: name,
+            pokemontypes: [
+                PokemonTypes(type: PokemonType(id: 11, name: "water", typeEfficaciesByTargetTypeId: nil))
+            ],
+            pokemonspecy: nil,
+            weight:0,
+            height:0,
+            pokemonsprites: [],
+            pokemonstats: [
+                StatEntry(
+                    base_stat: 50,
+                    stat: StatDetails(name: "hp")
+                )
+            ],
+        )
+    }
+}

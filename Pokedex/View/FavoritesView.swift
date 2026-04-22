@@ -34,7 +34,6 @@ struct FavoritesView: View {
                         pokemonList
                     }
                 }
-//                .navigationTitle("My Favorites")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: Pokemon.self) { pokemon in
                     PokemonDetailsView(
