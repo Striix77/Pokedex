@@ -59,11 +59,14 @@ struct PokemonDetailsView: View {
             .toolbar(.hidden, for: .tabBar)
         }
     }
-    
-    private var backgroundGradient: some View{
-        LinearGradient(
+
+    private var backgroundGradient: some View {
+        var backgroundColors: (Color, Color)
+        backgroundColors.0 = typeColors.0 ?? Color.white
+        backgroundColors.1 = typeColors.1 ?? Color.white
+        return LinearGradient(
             colors: [
-                typeColors.0 ?? Color.white, typeColors.1 ?? Color.white,
+                backgroundColors.0, backgroundColors.1,
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
