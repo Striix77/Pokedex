@@ -16,6 +16,10 @@ struct PokemonListView: View {
         ),
         Gradient.Stop(
             color: Color.listViewBackground2,
+            location: 0.4
+        ),
+        Gradient.Stop(
+            color: Color.listViewBackground2,
             location: 1.0
         ),
     ]

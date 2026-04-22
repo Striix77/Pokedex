@@ -13,19 +13,26 @@ struct FavoritesView: View {
     var favoritePokemon: [Pokemon] {
         viewModel.list.filter { viewModel.favorites.contains($0.id) }
     }
-    
+
     private let stops = [
         Gradient.Stop(
             color: Color.favoritesViewBackground1,
             location: 0.0
         ),
-        Gradient.Stop(color: Color.favoritesViewBackground2, location: 1.0)
+        Gradient.Stop(
+            color: Color.favoritesViewBackground2,
+            location: 0.4
+        ),
+        Gradient.Stop(
+            color: Color.favoritesViewBackground2,
+            location: 1.0
+        ),
     ]
 
     var body: some View {
         NavigationStack {
-            
-            ZStack{
+
+            ZStack {
                 PokemonListBackgroundView(stops: stops)
                 Group {
                     if favoritePokemon.isEmpty {
