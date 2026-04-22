@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PokemonDetailsView: View {
+    @Environment(\.colorScheme) private var colorScheme
     let pokemon: Pokemon
     let types: [PokemonType]
     let isFavorite: Bool
@@ -62,8 +63,9 @@ struct PokemonDetailsView: View {
 
     private var backgroundGradient: some View {
         var backgroundColors: (Color, Color)
-        backgroundColors.0 = typeColors.0 ?? Color.white
-        backgroundColors.1 = typeColors.1 ?? Color.white
+        let colorSchemeBackground = colorScheme == .light ? Color.white : Color.black
+        backgroundColors.0 = typeColors.0 ?? colorSchemeBackground
+        backgroundColors.1 = typeColors.1 ?? colorSchemeBackground
         return LinearGradient(
             colors: [
                 backgroundColors.0, backgroundColors.1,
