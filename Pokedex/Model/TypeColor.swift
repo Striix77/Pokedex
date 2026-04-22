@@ -41,16 +41,17 @@ enum TypeColor: String {
             return (nil, nil)
         }
 
-        var colors: (Color?, Color?)
-        colors.0 =
-            TypeColor(
+        var colors: (Color?, Color?) {
+            let firstTypeColor = TypeColor(
                 rawValue: types[0].type.name
             )?.color
-        if types.count > 1 {
-            colors.1 =
-                TypeColor(
-                    rawValue: types[1].type.name
-                )?.color
+            guard types.count > 1 else {
+                return (firstTypeColor, nil)
+            }
+            let secondTypeColor = TypeColor(
+                rawValue: types[1].type.name
+            )?.color
+            return (firstTypeColor, secondTypeColor)
         }
         return colors
     }
