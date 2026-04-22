@@ -21,7 +21,6 @@ struct MainTabView: View {
                     Label("Favorites", systemImage: "heart.fill")
                 }
         }
-        .preferredColorScheme(.light)
     }
 }
 
