@@ -35,10 +35,6 @@ struct PokemonQueries {
                     name
                 }
             }
-        
-            pokemoncries {
-                cries
-            }
           }
         }
         """
