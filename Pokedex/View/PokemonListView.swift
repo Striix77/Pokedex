@@ -62,41 +62,40 @@ struct PokemonListView: View {
             List(viewModel.filteredPokemon) { pokemon in
                 NavigationLink(value: pokemon) {
                     HStack {
-                        Text("#\(pokemon.id)")
-                            .font(
-                                .system(
-                                    size: 16,
-                                    weight: .semibold,
-                                    design: .monospaced
+                        ZStack {
+                            Text("#\(pokemon.id)")
+                                .font(.caption)
+                                .fontDesign(.monospaced)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(.ultraThinMaterial.opacity(0.5))
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule().stroke(
+                                        .white.opacity(0.2),
+                                        lineWidth: 1
+                                    )
                                 )
-                            )
-                            .padding(6)
+
+                        }
 
                         Text(pokemon.name.capitalized)
-                            .font(
-                                .system(
-                                    size: 20,
-                                    weight: .bold
-                                )
-                            )
                             .bold()
 
-                        Spacer()
-                        Spacer()
-
                     }
+                    .frame(alignment: .leading)
+                    .font(.title3)
                     .padding(8)
                 }
                 .listRowBackground(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(.white)
-                        .opacity(0.1)
-                        .padding(8)
-                        .blur(radius: 5)
+                    RoundedRectangle(cornerRadius: 8).fill(
+                        .ultraThinMaterial.opacity(0.5)
+                    )
                 )
                 .listRowSeparator(.hidden)
 
             }
+            .listRowSpacing(8)
             .navigationTitle("Pokédex")
             .navigationBarTitleDisplayMode(.inline)
             .searchable(
