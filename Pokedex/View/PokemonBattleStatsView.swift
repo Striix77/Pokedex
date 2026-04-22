@@ -69,7 +69,7 @@ struct PokemonBattleStatsView: View {
             .bold()
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Color(red: 1, green: 0.9373, blue: 0.6588))
+            .background(Color.noEfficacyBackground)
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 

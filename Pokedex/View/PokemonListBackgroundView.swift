@@ -39,12 +39,13 @@ struct PokemonListBackgroundView: View {
     @Previewable @State var viewModel = PokemonViewModel()
     PokemonListView(viewModel: viewModel)
 }
+
 #Preview {
     PokemonListBackgroundView(stops: [
         Gradient.Stop(
-            color: Color(red: 0.898, green: 0.4196, blue: 0.4275),
+            color: Color.listViewBackground1,
             location: 0.0
         ),
-        Gradient.Stop(color: Color(red: 0.4471, green: 0.1529, blue: 0.2784), location: 1.0)
+        Gradient.Stop(color: Color.listViewBackground2, location: 1.0)
     ])
 }
