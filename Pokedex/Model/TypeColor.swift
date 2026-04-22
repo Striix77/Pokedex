@@ -35,20 +35,21 @@ enum TypeColor: String {
         }
     }
 
-
     static func getDoubleTypeColors(for pokemon: Pokemon) -> (Color?, Color?) {
+        let types = pokemon.pokemontypes
+        guard !types.isEmpty else {
+            return (nil, nil)
+        }
 
         var colors: (Color?, Color?)
         colors.0 =
             TypeColor(
-                rawValue: pokemon.pokemontypes[0].type
-                    .name
+                rawValue: types[0].type.name
             )?.color
-        if pokemon.pokemontypes.count > 1 {
+        if types.count > 1 {
             colors.1 =
                 TypeColor(
-                    rawValue: pokemon.pokemontypes[1]
-                        .type.name
+                    rawValue: types[1].type.name
                 )?.color
         }
         return colors
