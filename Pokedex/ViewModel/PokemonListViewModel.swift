@@ -1,5 +1,5 @@
 //
-//  PokemonViewModel.swift
+//  PokemonListViewModel.swift
 //  Pokedex
 //
 //  Created by Freak on 25.02.2026.
