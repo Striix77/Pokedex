@@ -8,14 +8,17 @@ import SwiftUI
 import AVFoundation
 
 struct PokemonInfoHeaderView: View {
-    @State private var soundManager = SoundManager()
+    @Environment(SoundManager.self) var soundManager
+    @Environment(FavoritesService.self) var favoritesManager
     @State private var canPlay = false
 
     let id: Int
-    let onFavoriteToggle: () -> Void
-    let isFavorite: Bool
     let formattedGeneration: String
     let pokemonName: String
+    
+    private var isFavorite:Bool{
+        favoritesManager.favoriteIDs.contains(id)
+    }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -53,7 +56,7 @@ struct PokemonInfoHeaderView: View {
                     )
                 )
             Button {
-                onFavoriteToggle()
+                favoritesManager.toggle(id)
             } label: {
                 Image(
                     systemName: isFavorite
@@ -91,10 +94,6 @@ struct PokemonInfoHeaderView: View {
 #Preview(traits: .sizeThatFitsLayout) {
     PokemonInfoHeaderView(
         id: 1,
-        onFavoriteToggle: {
-
-        },
-        isFavorite: false,
         formattedGeneration: "Gen I",
         pokemonName: "Squirtle"
     )

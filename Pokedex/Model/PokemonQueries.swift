@@ -4,44 +4,52 @@
 //
 //  Created by Freak on 26.02.2026.
 //
-
 import Foundation
 
 struct PokemonQueries {
-    static let pokemonBaseQuery = """
-        query getPokemon {
-          pokemon {
-            id
-            name
-            pokemonspecy {
-              generation {
-                name
-              }
-            }
-            pokemontypes{
-              type{
+    static let pokemonListQuery = """
+            query getPokemonList {
+              pokemon {
                 id
                 name
+                pokemonspecy {
+                  generation {
+                    name
+                  }
+                }
+                pokemontypes{
+                  type{
+                    id
+                    name
+                  }
+                }
               }
             }
-            weight
-            height
-            pokemonsprites {
-                  sprites
-                }
-            pokemonstats {
-                base_stat
-                stat {
-                    name
+            """
+    
+    static func getPokemonDetailsQuery(for id: Int) -> String {
+            """
+            query getPokemonDetails {
+                pokemon(where: {id: {_eq: \(id)}}) {
+                  weight
+                  height
+                  pokemonsprites {
+                        sprites
+                      }
+                  pokemonstats {
+                      base_stat
+                      stat {
+                          name
+                      }
+                  }
+              
+                  pokemoncries {
+                      cries
+                  }
                 }
             }
-        
-            pokemoncries {
-                cries
-            }
-          }
+            """
         }
-        """
     
     static let pokemonTypesQuery = """
         query samplePokeAPIquery {

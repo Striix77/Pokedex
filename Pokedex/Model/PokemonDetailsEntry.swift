@@ -1,17 +1,12 @@
 //
-//  Pokemon.swift
+//  PokemonDetailsEntry.swift
 //  Pokedex
 //
-//  Created by Freak on 25.02.2026.
+//  Created by Freak on 17.04.2026.
 //
-
 import Foundation
 
-struct Pokemon: Codable, Identifiable, Hashable {
-    let id: Int
-    let name: String
-    let pokemontypes: [PokemonTypes]
-    let pokemonspecy: SpeciesEntry?
+struct PokemonDetailsEntry: Codable, Hashable {
     let weight: Int
     let height: Int
     let pokemonsprites: [SpriteEntry]
@@ -31,26 +26,9 @@ struct Pokemon: Codable, Identifiable, Hashable {
         return nil
     }
 
-    var typeString: String {
-        pokemontypes.map { $0.type.name.capitalized }
-            .joined(separator: ", ")
-    }
-
     func statValue(named name: String) -> Int {
         pokemonstats
             .first(where: { $0.stat.name == name })?
             .base_stat ?? 0
-    }
-
-    var generationName: String {
-        return pokemonspecy?.generation?.name ?? "Unknown"
-    }
-
-    var formattedGeneration: String {
-        let raw = generationName.replacingOccurrences(
-            of: "generation-",
-            with: ""
-        )
-        return "Gen \(raw.uppercased())"
     }
 }
