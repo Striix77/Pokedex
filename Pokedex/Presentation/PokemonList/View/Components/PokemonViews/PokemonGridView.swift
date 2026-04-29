@@ -12,7 +12,7 @@ struct PokemonGridView: PokemonViewProtocol {
     let typeList: [PokemonType]
 
     private let columns = [
-        GridItem(.adaptive(minimum: 150), spacing: 16),
+        GridItem(.adaptive(minimum: 150), spacing: 16)
     ]
     var body: some View {
         VStack {
@@ -20,11 +20,7 @@ struct PokemonGridView: PokemonViewProtocol {
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(allPokemon) { pokemon in
                         NavigationLink(value: pokemon) {
-                            PokemonGridCard(
-                                id:pokemon.id,
-                                name: pokemon.name.capitalized,
-                                spriteURL: pokemon.spriteURL
-                            )
+                            PokemonGridCard(pokemon: pokemon)
                         }
                     }
                 }
@@ -43,36 +39,50 @@ struct PokemonGridView: PokemonViewProtocol {
 }
 
 struct PokemonGridCard: View {
-    let id: Int
-    let name: String
-    let spriteURL: URL?
-    
+    @State private var ringStopLocation:CGFloat = 0
+    @Environment(\.colorScheme) var colorScheme
+    let pokemon: PokemonListEntry
+
+    private var typeColors: (Color?, Color?) {
+        var colors = TypeColor.getDoubleTypeColors(for: pokemon, scheme: colorScheme)
+        colors.0 = colors.0?.opacity(3)
+        colors.1 = colors.1?.opacity(3)
+        return colors
+    }
+
     var body: some View {
-        ZStack{
+        ZStack {
             RoundedRectangle(cornerRadius: 8)
-                .fill(.ultraThinMaterial)
-                
+                .fill(.gray).opacity(0.1)
+
+            GlowingRing(colors: typeColors)
+                .padding(12)
+
             mainContent
         }
         .frame(maxWidth: .infinity)
         .aspectRatio(1, contentMode: .fit)
+        .clipped()
     }
-    
-    private var mainContent: some View{
+
+    private var mainContent: some View {
         VStack {
-            PokemonImageView(spriteURL: spriteURL)
+            PokemonImageView(spriteURL: pokemon.spriteURL)
                 .aspectRatio(1, contentMode: .fit)
                 .frame(maxWidth: .infinity)
-            Text("#\(id)")
+            Text("#\(pokemon.id)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(name)
+            Text(pokemon.name.capitalized)
                 .bold()
                 .padding(.horizontal)
         }
         .frame(maxWidth: .infinity)
         .padding(.bottom)
-        .foregroundStyle(.white)
+        .foregroundStyle(Color.mainFont)
+    }
+}
+
 struct GlowingRing: View {
     let colors: (Color?, Color?)
     @State private var rotation: Double = 0
@@ -132,10 +142,10 @@ struct GlowingRing: View {
         filteringService: FilteringService()
     )
     PokedexView(viewModel: viewModel)
-        .task{
+        .task {
             await viewModel.fetchPokemon()
         }
         .environment(SoundManager())
         .environment(FavoritesService())
-    
+
 }
