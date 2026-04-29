@@ -13,8 +13,7 @@ struct PokedexView: View {
     var body: some View {
         NavigationStack {
             PokemonListView(
-                allPokemon: viewModel.filteredPokemon,
-                searchText: $viewModel.filteringService.searchText
+                allPokemon: viewModel.filteredPokemon
             )
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
@@ -22,7 +21,7 @@ struct PokedexView: View {
                     generationFilteringMenu
                 }
             }
-
+            .navigationTitle("Pokédex")
             .navigationDestination(for: PokemonListEntry.self) {
                 pokemonListEntry in
                 PokemonDetailsView(
@@ -31,6 +30,11 @@ struct PokedexView: View {
                 )
             }
         }
+        .searchable(
+            text: $viewModel.filteringService.searchText,
+            prompt: "Search Pokémon..."
+        )
+        
     }
 
     private var typeFilteringMenu: some View {

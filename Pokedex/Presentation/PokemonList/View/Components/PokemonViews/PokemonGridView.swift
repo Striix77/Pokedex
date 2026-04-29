@@ -8,9 +8,8 @@
 
 import SwiftUI
 
-struct PokemonGridView: View {
+struct PokemonGridView: PokemonViewProtocol {
     let allPokemon: [PokemonListEntry]
-    @Binding var searchText: String
     var body: some View {
         VStack {
             List(allPokemon) { pokemon in
@@ -24,12 +23,6 @@ struct PokemonGridView: View {
                     }
                 }
             }
-            .navigationTitle("Pokédex")
-            .searchable(
-                text: $searchText,
-                prompt: "Search Pokémon..."
-            )
-
         }
     }
 }
