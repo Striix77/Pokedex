@@ -12,7 +12,7 @@ struct PokedexView: View {
 
     var body: some View {
         NavigationStack {
-            PokemonListView(
+            PokemonGridView(
                 allPokemon: viewModel.filteredPokemon,
                 typeList: viewModel.typeList
             )

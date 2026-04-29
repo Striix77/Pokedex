@@ -12,27 +12,26 @@ struct PokemonGridView: PokemonViewProtocol {
     let typeList: [PokemonType]
 
     private let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16),
     ]
     var body: some View {
         VStack {
             ScrollView {
-                LazyVGrid(columns: columns) {
+                LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(allPokemon) { pokemon in
                         NavigationLink(value: pokemon) {
-                            HStack {
-                                Text("\(pokemon.id)")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(pokemon.name.capitalized)
-                                    .bold()
-                            }
+                            PokemonGridCard(
+                                id:pokemon.id,
+                                name: pokemon.name.capitalized,
+                                spriteURL: pokemon.spriteURL
+                            )
                         }
                     }
                 }
                 .padding()
             }
+            .scrollContentBackground(.hidden)
             .navigationDestination(for: PokemonListEntry.self) {
                 pokemonListEntry in
                 PokemonDetailsView(
@@ -41,6 +40,32 @@ struct PokemonGridView: PokemonViewProtocol {
                 )
             }
         }
+    }
+}
+
+struct PokemonGridCard: View {
+    let id: Int
+    let name: String
+    let spriteURL: URL?
+    
+    var body: some View {
+        ZStack{
+            RoundedRectangle(cornerRadius: 8)
+                .fill(.ultraThinMaterial)
+                
+            VStack {
+                PokemonImageView(spriteURL: spriteURL)
+                    .aspectRatio(1, contentMode: .fit)
+                    .frame(maxWidth: .infinity)
+                Text("\(id)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(name)
+                    .bold()
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .aspectRatio(1, contentMode: .fit)
     }
 }
 
@@ -61,4 +86,20 @@ struct PokemonGridView: PokemonViewProtocol {
         }
     }
 
+}
+
+#Preview("Pokedex") {
+    @Previewable @State var viewModel = PokedexViewModel(
+        pokemonListDataUseCase: PokemonListDataUseCase(
+            apiService: PokemonListAPIService()
+        ),
+        filteringService: FilteringService()
+    )
+    PokedexView(viewModel: viewModel)
+        .task{
+            await viewModel.fetchPokemon()
+        }
+        .environment(SoundManager())
+        .environment(FavoritesService())
+    
 }

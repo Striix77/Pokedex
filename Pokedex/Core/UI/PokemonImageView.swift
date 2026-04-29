@@ -10,7 +10,7 @@ import SDWebImageSwiftUI
 struct PokemonImageView: View {
     @State private var didFail = false
     let spriteURL: URL?
-    let width: CGFloat
+    
     var body: some View {
         ZStack {
             if didFail {
