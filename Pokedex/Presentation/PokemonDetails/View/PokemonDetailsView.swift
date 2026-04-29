@@ -1,0 +1,69 @@
+//
+//  PokemonDetailsView.swift
+//  Pokedex
+//
+//  Created by Freak on 25.02.2026.
+//
+
+import SwiftUI
+
+struct PokemonDetailsView: View {
+    @State private var viewModel = PokemonDetailsViewModel(
+        pokemonDetailsUseCase: PokemonDetailsUseCase(
+            apiService: PokemonDetailsAPIService()
+        )
+    )
+
+    let pokemonListEntry: PokemonListEntry
+    let types: [PokemonType]
+
+    private var calculator: BattleStatsCalculator {
+        BattleStatsCalculator(
+            pokemonTypes: pokemonListEntry.pokemontypes,
+            allTypes: types
+        )
+    }
+
+    var body: some View {
+        ScrollView {
+            if let details = viewModel.pokemonDetails {
+                VStack(spacing: 20) {
+                    ZStack{
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(width: .infinity)
+                            .aspectRatio(1, contentMode: .fit)
+                        PokemonImageView(spriteURL: details.spriteURL)
+                    }
+                    PokemonInfoHeaderView(
+                        id: pokemonListEntry.id,
+                        formattedGeneration: pokemonListEntry
+                            .formattedGeneration,
+                        pokemonName: pokemonListEntry.name
+                    )
+                    PokemonStatsView(
+                        typeString: pokemonListEntry.typeString,
+                        weight: details.weight,
+                        height: details.height
+                    )
+                    PokemonBattleStatsView(
+                        pokemonHP: details.statValue(named: "hp"),
+                        pokemonAttack: details.statValue(named: "attack"),
+                        pokemonDefense: details.statValue(named: "defense"),
+                        pokemonSpeed: details.statValue(named: "speed"),
+                        calculator: calculator
+                    )
+
+                    Spacer()
+                }
+                .padding()
+            }
+        }
+        .task {
+            await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
+        }
+        .navigationTitle(pokemonListEntry.name.capitalized)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
+    }
+}
