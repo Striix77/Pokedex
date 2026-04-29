@@ -1,5 +1,5 @@
 //
-//  PokemonViewModel.swift
+//  PokedexViewModel.swift
 //  Pokedex
 //
 //  Created by Freak on 25.02.2026.
@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class PokemonListViewModel {
+class PokedexViewModel {
     var pokemonList: Array<PokemonListEntry>
     var typeList: Array<PokemonType>
     var generationsList: Array<PokemonGeneration>

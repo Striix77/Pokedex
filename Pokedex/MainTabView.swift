@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var viewModel = PokemonListViewModel(
+    @State private var viewModel = PokedexViewModel(
         pokemonListDataUseCase: PokemonListDataUseCase(
             apiService: PokemonListAPIService(),
         ),

@@ -8,7 +8,7 @@ import SwiftUI
 
 struct FavoritesView: View {
     @Environment(FavoritesService.self) var favoritesService
-    var viewModel: PokemonListViewModel
+    var viewModel: PokedexViewModel
 
     var favoritePokemon: [PokemonListEntry] {
         viewModel.pokemonList.filter {

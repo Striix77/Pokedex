@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PokemonGridView: View {
-    @Bindable var viewModel: PokemonListViewModel
+    @Bindable var viewModel: PokedexViewModel
 
     var body: some View {
         NavigationStack {
@@ -96,7 +96,7 @@ struct PokemonGridView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = PokemonListViewModel(
+    @Previewable @State var viewModel = PokedexViewModel(
         pokemonListDataUseCase: PokemonListDataUseCase(
             apiService: PokemonListAPIService()
         ),
