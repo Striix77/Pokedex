@@ -12,7 +12,7 @@ struct PokedexView: View {
 
     var body: some View {
         NavigationStack {
-            PokedexListView(
+            PokemonListView(
                 allPokemon: viewModel.filteredPokemon,
                 searchText: $viewModel.filteringService.searchText
             )

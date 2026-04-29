@@ -5,20 +5,15 @@
 //  Created by Freak on 29.04.2026.
 //
 
+
 import SwiftUI
 
 struct PokemonGridView: View {
-    @Bindable var viewModel: PokedexViewModel
-
+    let allPokemon: [PokemonListEntry]
+    @Binding var searchText: String
     var body: some View {
-        NavigationStack {
-            pokemonList
-        }
-    }
-
-    private var pokemonList: some View {
         VStack {
-            List(viewModel.filteredPokemon) { pokemon in
+            List(allPokemon) { pokemon in
                 NavigationLink(value: pokemon) {
                     HStack {
                         Text("\(pokemon.id)")
@@ -31,80 +26,10 @@ struct PokemonGridView: View {
             }
             .navigationTitle("Pokédex")
             .searchable(
-                text: $viewModel.filteringService.searchText,
+                text: $searchText,
                 prompt: "Search Pokémon..."
             )
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    typeFilteringMenu
-                    generationFilteringMenu
-                }
-            }
 
-            .navigationDestination(for: PokemonListEntry.self) {
-                pokemonListEntry in
-                PokemonDetailsView(
-                    pokemonListEntry: pokemonListEntry,
-                    types: viewModel.typeList
-                )
-            }
-
-        }
-    }
-
-    private var typeFilteringMenu: some View {
-        Menu {
-            Picker(
-                "Type",
-                selection: $viewModel.filteringService.selectedTypeFilter
-            ) {
-                Text("All").tag("All")
-                ForEach(viewModel.typeList, id: \.self) { type in
-                    Text(type.name.capitalized).tag(
-                        type.name.capitalized
-                    )
-                }
-            }
-        } label: {
-            Label(
-                "Type filter",
-                systemImage: "line.3.horizontal.decrease.circle"
-            )
-        }
-    }
-
-    private var generationFilteringMenu: some View {
-        Menu {
-            Picker(
-                "Generation",
-                selection: $viewModel.filteringService.selectedGenerationFilter
-            ) {
-                Text("All").tag("All")
-                ForEach(viewModel.generationsList, id: \.self) { generation in
-                    Text(generation.formattedName).tag(
-                        generation.name
-                    )
-                }
-            }
-        } label: {
-            Label(
-                "Generation filter",
-                systemImage: "number.circle"
-            )
         }
     }
 }
-
-#Preview {
-    @Previewable @State var viewModel = PokedexViewModel(
-        pokemonListDataUseCase: PokemonListDataUseCase(
-            apiService: PokemonListAPIService()
-        ),
-        filteringService: FilteringService()
-    )
-    PokemonGridView(viewModel: viewModel)
-        .task{
-            await viewModel.fetchPokemon()
-        }
-}
-
