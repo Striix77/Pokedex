@@ -18,10 +18,20 @@ struct PokedexView: View {
 
     var body: some View {
         NavigationStack {
-            PokemonGridView(
-                allPokemon: viewModel.filteredPokemon,
-                typeList: viewModel.typeList
-            )
+            Group {
+                switch viewType {
+                case .grid:
+                    PokemonGridView(
+                        allPokemon: viewModel.filteredPokemon,
+                        typeList: viewModel.typeList
+                    )
+                case .list:
+                    PokemonListView(
+                        allPokemon: viewModel.filteredPokemon,
+                        typeList: viewModel.typeList
+                    )
+                }
+            }
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     viewTypeMenu
@@ -49,7 +59,8 @@ struct PokedexView: View {
         } label: {
             Label(
                 "View Type",
-                systemImage: viewType == .grid ? "square.grid.2x2" : "list.bullet"
+                systemImage: viewType == .grid
+                    ? "square.grid.2x2" : "list.bullet"
             )
         }
     }
@@ -105,10 +116,10 @@ struct PokedexView: View {
         filteringService: FilteringService()
     )
     PokedexView(viewModel: viewModel)
-        .task{
+        .task {
             await viewModel.fetchPokemon()
         }
         .environment(SoundManager())
         .environment(FavoritesService())
-    
+
 }
