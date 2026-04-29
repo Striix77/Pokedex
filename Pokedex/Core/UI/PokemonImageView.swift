@@ -10,16 +10,13 @@ import SDWebImageSwiftUI
 struct PokemonImageView: View {
     @State private var didFail = false
     let spriteURL: URL?
+    let width: CGFloat
     var body: some View {
         ZStack {
-            Circle()
-                .fill(Color.blue.opacity(0.1))
-                .frame(width: 260, height: 260)
-
             if didFail {
                 Image("missingno")
                     .resizable()
-                    .frame(width: 250, height: 250)
+                    .scaledToFit()
             } else {
                 //TODO: Replace with Kingfisher
                 WebImage(url: spriteURL)
@@ -38,7 +35,7 @@ struct PokemonImageView: View {
                     }
                     .resizable()
                     .indicator(.activity)
-                    .frame(width: 250, height: 250)
+                    .scaledToFit()
             }
 
         }
