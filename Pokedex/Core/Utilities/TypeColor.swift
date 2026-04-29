@@ -39,4 +39,21 @@ enum TypeColor: String {
         
         return type.color.opacity(scheme == .light ? 0.5 : 0.3)
     }
+    
+    static func getDoubleTypeColors(for pokemon: PokemonListEntry, scheme: ColorScheme) -> (Color?, Color?) {
+            let types = pokemon.pokemontypes
+            guard !types.isEmpty else {
+                return (nil, nil)
+            }
+
+            var colors: (Color?, Color?) {
+                let firstTypeColor = TypeColor.getSafeColor(for: types[0].type.name, scheme: scheme)
+                guard types.count > 1 else {
+                    return (firstTypeColor, nil)
+                }
+                let secondTypeColor = TypeColor.getSafeColor(for: types[1].type.name, scheme: scheme)
+                return (firstTypeColor, secondTypeColor)
+            }
+            return colors
+        }
 }
