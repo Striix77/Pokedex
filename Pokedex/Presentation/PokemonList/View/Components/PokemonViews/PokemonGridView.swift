@@ -12,8 +12,7 @@ struct PokemonGridView: PokemonViewProtocol {
     let typeList: [PokemonType]
 
     private let columns = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
+        GridItem(.adaptive(minimum: 150), spacing: 16),
     ]
     var body: some View {
         VStack {
@@ -57,12 +56,15 @@ struct PokemonGridCard: View {
                 PokemonImageView(spriteURL: spriteURL)
                     .aspectRatio(1, contentMode: .fit)
                     .frame(maxWidth: .infinity)
-                Text("\(id)")
+                Text("#\(id)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Text(name)
                     .bold()
             }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom)
+            .foregroundStyle(.white)
         }
         .frame(maxWidth: .infinity)
         .aspectRatio(1, contentMode: .fit)
