@@ -68,6 +68,7 @@ struct PokemonGridCard: View {
                 .foregroundStyle(.secondary)
             Text(name)
                 .bold()
+                .padding(.horizontal)
         }
         .frame(maxWidth: .infinity)
         .padding(.bottom)
