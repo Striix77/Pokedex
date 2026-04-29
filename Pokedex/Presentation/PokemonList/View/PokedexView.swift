@@ -12,27 +12,9 @@ struct PokedexView: View {
 
     var body: some View {
         NavigationStack {
-            pokemonList
-        }
-    }
-
-    private var pokemonList: some View {
-        VStack {
-            List(viewModel.filteredPokemon) { pokemon in
-                NavigationLink(value: pokemon) {
-                    HStack {
-                        Text("\(pokemon.id)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text(pokemon.name.capitalized)
-                            .bold()
-                    }
-                }
-            }
-            .navigationTitle("Pokédex")
-            .searchable(
-                text: $viewModel.filteringService.searchText,
-                prompt: "Search Pokémon..."
+            PokedexListView(
+                allPokemon: viewModel.filteredPokemon,
+                searchText: $viewModel.filteringService.searchText
             )
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
@@ -48,7 +30,6 @@ struct PokedexView: View {
                     types: viewModel.typeList
                 )
             }
-
         }
     }
 
@@ -94,6 +75,8 @@ struct PokedexView: View {
         }
     }
 }
+
+
 
 #Preview {
     @Previewable @State var viewModel = PokedexViewModel(
