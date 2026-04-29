@@ -28,7 +28,13 @@ struct PokemonDetailsView: View {
         ScrollView {
             if let details = viewModel.pokemonDetails {
                 VStack(spacing: 20) {
-                    PokemonImageView(spriteURL: details.spriteURL)
+                    ZStack{
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(width: .infinity)
+                            .aspectRatio(1, contentMode: .fit)
+                        PokemonImageView(spriteURL: details.spriteURL)
+                    }
                     PokemonInfoHeaderView(
                         id: pokemonListEntry.id,
                         formattedGeneration: pokemonListEntry
