@@ -44,10 +44,6 @@ struct PokemonListBackgroundView: View {
     }
 }
 
-#Preview {
-    @Previewable @State var viewModel = PokemonViewModel()
-    PokemonListView(viewModel: viewModel)
-}
 
 #Preview {
     PokemonListBackgroundView(stops: [
