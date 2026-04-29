@@ -52,22 +52,26 @@ struct PokemonGridCard: View {
             RoundedRectangle(cornerRadius: 8)
                 .fill(.ultraThinMaterial)
                 
-            VStack {
-                PokemonImageView(spriteURL: spriteURL)
-                    .aspectRatio(1, contentMode: .fit)
-                    .frame(maxWidth: .infinity)
-                Text("#\(id)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(name)
-                    .bold()
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.bottom)
-            .foregroundStyle(.white)
+            mainContent
         }
         .frame(maxWidth: .infinity)
         .aspectRatio(1, contentMode: .fit)
+    }
+    
+    private var mainContent: some View{
+        VStack {
+            PokemonImageView(spriteURL: spriteURL)
+                .aspectRatio(1, contentMode: .fit)
+                .frame(maxWidth: .infinity)
+            Text("#\(id)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text(name)
+                .bold()
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.bottom)
+        .foregroundStyle(.white)
     }
 }
 
