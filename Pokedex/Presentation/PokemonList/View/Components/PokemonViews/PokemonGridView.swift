@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PokemonGridView: PokemonViewProtocol {
     let allPokemon: [PokemonListEntry]
+    let typeList: [PokemonType]
     var body: some View {
         VStack {
             List(allPokemon) { pokemon in
@@ -23,6 +24,29 @@ struct PokemonGridView: PokemonViewProtocol {
                     }
                 }
             }
+            .navigationDestination(for: PokemonListEntry.self) {
+                pokemonListEntry in
+                PokemonDetailsView(
+                    pokemonListEntry: pokemonListEntry,
+                    types: typeList
+                )
+            }
         }
     }
+}
+
+#Preview {
+    @Previewable @State var viewModel = PokedexViewModel(
+        pokemonListDataUseCase: PokemonListDataUseCase(
+            apiService: PokemonListAPIService()
+        ),
+        filteringService: FilteringService()
+    )
+    NavigationStack{
+        PokemonGridView(allPokemon:viewModel.filteredPokemon, typeList: viewModel.typeList)
+            .task{
+                await viewModel.fetchPokemon()
+            }
+    }
+        
 }

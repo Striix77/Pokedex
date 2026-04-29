@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PokemonListView: PokemonViewProtocol {
     let allPokemon: [PokemonListEntry]
+    let typeList: [PokemonType]
     var body: some View {
         VStack {
             List(allPokemon) { pokemon in
@@ -22,6 +23,13 @@ struct PokemonListView: PokemonViewProtocol {
                             .bold()
                     }
                 }
+            }
+            .navigationDestination(for: PokemonListEntry.self) {
+                pokemonListEntry in
+                PokemonDetailsView(
+                    pokemonListEntry: pokemonListEntry,
+                    types: typeList
+                )
             }
         }
     }

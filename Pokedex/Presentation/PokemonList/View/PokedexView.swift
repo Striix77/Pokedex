@@ -13,7 +13,8 @@ struct PokedexView: View {
     var body: some View {
         NavigationStack {
             PokemonListView(
-                allPokemon: viewModel.filteredPokemon
+                allPokemon: viewModel.filteredPokemon,
+                typeList: viewModel.typeList
             )
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
@@ -22,19 +23,11 @@ struct PokedexView: View {
                 }
             }
             .navigationTitle("Pokédex")
-            .navigationDestination(for: PokemonListEntry.self) {
-                pokemonListEntry in
-                PokemonDetailsView(
-                    pokemonListEntry: pokemonListEntry,
-                    types: viewModel.typeList
-                )
-            }
+            .searchable(
+                text: $viewModel.filteringService.searchText,
+                prompt: "Search Pokémon..."
+            )
         }
-        .searchable(
-            text: $viewModel.filteringService.searchText,
-            prompt: "Search Pokémon..."
-        )
-        
     }
 
     private var typeFilteringMenu: some View {
@@ -80,8 +73,6 @@ struct PokedexView: View {
     }
 }
 
-
-
 #Preview {
     @Previewable @State var viewModel = PokedexViewModel(
         pokemonListDataUseCase: PokemonListDataUseCase(
@@ -90,4 +81,10 @@ struct PokedexView: View {
         filteringService: FilteringService()
     )
     PokedexView(viewModel: viewModel)
+        .task{
+            await viewModel.fetchPokemon()
+        }
+        .environment(SoundManager())
+        .environment(FavoritesService())
+    
 }

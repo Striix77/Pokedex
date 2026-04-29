@@ -10,4 +10,7 @@ protocol PokemonViewProtocol: View {
     var allPokemon: [PokemonListEntry] {
         get
     }
+    var typeList: [PokemonType] {
+        get
+    }
 }
