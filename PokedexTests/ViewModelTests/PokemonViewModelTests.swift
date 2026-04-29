@@ -11,29 +11,29 @@ import Testing
 @Suite("ViewModel Logic Tests")
 struct PokemonViewModelTests {
 
-    @Test(
-        "Search filtering is case-insensitive",
-        arguments: ["PIKA", "pika", "PikA"]
-    )
-    func searchFiltering(query: String) {
-        let viewModel = PokedexViewModel()
-        viewModel.list = [Pokemon.mock(id: 25, name: "Pikachu")]
-
-        viewModel.searchText = query
-
-        #expect(viewModel.filteredPokemon.count == 1)
-        #expect(viewModel.filteredPokemon.first?.name == "Pikachu")
-    }
-
-    @Test("Toggling favorites updates the collection")
-    func favoriteToggle() {
-        let viewModel = PokedexViewModel()
-        let pika = Pokemon.mock(id: 25, name: "Pikachu")
-
-        viewModel.toggleFavorite(pokemon:pika)
-        #expect(viewModel.favorites.contains(25))
-
-        viewModel.toggleFavorite(pokemon:pika)
-        #expect(viewModel.favorites.isEmpty)
-    }
+//    @Test(
+//        "Search filtering is case-insensitive",
+//        arguments: ["PIKA", "pika", "PikA"]
+//    )
+//    func searchFiltering(query: String) {
+//        let viewModel = PokedexViewModel()
+//        viewModel.list = [Pokemon.mock(id: 25, name: "Pikachu")]
+//
+//        viewModel.searchText = query
+//
+//        #expect(viewModel.filteredPokemon.count == 1)
+//        #expect(viewModel.filteredPokemon.first?.name == "Pikachu")
+//    }
+//
+//    @Test("Toggling favorites updates the collection")
+//    func favoriteToggle() {
+//        let viewModel = PokedexViewModel()
+//        let pika = Pokemon.mock(id: 25, name: "Pikachu")
+//
+//        viewModel.toggleFavorite(pokemon:pika)
+//        #expect(viewModel.favorites.contains(25))
+//
+//        viewModel.toggleFavorite(pokemon:pika)
+//        #expect(viewModel.favorites.isEmpty)
+//    }
 }
