@@ -5,24 +5,33 @@
 //  Created by Freak on 29.04.2026.
 //
 
-
 import SwiftUI
 
 struct PokemonGridView: PokemonViewProtocol {
     let allPokemon: [PokemonListEntry]
     let typeList: [PokemonType]
+
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+    ]
     var body: some View {
         VStack {
-            List(allPokemon) { pokemon in
-                NavigationLink(value: pokemon) {
-                    HStack {
-                        Text("\(pokemon.id)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text(pokemon.name.capitalized)
-                            .bold()
+            ScrollView {
+                LazyVGrid(columns: columns) {
+                    ForEach(allPokemon) { pokemon in
+                        NavigationLink(value: pokemon) {
+                            HStack {
+                                Text("\(pokemon.id)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text(pokemon.name.capitalized)
+                                    .bold()
+                            }
+                        }
                     }
                 }
+                .padding()
             }
             .navigationDestination(for: PokemonListEntry.self) {
                 pokemonListEntry in
@@ -42,11 +51,14 @@ struct PokemonGridView: PokemonViewProtocol {
         ),
         filteringService: FilteringService()
     )
-    NavigationStack{
-        PokemonGridView(allPokemon:viewModel.filteredPokemon, typeList: viewModel.typeList)
-            .task{
-                await viewModel.fetchPokemon()
-            }
+    NavigationStack {
+        PokemonGridView(
+            allPokemon: viewModel.filteredPokemon,
+            typeList: viewModel.typeList
+        )
+        .task {
+            await viewModel.fetchPokemon()
+        }
     }
-        
+
 }
