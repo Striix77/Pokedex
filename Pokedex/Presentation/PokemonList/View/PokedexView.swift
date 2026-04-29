@@ -1,5 +1,5 @@
 //
-//  PokemonListView.swift
+//  PokedexView.swift
 //  Pokedex
 //
 //  Created by Freak on 25.02.2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PokemonListView: View {
+struct PokedexView: View {
     @Bindable var viewModel: PokemonListViewModel
 
     var body: some View {
@@ -102,5 +102,5 @@ struct PokemonListView: View {
         ),
         filteringService: FilteringService()
     )
-    PokemonListView(viewModel: viewModel)
+    PokedexView(viewModel: viewModel)
 }

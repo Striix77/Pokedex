@@ -24,7 +24,7 @@ struct MainTabView: View {
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
             } else {
-                PokemonListView(viewModel: viewModel)
+                PokedexView(viewModel: viewModel)
                     .tabItem {
                         Label("All Pokémon", systemImage: "bolt.fill")
                     }
