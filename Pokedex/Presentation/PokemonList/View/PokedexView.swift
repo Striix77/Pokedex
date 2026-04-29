@@ -7,8 +7,14 @@
 
 import SwiftUI
 
+enum ViewType: String {
+    case list
+    case grid
+}
+
 struct PokedexView: View {
     @Bindable var viewModel: PokedexViewModel
+    @State var viewType = ViewType.grid
 
     var body: some View {
         NavigationStack {
@@ -18,6 +24,7 @@ struct PokedexView: View {
             )
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                    viewTypeMenu
                     typeFilteringMenu
                     generationFilteringMenu
                 }
@@ -26,6 +33,23 @@ struct PokedexView: View {
             .searchable(
                 text: $viewModel.filteringService.searchText,
                 prompt: "Search Pokémon..."
+            )
+        }
+    }
+
+    private var viewTypeMenu: some View {
+        Menu {
+            Picker(
+                "View Type",
+                selection: $viewType
+            ) {
+                Text("Grid").tag(ViewType.grid)
+                Text("List").tag(ViewType.list)
+            }
+        } label: {
+            Label(
+                "View Type",
+                systemImage: viewType == .grid ? "square.grid.2x2" : "list.bullet"
             )
         }
     }
