@@ -12,6 +12,9 @@ struct PokemonQueries {
               pokemon {
                 id
                 name
+                pokemonsprites {
+                    sprites
+                  }
                 pokemonspecy {
                   generation {
                     name
