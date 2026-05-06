@@ -16,13 +16,11 @@ struct Pokemon: Codable, Identifiable, Hashable {
     let height: Int
     let pokemonsprites: [SpriteEntry]
     let pokemonstats: [StatEntry]
-    let pokemoncries: [PokemonCries]
 
     var spriteURL: URL? {
         guard let spritesJson = pokemonsprites.first?.sprites else {
             return nil
         }
-        print(pokemonsprites)
         if let artworkString = spritesJson.other?.officialArtwork?.front_default
         {
             return URL(string: artworkString)
@@ -52,5 +50,27 @@ struct Pokemon: Codable, Identifiable, Hashable {
             with: ""
         )
         return "Gen \(raw.uppercased())"
+    }
+}
+
+extension Pokemon {
+    static func mock(id: Int, name: String) -> Pokemon {
+        return Pokemon(
+            id: id,
+            name: name,
+            pokemontypes: [
+                PokemonTypes(type: PokemonType(id: 11, name: "water", typeEfficaciesByTargetTypeId: nil))
+            ],
+            pokemonspecy: nil,
+            weight:0,
+            height:0,
+            pokemonsprites: [],
+            pokemonstats: [
+                StatEntry(
+                    base_stat: 50,
+                    stat: StatDetails(name: "hp")
+                )
+            ],
+        )
     }
 }

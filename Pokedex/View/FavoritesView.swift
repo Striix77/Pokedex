@@ -14,25 +14,44 @@ struct FavoritesView: View {
         viewModel.list.filter { viewModel.favorites.contains($0.id) }
     }
 
+    private let stops = [
+        Gradient.Stop(
+            color: Color.favoritesViewBackground1,
+            location: 0.0
+        ),
+        Gradient.Stop(
+            color: Color.favoritesViewBackground2,
+            location: 0.4
+        ),
+        Gradient.Stop(
+            color: Color.favoritesViewBackground2,
+            location: 1.0
+        ),
+    ]
+
     var body: some View {
         NavigationStack {
-            Group {
-                if favoritePokemon.isEmpty {
-                    contentUnavailable
-                } else {
-                    pokemonList
-                }
-            }
-            .navigationTitle("My Favorites")
-            .navigationDestination(for: Pokemon.self) { pokemon in
-                PokemonDetailsView(
-                    pokemon: pokemon,
-                    types: viewModel.typeList,
-                    isFavorite: viewModel.favorites.contains(pokemon.id),
-                    onFavoriteToggle: {
-                        viewModel.toggleFavorite(pokemon: pokemon)
+
+            ZStack {
+                PokemonListBackgroundView(stops: stops)
+                Group {
+                    if favoritePokemon.isEmpty {
+                        contentUnavailable
+                    } else {
+                        pokemonList
                     }
-                )
+                }
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationDestination(for: Pokemon.self) { pokemon in
+                    PokemonDetailsView(
+                        pokemon: pokemon,
+                        types: viewModel.typeList,
+                        isFavorite: viewModel.favorites.contains(pokemon.id),
+                        onFavoriteToggle: {
+                            viewModel.toggleFavorite(pokemon: pokemon)
+                        }
+                    )
+                }
             }
         }
     }
@@ -59,5 +78,11 @@ struct FavoritesView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
     }
+}
+
+#Preview {
+    @Previewable @State var viewModel = PokemonViewModel()
+    FavoritesView(viewModel: viewModel)
 }
