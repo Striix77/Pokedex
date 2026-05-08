@@ -10,9 +10,27 @@ import SwiftUI
 struct PokemonListView: View {
     @Bindable var viewModel: PokemonListViewModel
 
+    private let stops = [
+        Gradient.Stop(
+            color: Color.listViewBackground1,
+            location: 0.0
+        ),
+        Gradient.Stop(
+            color: Color.listViewBackground2,
+            location: 0.4
+        ),
+        Gradient.Stop(
+            color: Color.listViewBackground2,
+            location: 1.0
+        ),
+    ]
+
     var body: some View {
         NavigationStack {
-            pokemonList
+            ZStack {
+                PokemonListBackgroundView(stops: stops)
+                pokemonList
+            }
         }
     }
 
@@ -21,15 +39,42 @@ struct PokemonListView: View {
             List(viewModel.filteredPokemon) { pokemon in
                 NavigationLink(value: pokemon) {
                     HStack {
-                        Text("\(pokemon.id)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        ZStack {
+                            Text("#\(pokemon.id)")
+                                .font(.caption)
+                                .fontDesign(.monospaced)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(.ultraThinMaterial.opacity(0.5))
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule().stroke(
+                                        .white.opacity(0.2),
+                                        lineWidth: 1
+                                    )
+                                )
+
+                        }
+
                         Text(pokemon.name.capitalized)
                             .bold()
+
                     }
+                    .frame(alignment: .leading)
+                    .font(.title3)
+                    .padding(8)
                 }
+                .listRowBackground(
+                    RoundedRectangle(cornerRadius: 8).fill(
+                        .ultraThinMaterial.opacity(0.5)
+                    )
+                )
+                .listRowSeparator(.hidden)
+
             }
+            .listRowSpacing(8)
             .navigationTitle("Pokédex")
+            .navigationBarTitleDisplayMode(.inline)
             .searchable(
                 text: $viewModel.filteringService.searchText,
                 prompt: "Search Pokémon..."
@@ -40,7 +85,7 @@ struct PokemonListView: View {
                     generationFilteringMenu
                 }
             }
-
+            .scrollContentBackground(.hidden)
             .navigationDestination(for: PokemonListEntry.self) {
                 pokemonListEntry in
                 PokemonDetailsView(
@@ -92,6 +137,7 @@ struct PokemonListView: View {
                 systemImage: "number.circle"
             )
         }
+        .scrollContentBackground(.hidden)
     }
 }
 
