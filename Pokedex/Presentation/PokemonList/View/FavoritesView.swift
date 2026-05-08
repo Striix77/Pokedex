@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    @Environment(FavoritesService.self) var favoritesService
+    @Environment(\.favoritesService) var favoritesService
     var viewModel: PokedexViewModel
 
     var favoritePokemon: [PokemonListEntry] {
