@@ -20,7 +20,11 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             if viewModel.isLoading && viewModel.pokemonList.isEmpty {
-                ProgressView("Catching 'em all...")
+                VStack{
+                    PokeballProgressView()
+                        .frame(width: 40)
+                    Text("Catching 'em all...")
+                }
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
             } else {
