@@ -9,13 +9,9 @@ import Foundation
 class PokemonDetailsAPIService: PokemonDetailsAPIProtocol{
     func fetchPokemonDetails(id: Int, url: URL) async throws -> [PokemonDetailsEntry] {
         let query = PokemonQueries.getPokemonDetailsQuery(for: id)
-
         let body: [String: Any] = ["query": query]
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        let request = RequestBuilder.buildRequest(to: url, for: query, with: body)
 
         let (data, _) = try await URLSession.shared.data(for: request)
         print("got the list data")
