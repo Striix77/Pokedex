@@ -31,7 +31,7 @@ struct PokemonDetailsView: View {
                     ZStack{
                         Circle()
                             .fill(.ultraThinMaterial)
-                            .frame(width: .infinity)
+                            .frame(maxWidth: .infinity)
                             .aspectRatio(1, contentMode: .fit)
                         PokemonImageView(spriteURL: details.spriteURL)
                     }
