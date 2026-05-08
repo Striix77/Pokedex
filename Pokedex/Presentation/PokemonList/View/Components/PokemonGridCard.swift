@@ -7,7 +7,6 @@
 import SwiftUI
 
 struct PokemonGridCard: View {
-    @State private var ringStopLocation:CGFloat = 0
     @Environment(\.colorScheme) var colorScheme
     let pokemon: PokemonListEntry
 
