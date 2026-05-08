@@ -77,5 +77,6 @@ struct FavoritesView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
     }
 }
