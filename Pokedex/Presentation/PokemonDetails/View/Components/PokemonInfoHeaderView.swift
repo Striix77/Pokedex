@@ -5,7 +5,6 @@
 //  Created by Freak on 02.04.2026.
 //
 import SwiftUI
-import AVFoundation
 
 struct PokemonInfoHeaderView: View {
     @Environment(SoundManager.self) var soundManager
