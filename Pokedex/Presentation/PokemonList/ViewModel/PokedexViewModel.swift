@@ -4,18 +4,18 @@
 //
 //  Created by Freak on 25.02.2026.
 //
-
 import Foundation
 
 @Observable
+@MainActor
 class PokedexViewModel {
-    var pokemonList: Array<PokemonListEntry>
-    var typeList: Array<PokemonType>
-    var generationsList: Array<PokemonGeneration>
-    
+    var pokemonList: [PokemonListEntry]
+    var typeList: [PokemonType]
+    var generationsList: [PokemonGeneration]
+
     var isLoading = false
     var errorMessage: String? = nil
-    
+
     var filteringService: FilteringServiceProtocol
     var filteredPokemon: [PokemonListEntry] {
         filteringService.filterPokemon(pokemonList: pokemonList)
@@ -29,7 +29,7 @@ class PokedexViewModel {
     ) {
         self.pokemonListDataUseCase = pokemonListDataUseCase
         self.filteringService = filteringService
-        
+
         pokemonList = [PokemonListEntry]()
         typeList = [PokemonType]()
         generationsList = [PokemonGeneration]()
@@ -39,12 +39,11 @@ class PokedexViewModel {
         isLoading = true
         errorMessage = await ErrorHandler.handleFetching {
             let data = try await pokemonListDataUseCase.execute()
-            
-            await MainActor.run {
-                self.pokemonList = data.list
-                self.typeList = data.types
-                self.generationsList = data.generations
-            }
+
+            self.pokemonList = data.list
+            self.typeList = data.types
+            self.generationsList = data.generations
+
         }
         isLoading = false
     }
