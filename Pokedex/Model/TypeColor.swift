@@ -35,7 +35,7 @@ enum TypeColor: String {
         }
     }
 
-    static func getDoubleTypeColors(for pokemon: Pokemon) -> (Color?, Color?) {
+    static func getDoubleTypeColors(for pokemon: PokemonListEntry) -> (Color?, Color?) {
         let types = pokemon.pokemontypes
         guard !types.isEmpty else {
             return (nil, nil)

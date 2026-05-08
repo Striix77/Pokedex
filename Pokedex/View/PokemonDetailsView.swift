@@ -8,60 +8,62 @@
 import SwiftUI
 
 struct PokemonDetailsView: View {
+    @State private var viewModel = PokemonDetailsViewModel()
+    
     @Environment(\.colorScheme) private var colorScheme
-    let pokemon: Pokemon
+    let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
-    let isFavorite: Bool
-    let onFavoriteToggle: () -> Void
-
+    
     private var calculator: BattleStatsCalculator {
         BattleStatsCalculator(
-            pokemonTypes: pokemon.pokemontypes,
+            pokemonTypes: pokemonListEntry.pokemontypes,
             allTypes: types
         )
     }
 
     private var typeColors: (Color?, Color?) {
-        TypeColor.getDoubleTypeColors(for: pokemon)
+        TypeColor.getDoubleTypeColors(for: pokemonListEntry)
     }
 
     var body: some View {
         ZStack {
             backgroundGradient
             ScrollView {
-                VStack(spacing: 20) {
-                    PokemonImageView(spriteURL: pokemon.spriteURL)
-                    PokemonInfoHeaderView(
-                        id: pokemon.id,
-                        onFavoriteToggle: onFavoriteToggle,
-                        isFavorite: isFavorite,
-                        formattedGeneration: pokemon.formattedGeneration,
-                        pokemonName: pokemon.name
-                    )
-                    PokemonStatsView(
-                        typeString: pokemon.typeString,
-                        weight: pokemon.weight,
-                        height: pokemon.height
-                    )
-                    PokemonBattleStatsView(
-                        pokemonHP: pokemon.statValue(named: "hp"),
-                        pokemonAttack: pokemon.statValue(named: "attack"),
-                        pokemonDefense: pokemon.statValue(named: "defense"),
-                        pokemonSpeed: pokemon.statValue(named: "speed"),
-                        calculator: calculator
-                    )
-
-                    Spacer()
+                if let details = viewModel.pokemonDetails {
+                    VStack(spacing: 20) {
+                        PokemonImageView(spriteURL: details.spriteURL)
+                        PokemonInfoHeaderView(
+                            id: pokemonListEntry.id,
+                            formattedGeneration: pokemonListEntry.formattedGeneration,
+                            pokemonName: pokemonListEntry.name
+                        )
+                        PokemonStatsView(
+                            typeString: pokemonListEntry.typeString,
+                            weight: details.weight,
+                            height: details.height
+                        )
+                        PokemonBattleStatsView(
+                            pokemonHP: details.statValue(named: "hp"),
+                            pokemonAttack: details.statValue(named: "attack"),
+                            pokemonDefense: details.statValue(named: "defense"),
+                            pokemonSpeed: details.statValue(named: "speed"),
+                            calculator: calculator
+                        )
+                        
+                        Spacer()
+                    }
+                    .padding()
                 }
-                .padding()
             }
-            .navigationTitle(pokemon.name.capitalized)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar(.hidden, for: .tabBar)
         }
+        .task{
+            await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
+        }
+        .navigationTitle(pokemonListEntry.name.capitalized)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
     }
-
-    private var backgroundGradient: some View {
+        private var backgroundGradient: some View {
         var backgroundColors: (Color, Color)
         let colorSchemeBackground = colorScheme == .light ? Color.white : Color.black
         backgroundColors.0 = typeColors.0 ?? colorSchemeBackground
@@ -77,18 +79,3 @@ struct PokemonDetailsView: View {
     }
 }
 
-#Preview {
-    PokemonDetailsView(
-        pokemon: Pokemon.mock(id: 7, name: "Squirtle"),
-        types: [
-            PokemonType(
-                id: 11,
-                name: "water",
-                typeEfficaciesByTargetTypeId: nil
-            )
-        ],
-        isFavorite: false,
-        onFavoriteToggle: {}
-         
-    )
-}

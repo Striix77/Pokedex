@@ -4,16 +4,18 @@
 //
 //  Created by Freak on 26.02.2026.
 //
-
 import SwiftUI
 
 struct FavoritesView: View {
-    var viewModel: PokemonViewModel
+    @Environment(FavoritesService.self) var favoritesService
+    var viewModel: PokemonListViewModel
 
-    var favoritePokemon: [Pokemon] {
-        viewModel.list.filter { viewModel.favorites.contains($0.id) }
+    var favoritePokemon: [PokemonListEntry] {
+        viewModel.pokemonList.filter {
+            favoritesService.favoriteIDs.contains($0.id)
+        }
     }
-
+    
     private let stops = [
         Gradient.Stop(
             color: Color.favoritesViewBackground1,
@@ -29,10 +31,10 @@ struct FavoritesView: View {
         ),
     ]
 
+
     var body: some View {
         NavigationStack {
-
-            ZStack {
+            ZStack{
                 PokemonListBackgroundView(stops: stops)
                 Group {
                     if favoritePokemon.isEmpty {
@@ -41,15 +43,12 @@ struct FavoritesView: View {
                         pokemonList
                     }
                 }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationDestination(for: Pokemon.self) { pokemon in
+                .navigationTitle("My Favorites")
+                .navigationDestination(for: PokemonListEntry.self) {
+                    pokemonListEntry in
                     PokemonDetailsView(
-                        pokemon: pokemon,
-                        types: viewModel.typeList,
-                        isFavorite: viewModel.favorites.contains(pokemon.id),
-                        onFavoriteToggle: {
-                            viewModel.toggleFavorite(pokemon: pokemon)
-                        }
+                        pokemonListEntry: pokemonListEntry,
+                        types: viewModel.typeList
                     )
                 }
             }
@@ -80,9 +79,4 @@ struct FavoritesView: View {
         }
         .scrollContentBackground(.hidden)
     }
-}
-
-#Preview {
-    @Previewable @State var viewModel = PokemonViewModel()
-    FavoritesView(viewModel: viewModel)
 }

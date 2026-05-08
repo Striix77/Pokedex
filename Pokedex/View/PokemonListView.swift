@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct PokemonListView: View {
-    @State var viewModel: PokemonViewModel
+    @Bindable var viewModel: PokemonListViewModel
+
     private let stops = [
         Gradient.Stop(
             color: Color.listViewBackground1,
@@ -28,36 +29,8 @@ struct PokemonListView: View {
         NavigationStack {
             ZStack {
                 PokemonListBackgroundView(stops: stops)
-                if viewModel.isLoading && viewModel.list.isEmpty {
-                    ProgressView("Catching 'em all...")
-                } else if viewModel.errorMessage != nil {
-                    contentUnavailable
-                } else {
-                    pokemonList
-                }
+                pokemonList
             }
-        }
-        .task {
-            await viewModel.fetchPokemon()
-        }
-    }
-
-    private var contentUnavailable: some View {
-        ContentUnavailableView {
-            Label(
-                viewModel.errorMessage ?? "Connection Lost",
-                systemImage: "wifi.exclamationmark"
-            )
-        } description: {
-            Text(
-                "Looks like Team Rocket is at it again...\nMaybe try again later!"
-            )
-        } actions: {
-            Button("Try Again") {
-                Task { await viewModel.fetchPokemon() }
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
         }
     }
 
@@ -103,7 +76,7 @@ struct PokemonListView: View {
             .navigationTitle("Pokédex")
             .navigationBarTitleDisplayMode(.inline)
             .searchable(
-                text: $viewModel.searchText,
+                text: $viewModel.filteringService.searchText,
                 prompt: "Search Pokémon..."
             )
             .toolbar {
@@ -113,14 +86,11 @@ struct PokemonListView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .navigationDestination(for: Pokemon.self) { pokemon in
+            .navigationDestination(for: PokemonListEntry.self) {
+                pokemonListEntry in
                 PokemonDetailsView(
-                    pokemon: pokemon,
-                    types: viewModel.typeList,
-                    isFavorite: viewModel.favorites.contains(pokemon.id),
-                    onFavoriteToggle: {
-                        viewModel.toggleFavorite(pokemon: pokemon)
-                    }
+                    pokemonListEntry: pokemonListEntry,
+                    types: viewModel.typeList
                 )
             }
 
@@ -129,7 +99,10 @@ struct PokemonListView: View {
 
     private var typeFilteringMenu: some View {
         Menu {
-            Picker("Type", selection: $viewModel.selectedTypeFilter) {
+            Picker(
+                "Type",
+                selection: $viewModel.filteringService.selectedTypeFilter
+            ) {
                 Text("All").tag("All")
                 ForEach(viewModel.typeList, id: \.self) { type in
                     Text(type.name.capitalized).tag(
@@ -147,8 +120,10 @@ struct PokemonListView: View {
 
     private var generationFilteringMenu: some View {
         Menu {
-            Picker("Generation", selection: $viewModel.selectedGenerationFilter)
-            {
+            Picker(
+                "Generation",
+                selection: $viewModel.filteringService.selectedGenerationFilter
+            ) {
                 Text("All").tag("All")
                 ForEach(viewModel.generationsList, id: \.self) { generation in
                     Text(generation.formattedName).tag(
@@ -167,6 +142,9 @@ struct PokemonListView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = PokemonViewModel()
+    @Previewable @State var viewModel = PokemonListViewModel(
+        apiService: PokemonAPIService(),
+        filteringService: FilteringService()
+    )
     PokemonListView(viewModel: viewModel)
 }
