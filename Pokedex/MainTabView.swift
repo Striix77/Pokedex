@@ -38,7 +38,7 @@ struct MainTabView: View {
             await viewModel.fetchPokemon()
         }
         .environment(soundManager)
-        .environment(favoritesService)
+        .environment(\.favoritesService, favoritesService)
     }
 
     private var contentUnavailable: some View {

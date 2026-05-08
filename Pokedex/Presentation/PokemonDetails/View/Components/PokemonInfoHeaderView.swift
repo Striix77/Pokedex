@@ -8,7 +8,7 @@ import SwiftUI
 
 struct PokemonInfoHeaderView: View {
     @Environment(SoundManager.self) var soundManager
-    @Environment(FavoritesService.self) var favoritesManager
+    @Environment(\.favoritesService) var favoritesManager
     @State private var canPlay = false
 
     let id: Int
