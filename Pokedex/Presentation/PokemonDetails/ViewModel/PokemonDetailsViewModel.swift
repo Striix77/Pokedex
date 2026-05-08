@@ -7,17 +7,18 @@
 import Foundation
 
 @Observable
+@MainActor
 class PokemonDetailsViewModel {
     var isLoading = true
     var errorMessage: String? = nil
-    private var pokemonDetailsArray: Array<PokemonDetailsEntry>
+    private var pokemonDetailsArray: [PokemonDetailsEntry]
     private let pokemonDetailsUseCase: PokemonDetailsUseCaseProtocol
 
     var pokemonDetails: PokemonDetailsEntry? {
         pokemonDetailsArray.first
     }
-    
-    init(pokemonDetailsUseCase: PokemonDetailsUseCaseProtocol){
+
+    init(pokemonDetailsUseCase: PokemonDetailsUseCaseProtocol) {
         self.pokemonDetailsArray = [PokemonDetailsEntry]()
         self.pokemonDetailsUseCase = pokemonDetailsUseCase
     }
@@ -27,10 +28,8 @@ class PokemonDetailsViewModel {
 
         errorMessage = await ErrorHandler.handleFetching {
             let detailsArray = try await pokemonDetailsUseCase.execute(id: id)
-            
-            await MainActor.run{
-                self.pokemonDetailsArray = detailsArray
-            }
+
+            self.pokemonDetailsArray = detailsArray
         }
         isLoading = false
     }
