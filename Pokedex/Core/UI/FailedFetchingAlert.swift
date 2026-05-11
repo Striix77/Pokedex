@@ -9,6 +9,7 @@ import SwiftUI
 struct FailedFetchingAlert: ViewModifier {
     @Binding var showAlert: Bool
     var fetchAction: () async -> Void
+    var confirmAction: () -> Void
     let errorMessage: String?
     
     func body(content: Content) -> some View {
@@ -22,6 +23,7 @@ struct FailedFetchingAlert: ViewModifier {
                     Text("Retry")
                 }
                 Button(role: .cancel) {
+                    confirmAction()
                 } label: {
                     Text("OK")
                 }
