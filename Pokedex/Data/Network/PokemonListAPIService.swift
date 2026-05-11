@@ -13,12 +13,10 @@ class PokemonListAPIService: PokemonListAPIProtocol {
         let body: [String: Any] = ["query": query]
         let request = RequestBuilder.buildRequest(to: url, for: query, with: body)
         let (data, _) = try await URLSession.shared.data(for: request)
-        print("got the list data")
         let decoded = try JSONDecoder().decode(
             ListResponse.self,
             from: data
         )
-        print("decoded list data")
 
         return decoded.data.pokemon
 
@@ -31,12 +29,10 @@ class PokemonListAPIService: PokemonListAPIProtocol {
         let (typeData, _) = try await URLSession.shared.data(
             for: typeRequest
         )
-        print("got the types")
         let decodedTypes = try JSONDecoder().decode(
             TypeResponse.self,
             from: typeData
         )
-        print("decoded types")
 
         return decodedTypes.data.type
 
@@ -49,12 +45,10 @@ class PokemonListAPIService: PokemonListAPIProtocol {
         let (generationsData, _) = try await URLSession.shared.data(
             for: generationsRequest
         )
-        print("got the generations")
         let decodedGenerations = try JSONDecoder().decode(
             GenerationResponse.self,
             from: generationsData
         )
-        print("decoded generations")
 
         return decodedGenerations.data.generation
     }

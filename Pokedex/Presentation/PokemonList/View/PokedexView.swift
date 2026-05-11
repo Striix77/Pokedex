@@ -12,38 +12,58 @@ enum ViewType: String {
     case grid
 }
 
+private let stops = [
+        Gradient.Stop(
+            color: Color.listViewBackground1,
+            location: 0.0
+        ),
+        Gradient.Stop(
+            color: Color.listViewBackground2,
+            location: 0.4
+        ),
+        Gradient.Stop(
+            color: Color.listViewBackground2,
+            location: 1.0
+        ),
+    ]
+
 struct PokedexView: View {
     @Bindable var viewModel: PokedexViewModel
     @State var viewType = ViewType.grid
 
     var body: some View {
         NavigationStack {
-            Group {
-                switch viewType {
-                case .grid:
-                    PokemonGridView(
-                        allPokemon: viewModel.filteredPokemon,
-                        typeList: viewModel.typeList
-                    )
-                case .list:
-                    PokemonListView(
-                        allPokemon: viewModel.filteredPokemon,
-                        typeList: viewModel.typeList
-                    )
+            ZStack{
+                PokemonListBackgroundView(stops: stops)
+                Group {
+                    switch viewType {
+                    case .grid:
+                        PokemonGridView(
+                            allPokemon: viewModel.filteredPokemon,
+                            typeList: viewModel.typeList
+                        )
+                    case .list:
+                        PokemonListView(
+                            allPokemon: viewModel.filteredPokemon,
+                            typeList: viewModel.typeList
+                        )
+                    }
                 }
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    viewTypeMenu
-                    typeFilteringMenu
-                    generationFilteringMenu
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarTrailing) {
+                        viewTypeMenu
+                        typeFilteringMenu
+                        generationFilteringMenu
+                    }
                 }
+                .listRowSpacing(8)
+                .navigationTitle("Pokédex")
+                .navigationBarTitleDisplayMode(.inline)
+                .searchable(
+                    text: $viewModel.filteringService.searchText,
+                    prompt: "Search Pokémon..."
+                )
             }
-            .navigationTitle("Pokédex")
-            .searchable(
-                text: $viewModel.filteringService.searchText,
-                prompt: "Search Pokémon..."
-            )
         }
     }
 
