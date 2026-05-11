@@ -33,13 +33,15 @@ struct PokemonListBackgroundView: View {
                     .opacity(0.3)
                     .rotationEffect(Angle(degrees: -30))
 
+
             }
             .frame(
                 maxWidth: .infinity,
                 maxHeight: .infinity,
                 alignment: .topTrailing
             )
-            .offset(x: 50)
+            .offset(x: 50, y:100)
+            .ignoresSafeArea()
         }
     }
 }

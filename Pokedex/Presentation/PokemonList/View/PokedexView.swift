@@ -58,7 +58,6 @@ struct PokedexView: View {
                 }
                 .listRowSpacing(8)
                 .navigationTitle("Pokédex")
-                .navigationBarTitleDisplayMode(.inline)
                 .searchable(
                     text: $viewModel.filteringService.searchText,
                     prompt: "Search Pokémon..."
