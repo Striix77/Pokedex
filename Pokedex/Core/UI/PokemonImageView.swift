@@ -9,7 +9,10 @@ import SDWebImageSwiftUI
 
 struct PokemonImageView: View {
     @State private var didFail = false
+    @State private var isLoading = true
     let spriteURL: URL?
+    
+    private let fadeDuration = 0.5
     
     var body: some View {
         ZStack {
@@ -24,6 +27,7 @@ struct PokemonImageView: View {
                         print(
                             "Loaded from: \(cacheType == .disk ? "Disk" : "Network")"
                         )
+                        isLoading = false
                     }
                     .onFailure { error in
                         print(
@@ -32,6 +36,7 @@ struct PokemonImageView: View {
                         DispatchQueue.main.async {
                             self.didFail = true
                         }
+                        isLoading = false
                     }
                     .resizable()
                     .indicator{ isAnimating, progress in
@@ -40,11 +45,13 @@ struct PokemonImageView: View {
                                 PokeballProgressView()
                                     .frame(width: geo.size.width/2)
                                     .position(x: geo.size.width / 2, y: geo.size.height / 2)
+                                    .transition(.opacity)
                             }
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .scaledToFit()
+                    .animation(.easeInOut(duration: fadeDuration), value: isLoading)
                 
             }
         }
@@ -53,5 +60,5 @@ struct PokemonImageView: View {
 }
 
 #Preview {
-    PokemonImageView(spriteURL: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png"))
+    PokemonImageView(spriteURL: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png"))
 }
