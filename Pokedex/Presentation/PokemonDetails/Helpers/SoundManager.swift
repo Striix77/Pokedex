@@ -13,7 +13,7 @@ class SoundManager {
     private var canPlayCache: [String:Bool] = [:]
     
     init() {
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+        try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
         try? AVAudioSession.sharedInstance().setActive(true)
     }
 
