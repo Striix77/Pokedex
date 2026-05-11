@@ -12,3 +12,19 @@ extension EnvironmentValues {
         set { self[FavoritesServiceKey.self] = newValue }
     }
 }
+
+extension View {
+    func fetchingAlert(
+        showAlert: Binding<Bool>,
+        fetchAction: @escaping () async -> Void,
+        errorMessage: String?
+    ) -> some View {
+        modifier(
+            FailedFetchingAlert(
+                showAlert: showAlert,
+                fetchAction: fetchAction,
+                errorMessage: errorMessage
+            )
+        )
+    }
+}
