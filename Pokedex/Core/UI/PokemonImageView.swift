@@ -1,3 +1,4 @@
+import SDWebImageSwiftUI
 //
 //  PokemonImageView.swift
 //  Pokedex
@@ -5,15 +6,14 @@
 //  Created by Freak on 02.04.2026.
 //
 import SwiftUI
-import SDWebImageSwiftUI
 
 struct PokemonImageView: View {
     @State private var didFail = false
     @State private var isLoading = true
     let spriteURL: URL?
-    
+
     private let fadeDuration = 0.5
-    
+
     var body: some View {
         ZStack {
             if didFail {
@@ -27,7 +27,9 @@ struct PokemonImageView: View {
                         print(
                             "Loaded from: \(cacheType == .disk ? "Disk" : "Network")"
                         )
-                        isLoading = false
+                        DispatchQueue.main.async {
+                            self.isLoading = false
+                        }
                     }
                     .onFailure { error in
                         print(
@@ -35,24 +37,30 @@ struct PokemonImageView: View {
                         )
                         DispatchQueue.main.async {
                             self.didFail = true
+                            self.isLoading = false
                         }
-                        isLoading = false
                     }
                     .resizable()
-                    .indicator{ isAnimating, progress in
-                        ZStack{
-                            GeometryReader{ geo in
+                    .indicator { isAnimating, progress in
+                        ZStack {
+                            GeometryReader { geo in
                                 PokeballProgressView()
-                                    .frame(width: geo.size.width/2)
-                                    .position(x: geo.size.width / 2, y: geo.size.height / 2)
+                                    .frame(width: geo.size.width / 2)
+                                    .position(
+                                        x: geo.size.width / 2,
+                                        y: geo.size.height / 2
+                                    )
                                     .transition(.opacity)
                             }
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .scaledToFit()
-                    .animation(.easeInOut(duration: fadeDuration), value: isLoading)
-                
+                    .animation(
+                        .easeInOut(duration: fadeDuration),
+                        value: isLoading
+                    )
+
             }
         }
         .padding(.top, 30)
@@ -60,5 +68,10 @@ struct PokemonImageView: View {
 }
 
 #Preview {
-    PokemonImageView(spriteURL: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png"))
+    PokemonImageView(
+        spriteURL: URL(
+            string:
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png"
+        )
+    )
 }
