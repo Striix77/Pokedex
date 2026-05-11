@@ -34,11 +34,24 @@ struct PokemonImageView: View {
                         }
                     }
                     .resizable()
-                    .indicator(.activity)
+                    .indicator{ isAnimating, progress in
+                        ZStack{
+                            GeometryReader{ geo in
+                                PokeballProgressView()
+                                    .frame(width: geo.size.width/2)
+                                    .position(x: geo.size.width / 2, y: geo.size.height / 2)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
                     .scaledToFit()
+                
             }
-
         }
         .padding(.top, 30)
     }
+}
+
+#Preview {
+    PokemonImageView(spriteURL: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png"))
 }
