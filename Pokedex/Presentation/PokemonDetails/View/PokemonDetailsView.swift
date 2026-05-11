@@ -14,6 +14,7 @@ struct PokemonDetailsView: View {
         )
     )
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dismiss) private var dismiss
     let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
 
@@ -39,7 +40,6 @@ struct PokemonDetailsView: View {
                     .progressViewStyle(.circular)
                     .scaleEffect(2)
             } else {
-
                 ScrollView {
                     if let details = viewModel.pokemonDetails {
                         VStack(spacing: 20) {
@@ -87,6 +87,14 @@ struct PokemonDetailsView: View {
         .navigationTitle(pokemonListEntry.name.capitalized)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
+        .fetchingAlert(
+            showAlert: $viewModel.showAlert,
+            fetchAction: {
+                await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
+            },
+            confirmAction: { dismiss() },
+            errorMessage: viewModel.errorMessage
+        )
     }
     private var backgroundGradient: some View {
         var backgroundColors: (Color, Color)
