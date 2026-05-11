@@ -25,45 +25,59 @@ struct PokemonDetailsView: View {
     }
 
     private var typeColors: (Color?, Color?) {
-        TypeColor.getDoubleTypeColors(for: pokemonListEntry, scheme: colorScheme)
+        TypeColor.getDoubleTypeColors(
+            for: pokemonListEntry,
+            scheme: colorScheme
+        )
     }
 
     var body: some View {
         ZStack {
             backgroundGradient
-        ScrollView {
-            if let details = viewModel.pokemonDetails {
-                VStack(spacing: 20) {
-                    ZStack{
-                        Circle()
-                            .fill(.ultraThinMaterial)
-                            .frame(maxWidth: .infinity)
-                            .aspectRatio(1, contentMode: .fit)
-                        PokemonImageView(spriteURL: details.spriteURL)
-                    }
-                    PokemonInfoHeaderView(
-                        id: pokemonListEntry.id,
-                        formattedGeneration: pokemonListEntry
-                            .formattedGeneration,
-                        pokemonName: pokemonListEntry.name
-                    )
-                    PokemonStatsView(
-                        typeString: pokemonListEntry.typeString,
-                        weight: details.weight,
-                        height: details.height
-                    )
-                    PokemonBattleStatsView(
-                        pokemonHP: details.statValue(named: "hp"),
-                        pokemonAttack: details.statValue(named: "attack"),
-                        pokemonDefense: details.statValue(named: "defense"),
-                        pokemonSpeed: details.statValue(named: "speed"),
-                        calculator: calculator
-                    )
+            if viewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .scaleEffect(2)
+            } else {
 
-                    Spacer()
+                ScrollView {
+                    if let details = viewModel.pokemonDetails {
+                        VStack(spacing: 20) {
+                            ZStack {
+                                Circle()
+                                    .fill(.ultraThinMaterial)
+                                    .frame(maxWidth: .infinity)
+                                    .aspectRatio(1, contentMode: .fit)
+                                PokemonImageView(spriteURL: details.spriteURL)
+                            }
+                            PokemonInfoHeaderView(
+                                id: pokemonListEntry.id,
+                                formattedGeneration: pokemonListEntry
+                                    .formattedGeneration,
+                                pokemonName: pokemonListEntry.name
+                            )
+                            PokemonStatsView(
+                                typeString: pokemonListEntry.typeString,
+                                weight: details.weight,
+                                height: details.height
+                            )
+                            PokemonBattleStatsView(
+                                pokemonHP: details.statValue(named: "hp"),
+                                pokemonAttack: details.statValue(
+                                    named: "attack"
+                                ),
+                                pokemonDefense: details.statValue(
+                                    named: "defense"
+                                ),
+                                pokemonSpeed: details.statValue(named: "speed"),
+                                calculator: calculator
+                            )
 
+                            Spacer()
+
+                        }
+                        .padding()
                     }
-                    .padding()
                 }
             }
         }
@@ -74,9 +88,10 @@ struct PokemonDetailsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
     }
-        private var backgroundGradient: some View {
+    private var backgroundGradient: some View {
         var backgroundColors: (Color, Color)
-        let colorSchemeBackground = colorScheme == .light ? Color.white : Color.black
+        let colorSchemeBackground =
+            colorScheme == .light ? Color.white : Color.black
         backgroundColors.0 = typeColors.0 ?? colorSchemeBackground
         backgroundColors.1 = typeColors.1 ?? colorSchemeBackground
         return LinearGradient(
@@ -89,4 +104,3 @@ struct PokemonDetailsView: View {
         .ignoresSafeArea()
     }
 }
-
