@@ -36,49 +36,9 @@ struct PokemonDetailsView: View {
         ZStack {
             backgroundGradient
             if viewModel.isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .scaleEffect(2)
+                progressView
             } else {
-                ScrollView {
-                    if let details = viewModel.pokemonDetails {
-                        VStack(spacing: 20) {
-                            ZStack {
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                                    .frame(maxWidth: .infinity)
-                                    .aspectRatio(1, contentMode: .fit)
-                                PokemonImageView(spriteURL: details.spriteURL)
-                            }
-                            PokemonInfoHeaderView(
-                                id: pokemonListEntry.id,
-                                formattedGeneration: pokemonListEntry
-                                    .formattedGeneration,
-                                pokemonName: pokemonListEntry.name
-                            )
-                            PokemonStatsView(
-                                typeString: pokemonListEntry.typeString,
-                                weight: details.weight,
-                                height: details.height
-                            )
-                            PokemonBattleStatsView(
-                                pokemonHP: details.statValue(named: "hp"),
-                                pokemonAttack: details.statValue(
-                                    named: "attack"
-                                ),
-                                pokemonDefense: details.statValue(
-                                    named: "defense"
-                                ),
-                                pokemonSpeed: details.statValue(named: "speed"),
-                                calculator: calculator
-                            )
-
-                            Spacer()
-
-                        }
-                        .padding()
-                    }
-                }
+                mainContent
             }
         }
         .task {
@@ -96,6 +56,52 @@ struct PokemonDetailsView: View {
             errorMessage: viewModel.errorMessage
         )
     }
+    
+    private var progressView: some View {
+        ProgressView()
+            .progressViewStyle(.circular)
+            .scaleEffect(2)
+    }
+    
+    private var mainContent: some View {
+        ScrollView {
+            if let details = viewModel.pokemonDetails {
+                VStack(spacing: 20) {
+                    ZStack {
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(maxWidth: .infinity)
+                            .aspectRatio(1, contentMode: .fit)
+                        PokemonImageView(spriteURL: details.spriteURL)
+                    }
+                    PokemonInfoHeaderView(
+                        id: pokemonListEntry.id,
+                        formattedGeneration: pokemonListEntry
+                            .formattedGeneration,
+                        pokemonName: pokemonListEntry.name
+                    )
+                    PokemonStatsView(
+                        typeString: pokemonListEntry.typeString,
+                        weight: details.weight,
+                        height: details.height
+                    )
+                    PokemonBattleStatsView(
+                        pokemonHP: details.statValue(named: "hp"),
+                        pokemonAttack: details.statValue(
+                            named: "attack"
+                        ),
+                        pokemonDefense: details.statValue(
+                            named: "defense"
+                        ),
+                        pokemonSpeed: details.statValue(named: "speed"),
+                        calculator: calculator
+                    )
+                }
+                .padding()
+            }
+        }
+    }
+    
     private var backgroundGradient: some View {
         var backgroundColors: (Color, Color)
         let colorSchemeBackground =
