@@ -44,7 +44,7 @@ struct PokemonImageView: View {
                     .indicator { isAnimating, progress in
                         ZStack {
                             GeometryReader { geo in
-                                PokeballProgressView()
+                                PokeballProgressView(isLoading: .constant(true))
                                     .frame(width: geo.size.width / 2)
                                     .position(
                                         x: geo.size.width / 2,

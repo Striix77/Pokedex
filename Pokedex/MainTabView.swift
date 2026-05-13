@@ -17,27 +17,35 @@ struct MainTabView: View {
     @State private var soundManager = SoundManager()
     @State private var favoritesService = FavoritesService()
 
+    @State private var showContent = false
+
     var body: some View {
-        TabView {
-            if viewModel.isLoading && viewModel.pokemonList.isEmpty {
-                VStack{
-                    PokeballProgressView()
-                        .frame(width: 40)
+        ZStack{
+            if !showContent {
+                VStack {
+                    PokeballProgressView(isLoading: $viewModel.isLoading) {
+                        showContent = true
+                    }
+                    .frame(width: 40)
                     Text("Catching 'em all...")
                 }
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
             } else {
-                PokedexView(viewModel: viewModel)
-                    .tabItem {
-                        Label("All Pokémon", systemImage: "bolt.fill")
-                    }
-                FavoritesView(viewModel: viewModel)
-                    .tabItem {
-                        Label("Favorites", systemImage: "heart.fill")
-                    }
+                TabView {
+                    PokedexView(viewModel: viewModel)
+                        .tabItem {
+                            Label("All Pokémon", systemImage: "bolt.fill")
+                        }
+                    FavoritesView(viewModel: viewModel)
+                        .tabItem {
+                            Label("Favorites", systemImage: "heart.fill")
+                        }
+                }
+                .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 1), value: showContent)
         .task {
             await viewModel.fetchPokemon()
         }
@@ -58,6 +66,7 @@ struct MainTabView: View {
         } actions: {
             Button("Try Again") {
                 Task { await viewModel.fetchPokemon() }
+                showContent = false
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)

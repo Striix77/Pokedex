@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PokeballProgressView: View {
     @Binding var isLoading: Bool
+    var onFinished: (() -> Void)? = nil
 
     @State private var isAnimating: Bool = false
     @State private var yOffset: CGFloat = 0
