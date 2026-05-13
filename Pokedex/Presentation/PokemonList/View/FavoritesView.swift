@@ -8,30 +8,49 @@ import SwiftUI
 
 struct FavoritesView: View {
     @Environment(\.favoritesService) var favoritesService
-    var viewModel: PokemonListViewModel
+    var viewModel: PokedexViewModel
 
     var favoritePokemon: [PokemonListEntry] {
         viewModel.pokemonList.filter {
             favoritesService.favoriteIDs.contains($0.id)
         }
     }
+    
+    private let stops = [
+        Gradient.Stop(
+            color: Color.favoritesViewBackground1,
+            location: 0.0
+        ),
+        Gradient.Stop(
+            color: Color.favoritesViewBackground2,
+            location: 0.4
+        ),
+        Gradient.Stop(
+            color: Color.favoritesViewBackground2,
+            location: 1.0
+        ),
+    ]
+
 
     var body: some View {
         NavigationStack {
-            Group {
-                if favoritePokemon.isEmpty {
-                    contentUnavailable
-                } else {
-                    pokemonList
+            ZStack{
+                PokemonListBackgroundView(stops: stops)
+                Group {
+                    if favoritePokemon.isEmpty {
+                        contentUnavailable
+                    } else {
+                        pokemonList
+                    }
                 }
-            }
-            .navigationTitle("My Favorites")
-            .navigationDestination(for: PokemonListEntry.self) {
-                pokemonListEntry in
-                PokemonDetailsView(
-                    pokemonListEntry: pokemonListEntry,
-                    types: viewModel.typeList
-                )
+                .navigationTitle("My Favorites")
+                .navigationDestination(for: PokemonListEntry.self) {
+                    pokemonListEntry in
+                    PokemonDetailsView(
+                        pokemonListEntry: pokemonListEntry,
+                        types: viewModel.typeList
+                    )
+                }
             }
         }
     }
@@ -58,5 +77,6 @@ struct FavoritesView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
     }
 }

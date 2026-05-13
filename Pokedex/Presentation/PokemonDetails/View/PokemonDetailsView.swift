@@ -13,7 +13,7 @@ struct PokemonDetailsView: View {
             apiService: PokemonDetailsAPIService()
         )
     )
-
+    @Environment(\.colorScheme) private var colorScheme
     let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
 
@@ -24,11 +24,23 @@ struct PokemonDetailsView: View {
         )
     }
 
+    private var typeColors: (Color?, Color?) {
+        TypeColor.getDoubleTypeColors(for: pokemonListEntry, scheme: colorScheme)
+    }
+
     var body: some View {
+        ZStack {
+            backgroundGradient
         ScrollView {
             if let details = viewModel.pokemonDetails {
                 VStack(spacing: 20) {
-                    PokemonImageView(spriteURL: details.spriteURL)
+                    ZStack{
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(maxWidth: .infinity)
+                            .aspectRatio(1, contentMode: .fit)
+                        PokemonImageView(spriteURL: details.spriteURL)
+                    }
                     PokemonInfoHeaderView(
                         id: pokemonListEntry.id,
                         formattedGeneration: pokemonListEntry
@@ -49,8 +61,10 @@ struct PokemonDetailsView: View {
                     )
 
                     Spacer()
+
+                    }
+                    .padding()
                 }
-                .padding()
             }
         }
         .task {
@@ -60,4 +74,19 @@ struct PokemonDetailsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
     }
+        private var backgroundGradient: some View {
+        var backgroundColors: (Color, Color)
+        let colorSchemeBackground = colorScheme == .light ? Color.white : Color.black
+        backgroundColors.0 = typeColors.0 ?? colorSchemeBackground
+        backgroundColors.1 = typeColors.1 ?? colorSchemeBackground
+        return LinearGradient(
+            colors: [
+                backgroundColors.0, backgroundColors.1,
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+    }
 }
+

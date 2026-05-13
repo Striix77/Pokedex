@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var viewModel = PokemonListViewModel(
+    @State private var viewModel = PokedexViewModel(
         pokemonListDataUseCase: PokemonListDataUseCase(
             apiService: PokemonListAPIService(),
         ),
@@ -24,7 +24,7 @@ struct MainTabView: View {
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
             } else {
-                PokemonListView(viewModel: viewModel)
+                PokedexView(viewModel: viewModel)
                     .tabItem {
                         Label("All Pokémon", systemImage: "bolt.fill")
                     }

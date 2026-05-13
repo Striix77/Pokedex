@@ -11,6 +11,20 @@ struct PokemonListEntry: Codable, Identifiable, Hashable {
     let name: String
     let pokemontypes: [PokemonTypes]
     let pokemonspecy: SpeciesEntry?
+    let pokemonsprites: [SpriteEntry]
+    
+    var spriteURL: URL? {
+        guard let spritesJson = pokemonsprites.first?.sprites else {
+            return nil
+        }
+        print(pokemonsprites)
+        if let artworkString = spritesJson.other?.officialArtwork?.front_default
+        {
+            return URL(string: artworkString)
+        }
+
+        return nil
+    }
 
     var typeString: String {
         pokemontypes.map { $0.type.name.capitalized }
