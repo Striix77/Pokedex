@@ -10,6 +10,7 @@ import SwiftUI
 struct PokemonImageView: View {
     @State private var didFail = false
     @State private var isLoading = true
+    @State private var showContent = false
     let spriteURL: URL?
 
     private let fadeDuration = 0.5
@@ -21,6 +22,22 @@ struct PokemonImageView: View {
                     .resizable()
                     .scaledToFit()
             } else {
+                if !showContent {
+                    ZStack {
+                        GeometryReader { geo in
+                            PokeballProgressView(isLoading: $isLoading) {
+                                showContent = true
+                            }
+                            .frame(width: geo.size.width / 2)
+                            .position(
+                                x: geo.size.width / 2,
+                                y: geo.size.height / 2
+                            )
+                            .transition(.opacity)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
                 //TODO: Replace with Kingfisher
                 WebImage(url: spriteURL)
                     .onSuccess { image, data, cacheType in
@@ -41,27 +58,10 @@ struct PokemonImageView: View {
                         }
                     }
                     .resizable()
-                    .indicator { isAnimating, progress in
-                        ZStack {
-                            GeometryReader { geo in
-                                PokeballProgressView(isLoading: .constant(true))
-                                    .frame(width: geo.size.width / 2)
-                                    .position(
-                                        x: geo.size.width / 2,
-                                        y: geo.size.height / 2
-                                    )
-                                    .transition(.opacity)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
                     .scaledToFit()
-                    .animation(
-                        .easeInOut(duration: fadeDuration),
-                        value: isLoading
-                    )
-
+                    .opacity(showContent ? 1 : 0)
             }
+
         }
         .padding(.top, 30)
     }

@@ -20,7 +20,7 @@ struct PokeballProgressView: View {
     private let yOffsetAmount: CGFloat = 300
     private let rotations = 1
     private let duration: Double = 3
-    private let endRotationDuration: Double = 0.5
+    private let endRotationDuration: Double = 0.7
     private let completionAnimationDuration: Double = 0.3
 
     private var rotationAmount: CGFloat {
@@ -32,12 +32,25 @@ struct PokeballProgressView: View {
         .opacity(opacity)
         .rotationEffect(.degrees(rotation))
         .onAppear {
-            withAnimation(
-                .linear(duration: duration).repeatForever(
-                    autoreverses: false
-                )
-            ) {
-                rotation = rotationAmount
+            if isLoading {
+                withAnimation(
+                    .linear(duration: duration).repeatForever(
+                        autoreverses: false
+                    )
+                ) {
+                    rotation = rotationAmount
+                }
+            }
+            else {
+                withAnimation(.easeOut(duration: endRotationDuration)) {
+                    rotation = endRotationAmount
+                } completion: {
+                    withAnimation(.easeIn(duration: completionAnimationDuration)) {
+                        yOffset = yOffsetAmount
+                        opacity = 0
+                        onFinished?()
+                    }
+                }
             }
         }
         .onChange(of: isLoading) { _, newValue in
