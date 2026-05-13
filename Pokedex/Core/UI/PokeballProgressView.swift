@@ -29,43 +29,20 @@ struct PokeballProgressView: View {
 
     var body: some View {
         pokeball
-        .opacity(opacity)
-        .rotationEffect(.degrees(rotation))
-        .onAppear {
-            if isLoading {
-                withAnimation(
-                    .linear(duration: duration).repeatForever(
-                        autoreverses: false
-                    )
-                ) {
-                    rotation = rotationAmount
+            .opacity(opacity)
+            .rotationEffect(.degrees(rotation))
+            .onAppear {
+                if isLoading {
+                    playRotationAnimation()
+                } else {
+                    playPokeballOpenAnimation()
                 }
             }
-            else {
-                withAnimation(.easeOut(duration: endRotationDuration)) {
-                    rotation = endRotationAmount
-                } completion: {
-                    withAnimation(.easeIn(duration: completionAnimationDuration)) {
-                        yOffset = yOffsetAmount
-                        opacity = 0
-                        onFinished?()
-                    }
+            .onChange(of: isLoading) { _, newValue in
+                if !newValue {
+                    playPokeballOpenAnimation()
                 }
             }
-        }
-        .onChange(of: isLoading) { _, newValue in
-            if !newValue {
-                withAnimation(.easeOut(duration: endRotationDuration)) {
-                    rotation = endRotationAmount
-                } completion: {
-                    withAnimation(.easeIn(duration: completionAnimationDuration)) {
-                        yOffset = yOffsetAmount
-                        opacity = 0
-                        onFinished?()
-                    }
-                }
-            }
-        }
     }
 
     private var pokeball: some View {
@@ -78,6 +55,28 @@ struct PokeballProgressView: View {
                 .resizable()
                 .scaledToFit()
                 .offset(x: 0, y: yOffset)
+        }
+    }
+
+    private func playRotationAnimation() {
+        withAnimation(
+            .linear(duration: duration).repeatForever(
+                autoreverses: false
+            )
+        ) {
+            rotation = rotationAmount
+        }
+    }
+
+    private func playPokeballOpenAnimation() {
+        withAnimation(.easeOut(duration: endRotationDuration)) {
+            rotation = endRotationAmount
+        } completion: {
+            withAnimation(.easeIn(duration: completionAnimationDuration)) {
+                yOffset = yOffsetAmount
+                opacity = 0
+                onFinished?()
+            }
         }
     }
 }
