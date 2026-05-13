@@ -7,29 +7,29 @@
 
 import SwiftUI
 
-enum ViewType: String {
-    case list
-    case grid
-}
-
-private let stops = [
-        Gradient.Stop(
-            color: Color.listViewBackground1,
-            location: 0.0
-        ),
-        Gradient.Stop(
-            color: Color.listViewBackground2,
-            location: 0.4
-        ),
-        Gradient.Stop(
-            color: Color.listViewBackground2,
-            location: 1.0
-        ),
-    ]
-
 struct PokedexView: View {
     @Bindable var viewModel: PokedexViewModel
     @State var viewType = ViewType.grid
+    
+    enum ViewType: String {
+        case list
+        case grid
+    }
+
+    private let stops = [
+            Gradient.Stop(
+                color: Color.listViewBackground1,
+                location: 0.0
+            ),
+            Gradient.Stop(
+                color: Color.listViewBackground2,
+                location: 0.4
+            ),
+            Gradient.Stop(
+                color: Color.listViewBackground2,
+                location: 1.0
+            ),
+        ]
 
     var body: some View {
         NavigationStack {
