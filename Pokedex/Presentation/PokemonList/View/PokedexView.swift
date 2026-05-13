@@ -31,6 +31,17 @@ struct PokedexView: View {
     @Bindable var viewModel: PokedexViewModel
     @State var viewType = ViewType.grid
 
+    private let navigationTitle = "Pokédex"
+    private let searchPrompt = "Search Pokémon..."
+    private let viewTypeLabel = "View Type"
+    private let gridLabel = "Grid"
+    private let listLabel = "List"
+    private let typeFilterLabel = "Type filter"
+    private let typePickerLabel = "Type"
+    private let allLabel = "All"
+    private let generationFilterLabel = "Generation filter"
+    private let generationPickerLabel = "Generation"
+
     var body: some View {
         NavigationStack {
             ZStack{
@@ -57,11 +68,11 @@ struct PokedexView: View {
                     }
                 }
                 .listRowSpacing(8)
-                .navigationTitle("Pokédex")
+                .navigationTitle(navigationTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .searchable(
                     text: $viewModel.filteringService.searchText,
-                    prompt: "Search Pokémon..."
+                    prompt: searchPrompt
                 )
             }
         }
@@ -70,15 +81,15 @@ struct PokedexView: View {
     private var viewTypeMenu: some View {
         Menu {
             Picker(
-                "View Type",
+                viewTypeLabel,
                 selection: $viewType
             ) {
-                Text("Grid").tag(ViewType.grid)
-                Text("List").tag(ViewType.list)
+                Text(gridLabel).tag(ViewType.grid)
+                Text(listLabel).tag(ViewType.list)
             }
         } label: {
             Label(
-                "View Type",
+                viewTypeLabel,
                 systemImage: viewType == .grid
                     ? "square.grid.2x2" : "list.bullet"
             )
@@ -88,10 +99,10 @@ struct PokedexView: View {
     private var typeFilteringMenu: some View {
         Menu {
             Picker(
-                "Type",
+                typePickerLabel,
                 selection: $viewModel.filteringService.selectedTypeFilter
             ) {
-                Text("All").tag("All")
+                Text(allLabel).tag(allLabel)
                 ForEach(viewModel.typeList, id: \.self) { type in
                     Text(type.name.capitalized).tag(
                         type.name.capitalized
@@ -100,7 +111,7 @@ struct PokedexView: View {
             }
         } label: {
             Label(
-                "Type filter",
+                typeFilterLabel,
                 systemImage: "line.3.horizontal.decrease.circle"
             )
         }
@@ -109,10 +120,10 @@ struct PokedexView: View {
     private var generationFilteringMenu: some View {
         Menu {
             Picker(
-                "Generation",
+                generationPickerLabel,
                 selection: $viewModel.filteringService.selectedGenerationFilter
             ) {
-                Text("All").tag("All")
+                Text(allLabel).tag(allLabel)
                 ForEach(viewModel.generationsList, id: \.self) { generation in
                     Text(generation.formattedName).tag(
                         generation.name
@@ -121,7 +132,7 @@ struct PokedexView: View {
             }
         } label: {
             Label(
-                "Generation filter",
+                generationFilterLabel,
                 systemImage: "number.circle"
             )
         }

@@ -12,25 +12,30 @@ struct FailedFetchingAlert: ViewModifier {
     var confirmAction: () -> Void
     let errorMessage: String?
     
+    private let alertLabel = "Error"
+    private let retryLabel = "Retry"
+    private let okLabel = "Ok"
+    private let fallbackErrorMessage = "Ok"
+    
     func body(content: Content) -> some View {
         content
-            .alert("Error", isPresented: $showAlert) {
+            .alert(alertLabel, isPresented: $showAlert) {
                 Button(role: .confirm) {
                     Task {
                         await fetchAction()
                     }
                 } label: {
-                    Text("Retry")
+                    Text(retryLabel)
                 }
                 Button(role: .cancel) {
                     confirmAction()
                 } label: {
-                    Text("OK")
+                    Text(okLabel)
                 }
             } message: {
                 Text(
                     errorMessage
-                        ?? "An unexpected error occured. Please try again later!"
+                        ?? fallbackErrorMessage
                 )
             }
     }

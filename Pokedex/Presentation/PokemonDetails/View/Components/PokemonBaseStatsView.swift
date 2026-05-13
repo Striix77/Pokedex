@@ -12,30 +12,36 @@ struct PokemonBaseStatsView: View {
     let pokemonAttack: Int
     let pokemonDefense: Int
     let pokemonSpeed: Int
-    
+
+    private let title = "Base Stats"
+    private let hpLabel = "HP"
+    private let attackLabel = "ATK"
+    private let defenseLabel = "DEF"
+    private let speedLabel = "SPD"
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Base Stats")
+            Text(title)
                 .font(.title2)
                 .bold()
 
             StatBarView(
-                label: "HP",
+                label: hpLabel,
                 value: pokemonHP,
                 color: .green
             )
             StatBarView(
-                label: "ATK",
+                label: attackLabel,
                 value: pokemonAttack,
                 color: .red
             )
             StatBarView(
-                label: "DEF",
+                label: defenseLabel,
                 value: pokemonDefense,
                 color: .blue
             )
             StatBarView(
-                label: "SPD",
+                label: speedLabel,
                 value: pokemonSpeed,
                 color: .orange
             )
