@@ -18,6 +18,7 @@ struct PokemonBattleStatsView: View {
     private let weakEfficacyTitle = "Weak against"
     private let strongEfficacyValue = 50
     private let weakEfficacyValue = 200
+    private let noEfficacyLabel = "Other stats to be discovered..."
 
     private var strengthEfficacies: [TypeStrength]? {
         calculator.calculateEfficacies(
@@ -64,7 +65,7 @@ struct PokemonBattleStatsView: View {
     }
     
     private var noEfficacySubview: some View {
-        Text("Other stats to be discovered...")
+        Text(noEfficacyLabel)
             .font(.title3)
             .bold()
             .padding(.horizontal, 8)

@@ -16,6 +16,10 @@ struct FavoritesView: View {
         }
     }
     
+    private let navTitle = "My Favorites"
+    private let contentUnavailableLabel = "No Favorites Yet"
+    private let contentUnavailableDescription = "Go to the list and tap the heart on your favorite Pokémon!"
+    
     private let stops = [
         Gradient.Stop(
             color: Color.favoritesViewBackground1,
@@ -43,7 +47,7 @@ struct FavoritesView: View {
                         pokemonList
                     }
                 }
-                .navigationTitle("My Favorites")
+                .navigationTitle(navTitle)
                 .navigationDestination(for: PokemonListEntry.self) {
                     pokemonListEntry in
                     PokemonDetailsView(
@@ -57,10 +61,10 @@ struct FavoritesView: View {
 
     private var contentUnavailable: some View {
         ContentUnavailableView(
-            "No Favorites Yet",
+            contentUnavailableLabel,
             systemImage: "heart.slash",
             description: Text(
-                "Go to the list and tap the heart on your favorite Pokémon!"
+                contentUnavailableDescription
             )
         )
     }

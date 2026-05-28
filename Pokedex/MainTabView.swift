@@ -17,20 +17,30 @@ struct MainTabView: View {
     @State private var soundManager = SoundManager()
     @State private var favoritesService = FavoritesService()
 
+    private let loadingLabel = "Catching 'em all..."
+    private let allPokemonLabel = "All Pokémon"
+    private let allPokemonIcon = "bolt.fill"
+    private let favoritesLabel = "Favorites"
+    private let favoritesIcon = "heart.fill"
+    private let errorIcon = "wifi.exclamationmark"
+    private let fallbackErrorMessage = "Connection Lost"
+    private let errorDescription = "Looks like Team Rocket is at it again...\nMaybe try again later!"
+    private let tryAgainLabel = "Try Again"
+
     var body: some View {
         TabView {
             if viewModel.isLoading && viewModel.pokemonList.isEmpty {
-                ProgressView("Catching 'em all...")
+                ProgressView(loadingLabel)
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
             } else {
                 PokedexView(viewModel: viewModel)
                     .tabItem {
-                        Label("All Pokémon", systemImage: "bolt.fill")
+                        Label(allPokemonLabel, systemImage: allPokemonIcon)
                     }
                 FavoritesView(viewModel: viewModel)
                     .tabItem {
-                        Label("Favorites", systemImage: "heart.fill")
+                        Label(favoritesLabel, systemImage: favoritesIcon)
                     }
             }
         }
@@ -44,15 +54,13 @@ struct MainTabView: View {
     private var contentUnavailable: some View {
         ContentUnavailableView {
             Label(
-                viewModel.errorMessage ?? "Connection Lost",
-                systemImage: "wifi.exclamationmark"
+                viewModel.errorMessage ?? fallbackErrorMessage,
+                systemImage: errorIcon
             )
         } description: {
-            Text(
-                "Looks like Team Rocket is at it again...\nMaybe try again later!"
-            )
+            Text(errorDescription)
         } actions: {
-            Button("Try Again") {
+            Button(tryAgainLabel) {
                 Task { await viewModel.fetchPokemon() }
             }
             .buttonStyle(.borderedProminent)
