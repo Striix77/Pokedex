@@ -1,10 +1,10 @@
-import SDWebImageSwiftUI
 //
 //  PokemonImageView.swift
 //  Pokedex
 //
 //  Created by Freak on 02.04.2026.
 //
+import SDWebImageSwiftUI
 import SwiftUI
 
 struct PokemonImageView: View {
@@ -18,52 +18,63 @@ struct PokemonImageView: View {
     var body: some View {
         ZStack {
             if didFail {
-                Image("missingno")
-                    .resizable()
-                    .scaledToFit()
+                placeholder
             } else {
                 if !showContent {
-                    ZStack {
-                        GeometryReader { geo in
-                            PokeballProgressView(isLoading: $isLoading) {
-                                showContent = true
-                            }
-                            .frame(width: geo.size.width / 2)
-                            .position(
-                                x: geo.size.width / 2,
-                                y: geo.size.height / 2
-                            )
-                            .transition(.opacity)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    progressView
                 }
-                //TODO: Replace with Kingfisher
-                WebImage(url: spriteURL)
-                    .onSuccess { image, data, cacheType in
-                        print(
-                            "Loaded from: \(cacheType == .disk ? "Disk" : "Network")"
-                        )
-                        DispatchQueue.main.async {
-                            self.isLoading = false
-                        }
-                    }
-                    .onFailure { error in
-                        print(
-                            "Image failed to load: \(error.localizedDescription)"
-                        )
-                        DispatchQueue.main.async {
-                            self.didFail = true
-                            self.isLoading = false
-                        }
-                    }
-                    .resizable()
-                    .scaledToFit()
-                    .opacity(showContent ? 1 : 0)
+                pokemonImage
             }
-
         }
         .padding(.top, 30)
+    }
+
+    private var placeholder: some View {
+        Image("missingno")
+            .resizable()
+            .scaledToFit()
+    }
+
+    private var progressView: some View {
+        ZStack {
+            GeometryReader { geo in
+                PokeballProgressView(isLoading: $isLoading) {
+                    showContent = true
+                }
+                .frame(width: geo.size.width / 2)
+                .position(
+                    x: geo.size.width / 2,
+                    y: geo.size.height / 2
+                )
+                .transition(.opacity)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var pokemonImage: some View {
+        // TODO: Replace with Kingfisher
+        WebImage(url: spriteURL)
+            .onSuccess { _, _, cacheType in
+                print(
+                    "Loaded from: \(cacheType == .disk ? "Disk" : "Network")"
+                )
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
+            }
+            .onFailure { error in
+                print(
+                    "Image failed to load: \(error.localizedDescription)"
+                )
+                DispatchQueue.main.async {
+                    self.didFail = true
+                    self.isLoading = false
+                }
+            }
+            .resizable()
+            .scaledToFit()
+            .opacity(showContent ? 1 : 0)
     }
 }
 
@@ -71,7 +82,7 @@ struct PokemonImageView: View {
     PokemonImageView(
         spriteURL: URL(
             string:
-                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png"
+            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png"
         )
     )
 }
