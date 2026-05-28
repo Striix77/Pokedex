@@ -5,7 +5,7 @@
 //  Created by Freak on 02.04.2026.
 //
 import SwiftUI
-import SDWebImageSwiftUI
+import Kingfisher
 
 struct PokemonImageView: View {
     @State private var didFail = false
@@ -18,23 +18,22 @@ struct PokemonImageView: View {
                     .resizable()
                     .scaledToFit()
             } else {
-                //TODO: Replace with Kingfisher
-                WebImage(url: spriteURL)
-                    .onSuccess { image, data, cacheType in
+                KFImage(spriteURL)
+                    .onSuccess { result in
                         print(
-                            "Loaded from: \(cacheType == .disk ? "Disk" : "Network")"
+                            "Loaded from: \(result.cacheType == .disk ? "Disk" : "Network")"
                         )
                     }
                     .onFailure { error in
                         print(
                             "Image failed to load: \(error.localizedDescription)"
                         )
-                        DispatchQueue.main.async {
-                            self.didFail = true
-                        }
+                        self.didFail = true
                     }
                     .resizable()
-                    .indicator(.activity)
+                    .placeholder{
+                        ProgressView()
+                    }
                     .scaledToFit()
             }
 
