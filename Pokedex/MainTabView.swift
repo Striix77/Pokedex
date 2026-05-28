@@ -10,7 +10,7 @@ import SwiftUI
 struct MainTabView: View {
     @State private var viewModel = PokedexViewModel(
         pokemonListDataUseCase: PokemonListDataUseCase(
-            apiService: PokemonListAPIService(),
+            apiService: PokemonListAPIService()
         ),
         filteringService: FilteringService()
     )
@@ -20,29 +20,13 @@ struct MainTabView: View {
     @State private var showContent = false
 
     var body: some View {
-        ZStack{
+        ZStack {
             if !showContent {
-                VStack {
-                    PokeballProgressView(isLoading: $viewModel.isLoading) {
-                        showContent = true
-                    }
-                    .frame(width: 40)
-                    Text("Catching 'em all...")
-                }
+                progressView
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
             } else {
-                TabView {
-                    PokedexView(viewModel: viewModel)
-                        .tabItem {
-                            Label("All Pokémon", systemImage: "bolt.fill")
-                        }
-                    FavoritesView(viewModel: viewModel)
-                        .tabItem {
-                            Label("Favorites", systemImage: "heart.fill")
-                        }
-                }
-                .transition(.opacity)
+                tabView
             }
         }
         .animation(.easeInOut(duration: 1), value: showContent)
@@ -51,6 +35,16 @@ struct MainTabView: View {
         }
         .environment(soundManager)
         .environment(\.favoritesService, favoritesService)
+    }
+
+    private var progressView: some View {
+        VStack {
+            PokeballProgressView(isLoading: $viewModel.isLoading) {
+                showContent = true
+            }
+            .frame(width: 40)
+            Text("Catching 'em all...")
+        }
     }
 
     private var contentUnavailable: some View {
@@ -71,6 +65,20 @@ struct MainTabView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
         }
+    }
+
+    private var tabView: some View {
+        TabView {
+            PokedexView(viewModel: viewModel)
+                .tabItem {
+                    Label("All Pokémon", systemImage: "bolt.fill")
+                }
+            FavoritesView(viewModel: viewModel)
+                .tabItem {
+                    Label("Favorites", systemImage: "heart.fill")
+                }
+        }
+        .transition(.opacity)
     }
 }
 
