@@ -29,12 +29,10 @@ struct PokemonListView: PokemonViewProtocol {
                                         lineWidth: 1
                                     )
                                 )
-
                         }
 
                         Text(pokemon.name.capitalized)
                             .bold()
-
                     }
                     .frame(alignment: .leading)
                     .font(.title3)
@@ -46,7 +44,6 @@ struct PokemonListView: PokemonViewProtocol {
                     )
                 )
                 .listRowSeparator(.hidden)
-
             }
             .scrollContentBackground(.hidden)
             .navigationDestination(for: PokemonListEntry.self) {

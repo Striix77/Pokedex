@@ -73,13 +73,7 @@ struct PokemonDetailsView: View {
         ScrollView {
             if let details = viewModel.pokemonDetails {
                 VStack(spacing: 20) {
-                    ZStack {
-                        Circle()
-                            .fill(.ultraThinMaterial)
-                            .frame(maxWidth: .infinity)
-                            .aspectRatio(1, contentMode: .fit)
-                        PokemonImageView(spriteURL: pokemonListEntry.spriteURL)
-                    }
+                    PokemonHeroCard(pokemonListEntry: pokemonListEntry, typeColors: typeColors)
                     PokemonStatsView(
                         typeString: pokemonListEntry.typeString,
                         weight: details.weight,
