@@ -100,6 +100,13 @@ struct PokemonDetailsView: View {
                 .padding()
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                FavoritePokemonButton(id: pokemonListEntry.id)
+                    .imageScale(.small)
+            }
+            .sharedBackgroundVisibility(.hidden)
+        }
     }
 
     private var backgroundGradient: some View {
@@ -120,9 +127,11 @@ struct PokemonDetailsView: View {
 }
 
 #Preview {
-    PokemonDetailsView(
-        pokemonListEntry: .mock,
-        types: PokemonType.mockTypes
-    )
-    .environment(SoundManager())
+    NavigationStack {
+        PokemonDetailsView(
+            pokemonListEntry: .mock,
+            types: PokemonType.mockTypes
+        )
+        .environment(SoundManager())
+    }
 }

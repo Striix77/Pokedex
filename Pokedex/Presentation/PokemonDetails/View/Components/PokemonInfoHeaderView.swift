@@ -8,16 +8,11 @@ import SwiftUI
 
 struct PokemonInfoHeaderView: View {
     @Environment(SoundManager.self) var soundManager
-    @Environment(\.favoritesService) var favoritesManager
     @State private var canPlay = false
 
     let id: Int
     let formattedGeneration: String
     let pokemonName: String
-    
-    private var isFavorite:Bool{
-        favoritesManager.favoriteIDs.contains(id)
-    }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -54,17 +49,6 @@ struct PokemonInfoHeaderView: View {
                         design: .rounded
                     )
                 )
-            Button {
-                favoritesManager.toggle(id)
-            } label: {
-                Image(
-                    systemName: isFavorite
-                        ? "heart.fill" : "heart"
-                )
-                .font(.system(size: 30))
-                .foregroundStyle(isFavorite ? .red : .gray)
-            }
-            .buttonStyle(.borderless)
         }
     }
 
