@@ -28,7 +28,7 @@ struct EfficacyView: View {
             ScrollView(.horizontal) {
                 HStack(spacing: 24) {
                     ForEach(efficacies) { efficacy in
-                        EfficacyCardView(
+                        EfficacyPill(
                             efficacy: efficacy
                         )
                     }

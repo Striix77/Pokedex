@@ -4,31 +4,35 @@
 //
 //  Created by Freak on 06.04.2026.
 //
+import Kingfisher
 import SwiftUI
 
-struct EfficacyCardView: View {
+struct EfficacyPill: View {
     @Environment(\.colorScheme) var colorScheme
     let efficacy: TypeStrength
 
     var body: some View {
-        VStack {
-            //TODO: Replace with Kingfisher
-            AsyncImage(url: EfficacyCardHelper.getIconUrl(for: efficacy.id)) { image in
-                image
-                    .image?.resizable()
-                    .aspectRatio(contentMode: .fit)
-            }
-            .frame(width: 56, height: 56)
-            .shadow(radius: 4)
-            Text(efficacy.name)
-
+        HStack {
+            KFImage(EfficacyCardHelper.getIconUrl(for: efficacy.id))
+                .placeholder {
+                    Image(systemName: "questionmark.circle.fill")
+                        .imageScale(.large)
+                }
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: 25)
+                .aspectRatio(1, contentMode: .fit)
+                .clipShape(Circle())
+                .shadow(radius: 4)
+            Text(efficacy.name.uppercased())
+                .bold()
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 6)
         .background(
-            TypeColor(rawValue:efficacy.name.lowercased())?.color.opacity(0.7)
+            TypeColor(rawValue: efficacy.name.lowercased())?.color.opacity(0.7)
         )
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 22))
     }
 }
 
