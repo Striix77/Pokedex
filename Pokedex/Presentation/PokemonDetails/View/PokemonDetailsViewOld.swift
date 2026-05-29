@@ -1,5 +1,5 @@
 //
-//  PokemonDetailsView.swift
+//  PokemonDetailsViewOld.swift
 //  Pokedex
 //
 //  Created by Freak on 25.02.2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PokemonDetailsView: View {
+struct PokemonDetailsViewOld: View {
     @State private var viewModel = PokemonDetailsViewModel(
         pokemonDetailsUseCase: PokemonDetailsUseCase(
             apiService: PokemonDetailsAPIService()
@@ -110,19 +110,11 @@ struct PokemonDetailsView: View {
         backgroundColors.1 = typeColors.1 ?? colorSchemeBackground
         return LinearGradient(
             colors: [
-                backgroundColors.0, backgroundColors.1
+                backgroundColors.0, backgroundColors.1,
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
         .ignoresSafeArea()
     }
-}
-
-#Preview {
-    PokemonDetailsView(
-        pokemonListEntry: .mock,
-        types: PokemonType.mockTypes
-    )
-    .environment(SoundManager())
 }
