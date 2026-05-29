@@ -18,6 +18,12 @@ struct PokemonDetailsView: View {
     let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
 
+    private var backgroundColors: (Color, Color) {
+        let colorSchemeBackground =
+            colorScheme == .light ? Color.white : Color.black
+        return (typeColors.0 ?? colorSchemeBackground, typeColors.1 ?? colorSchemeBackground)
+    }
+
     private var calculator: BattleStatsCalculator {
         BattleStatsCalculator(
             pokemonTypes: pokemonListEntry.pokemontypes,
@@ -74,12 +80,6 @@ struct PokemonDetailsView: View {
                             .aspectRatio(1, contentMode: .fit)
                         PokemonImageView(spriteURL: pokemonListEntry.spriteURL)
                     }
-                    PokemonInfoHeaderView(
-                        id: pokemonListEntry.id,
-                        formattedGeneration: pokemonListEntry
-                            .formattedGeneration,
-                        pokemonName: pokemonListEntry.name
-                    )
                     PokemonStatsView(
                         typeString: pokemonListEntry.typeString,
                         weight: details.weight,
@@ -110,11 +110,6 @@ struct PokemonDetailsView: View {
     }
 
     private var backgroundGradient: some View {
-        var backgroundColors: (Color, Color)
-        let colorSchemeBackground =
-            colorScheme == .light ? Color.white : Color.black
-        backgroundColors.0 = typeColors.0 ?? colorSchemeBackground
-        backgroundColors.1 = typeColors.1 ?? colorSchemeBackground
         return LinearGradient(
             colors: [
                 backgroundColors.0, backgroundColors.1
