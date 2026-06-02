@@ -12,6 +12,25 @@ struct PokemonHeroCard: View {
     let typeColors: (Color?, Color?)
 
     private let maxImageOffset: CGFloat = 25
+    private let cardCornerRadius: CGFloat = 20
+    private let cardBorderLineWidth: CGFloat = 3
+    private let backgroundGradientOpacity: CGFloat = 0.2
+    private let backgroundGradientStartRadius: CGFloat = 1
+    private let backgroundGradientEndRadius: CGFloat = 400
+    private let retroScreenHeight: CGFloat = 300
+    private let retroScreenCornerLightBleedStartRadius: CGFloat = 150
+    private let retroScreenCornerLightBleedEndRadius: CGFloat = 325
+    private let retroScreenCornerLightBleedOpacity: CGFloat = 0.3
+    private let retroScreenBorderStartRadius: CGFloat = 1
+    private let retroScreenBorderEndRadius: CGFloat = 180
+    private let retroScreenBorderLineWidth: CGFloat = 2
+    private let retroScreenPictureGlowStartRadius: CGFloat = 5
+    private let retroScreenPictureGlowEndRadius: CGFloat = 75
+    private let retroScreenPictureGlowScale: CGFloat = 2
+    private let retroScreenPictureGlowOpacity: CGFloat = 0.3
+    private let floatAnimationDuration: CGFloat = 3
+    private let headerIconScale: CGFloat = 0.5
+    private let imageWidthFraction: CGFloat = 2
 
     private var backgroundColors: (Color, Color) {
         (typeColors.0 ?? Color.pokemonHeroCardBackground,
@@ -38,13 +57,13 @@ struct PokemonHeroCard: View {
                 .padding()
         }
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(accentColor, lineWidth: 3)
+            RoundedRectangle(cornerRadius: cardCornerRadius)
+                .stroke(accentColor, lineWidth: cardBorderLineWidth)
         )
     }
 
     private var background: some View {
-        RoundedRectangle(cornerRadius: 20)
+        RoundedRectangle(cornerRadius: cardCornerRadius)
             .fill(
                 backgroundColor
             )
@@ -52,9 +71,9 @@ struct PokemonHeroCard: View {
                 RadialGradient(stops: [
                     Gradient.Stop(color: backgroundColors.0, location: 0),
                     Gradient.Stop(color: backgroundColors.1, location: 1),
-                ], center: .top, startRadius: 1, endRadius: 400)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .opacity(0.2)
+                ], center: .top, startRadius: backgroundGradientStartRadius, endRadius: backgroundGradientEndRadius)
+                    .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
+                    .opacity(backgroundGradientOpacity)
             )
     }
 
@@ -76,7 +95,7 @@ struct PokemonHeroCard: View {
 
             HStack {
                 Image(systemName: "circle.fill")
-                    .scaleEffect(0.5)
+                    .scaleEffect(headerIconScale)
 
                 Text(pokemonListEntry.formattedGeneration)
             }
@@ -87,7 +106,7 @@ struct PokemonHeroCard: View {
     }
 
     private var retroScreen: some View {
-        RoundedRectangle(cornerRadius: 20)
+        RoundedRectangle(cornerRadius: cardCornerRadius)
             .fill(
                 screenBackgroundColor
             )
@@ -96,7 +115,7 @@ struct PokemonHeroCard: View {
             )
             .overlay(
                 DotMatrixScreen(accentColor: accentColor)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
             )
             .overlay(
                 retroScreenBorder
@@ -105,44 +124,44 @@ struct PokemonHeroCard: View {
                 retroScreenPicture
                     .clipped()
             )
-            .frame(height: 300)
+            .frame(height: retroScreenHeight)
     }
 
     private var retroScreenCornerLightBleed: some View {
         RadialGradient(stops: [
             Gradient.Stop(color: screenBackgroundColor, location: 0),
             Gradient.Stop(color: accentColor, location: 1),
-        ], center: .center, startRadius: 150, endRadius: 325)
-            .opacity(0.3)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+        ], center: .center, startRadius: retroScreenCornerLightBleedStartRadius, endRadius: retroScreenCornerLightBleedEndRadius)
+            .opacity(retroScreenCornerLightBleedOpacity)
+            .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
     }
 
     private var retroScreenBorder: some View {
-        RoundedRectangle(cornerRadius: 20)
+        RoundedRectangle(cornerRadius: cardCornerRadius)
             .stroke(
                 RadialGradient(
                     colors: [.white, .white.opacity(0.2)],
                     center: .center,
-                    startRadius: 1,
-                    endRadius: 180
+                    startRadius: retroScreenBorderStartRadius,
+                    endRadius: retroScreenBorderEndRadius
                 ),
-                lineWidth: 2
+                lineWidth: retroScreenBorderLineWidth
             )
     }
 
     private var retroScreenPicture: some View {
         GeometryReader { geo in
-            let width = geo.size.width / 2
+            let width = geo.size.width / imageWidthFraction
             ZStack {
                 RadialGradient(stops: [
                     Gradient.Stop(color: accentColor, location: 0),
                     Gradient.Stop(color: .clear, location: 1),
-                ], center: .center, startRadius: 5, endRadius: 75)
-                    .scaleEffect(2)
-                    .opacity(0.3)
+                ], center: .center, startRadius: retroScreenPictureGlowStartRadius, endRadius: retroScreenPictureGlowEndRadius)
+                    .scaleEffect(retroScreenPictureGlowScale)
+                    .opacity(retroScreenPictureGlowOpacity)
                     .offset(x: 0, y: imageOffset)
                     .onAppear {
-                        withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
+                        withAnimation(.easeInOut(duration: floatAnimationDuration).repeatForever(autoreverses: true)) {
                             imageOffset = -maxImageOffset
                         }
                     }
@@ -151,42 +170,6 @@ struct PokemonHeroCard: View {
                     .offset(x: 0, y: imageOffset)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-    }
-}
-
-struct DotMatrixScreen: View {
-    let accentColor: Color
-
-    private let dotSize: CGFloat = 3
-    private let spacing: CGFloat = 7
-
-    var body: some View {
-        Canvas { context, size in
-            drawDots(context: context, size: size)
-        }
-    }
-
-    private func drawDots(context: GraphicsContext, size: CGSize) {
-        let columns = Int(size.width / spacing)
-        let rows = Int(size.height / spacing)
-
-        for row in 0..<rows {
-            for col in 0..<columns {
-                let x = CGFloat(col) * spacing + spacing / 2
-                let y = CGFloat(row) * spacing + spacing / 2
-
-                let rect = CGRect(
-                    x: x - dotSize / 2,
-                    y: y - dotSize / 2,
-                    width: dotSize,
-                    height: dotSize
-                )
-                context.fill(
-                    Path(ellipseIn: rect),
-                    with: .color(.gray.opacity(0.1))
-                )
-            }
         }
     }
 }
