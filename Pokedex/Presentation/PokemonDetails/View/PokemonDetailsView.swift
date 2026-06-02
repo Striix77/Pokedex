@@ -14,6 +14,7 @@ struct PokemonDetailsView: View {
         )
     )
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dismiss) private var dismiss
     let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
 
@@ -25,16 +26,48 @@ struct PokemonDetailsView: View {
     }
 
     private var typeColors: (Color?, Color?) {
-        TypeColor.getDoubleTypeColors(for: pokemonListEntry, scheme: colorScheme)
+        TypeColor.getDoubleTypeColors(
+            for: pokemonListEntry,
+            scheme: colorScheme
+        )
     }
 
     var body: some View {
         ZStack {
             backgroundGradient
+            if viewModel.isLoading {
+                progressView
+            } else {
+                mainContent
+            }
+        }
+        .task {
+            await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
+        }
+        .navigationTitle(pokemonListEntry.name.capitalized)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
+        .fetchingAlert(
+            showAlert: $viewModel.showAlert,
+            fetchAction: {
+                await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
+            },
+            confirmAction: { dismiss() },
+            errorMessage: viewModel.errorMessage
+        )
+    }
+    
+    private var progressView: some View {
+        ProgressView()
+            .progressViewStyle(.circular)
+            .scaleEffect(2)
+    }
+    
+    private var mainContent: some View {
         ScrollView {
             if let details = viewModel.pokemonDetails {
                 VStack(spacing: 20) {
-                    ZStack{
+                    ZStack {
                         Circle()
                             .fill(.ultraThinMaterial)
                             .frame(maxWidth: .infinity)
@@ -54,29 +87,25 @@ struct PokemonDetailsView: View {
                     )
                     PokemonBattleStatsView(
                         pokemonHP: details.statValue(named: "hp"),
-                        pokemonAttack: details.statValue(named: "attack"),
-                        pokemonDefense: details.statValue(named: "defense"),
+                        pokemonAttack: details.statValue(
+                            named: "attack"
+                        ),
+                        pokemonDefense: details.statValue(
+                            named: "defense"
+                        ),
                         pokemonSpeed: details.statValue(named: "speed"),
                         calculator: calculator
                     )
-
-                    Spacer()
-
-                    }
-                    .padding()
                 }
+                .padding()
             }
         }
-        .task {
-            await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
-        }
-        .navigationTitle(pokemonListEntry.name.capitalized)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .tabBar)
     }
-        private var backgroundGradient: some View {
+    
+    private var backgroundGradient: some View {
         var backgroundColors: (Color, Color)
-        let colorSchemeBackground = colorScheme == .light ? Color.white : Color.black
+        let colorSchemeBackground =
+            colorScheme == .light ? Color.white : Color.black
         backgroundColors.0 = typeColors.0 ?? colorSchemeBackground
         backgroundColors.1 = typeColors.1 ?? colorSchemeBackground
         return LinearGradient(
@@ -89,4 +118,3 @@ struct PokemonDetailsView: View {
         .ignoresSafeArea()
     }
 }
-

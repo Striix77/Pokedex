@@ -11,6 +11,7 @@ import Foundation
 class PokemonDetailsViewModel {
     var isLoading = true
     var errorMessage: String? = nil
+    var showAlert: Bool = false
     private var pokemonDetailsArray: [PokemonDetailsEntry]
     private let pokemonDetailsUseCase: PokemonDetailsUseCaseProtocol
 
@@ -31,6 +32,7 @@ class PokemonDetailsViewModel {
 
             self.pokemonDetailsArray = detailsArray
         }
+        showAlert = errorMessage != nil
         isLoading = false
     }
 }

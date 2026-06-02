@@ -12,20 +12,24 @@ struct PokemonStatsView: View {
     let weight: Int
     let height: Int
 
+    private let typeLabel = "Type"
+    private let weightLabel = "Weight"
+    private let heightLabel = "Height"
+
     var body: some View {
         HStack(spacing: 40) {
             StatView(
-                label: "Type",
+                label: typeLabel,
                 value: typeString,
                 color: .orange
             )
             StatView(
-                label: "Weight",
+                label: weightLabel,
                 value: "\(weight)",
                 color: .blue
             )
             StatView(
-                label: "Height",
+                label: heightLabel,
                 value: "\(height)",
                 color: .green
             )

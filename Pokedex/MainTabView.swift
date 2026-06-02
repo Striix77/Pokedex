@@ -16,7 +16,6 @@ struct MainTabView: View {
     )
     @State private var soundManager = SoundManager()
     @State private var favoritesService = FavoritesService()
-
     @State private var showContent = false
 
     var body: some View {
@@ -50,15 +49,13 @@ struct MainTabView: View {
     private var contentUnavailable: some View {
         ContentUnavailableView {
             Label(
-                viewModel.errorMessage ?? "Connection Lost",
-                systemImage: "wifi.exclamationmark"
+                viewModel.errorMessage ?? fallbackErrorMessage,
+                systemImage: errorIcon
             )
         } description: {
-            Text(
-                "Looks like Team Rocket is at it again...\nMaybe try again later!"
-            )
+            Text(errorDescription)
         } actions: {
-            Button("Try Again") {
+            Button(tryAgainLabel) {
                 Task { await viewModel.fetchPokemon() }
                 showContent = false
             }
