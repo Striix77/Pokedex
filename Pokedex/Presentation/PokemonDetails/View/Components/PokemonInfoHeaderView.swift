@@ -73,28 +73,11 @@ struct PokemonInfoHeaderView: View {
     }
 }
 
-// #Preview(traits: .sizeThatFitsLayout) {
-//    PokemonInfoHeaderView(
-//        pokemonName: "Squirtle",
-//        pokemonTypes: [PokemonType(id: 12, name: "grass", typeEfficaciesByTargetTypeId: [
-//            TypeEfficacy(damageFactor: 200, type: AttackerType(id: 10, name: "fire")),
-//            TypeEfficacy(damageFactor: 200, type: AttackerType(id: 15, name: "ice")),
-//            TypeEfficacy(damageFactor: 200, type: AttackerType(id: 3, name: "flying")),
-//            TypeEfficacy(damageFactor: 200, type: AttackerType(id: 7, name: "bug")),
-//            TypeEfficacy(damageFactor: 50, type: AttackerType(id: 11, name: "water")),
-//            TypeEfficacy(damageFactor: 50, type: AttackerType(id: 13, name: "electric")),
-//            TypeEfficacy(damageFactor: 50, type: AttackerType(id: 12, name: "grass"))
-//        ]),
-//        PokemonType(id: 12, name: "grass", typeEfficaciesByTargetTypeId: [
-//            TypeEfficacy(damageFactor: 200, type: AttackerType(id: 10, name: "fire")),
-//            TypeEfficacy(damageFactor: 200, type: AttackerType(id: 15, name: "ice")),
-//            TypeEfficacy(damageFactor: 200, type: AttackerType(id: 3, name: "flying")),
-//            TypeEfficacy(damageFactor: 200, type: AttackerType(id: 7, name: "bug")),
-//            TypeEfficacy(damageFactor: 50, type: AttackerType(id: 11, name: "water")),
-//            TypeEfficacy(damageFactor: 50, type: AttackerType(id: 13, name: "electric")),
-//            TypeEfficacy(damageFactor: 50, type: AttackerType(id: 12, name: "grass"))
-//        ])],
-//        accentColor: TypeColor.grass.color
-//    )
-//    .environment(SoundManager())
-// }
+#Preview(traits: .sizeThatFitsLayout) {
+    PokemonInfoHeaderView(
+        pokemonName: PokemonListEntry.mock.name,
+        pokemonTypes: PokemonListEntry.mock.pokemontypes,
+        accentColor: TypeColor.grass.color
+    )
+    .environment(SoundManager())
+}

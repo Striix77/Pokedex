@@ -4,13 +4,13 @@
 //
 //  Created by Freak on 02.04.2026.
 //
-import SwiftUI
 import Kingfisher
+import SwiftUI
 
 struct PokemonImageView: View {
     @State private var didFail = false
     let spriteURL: URL?
-    
+
     var body: some View {
         ZStack {
             if didFail {
@@ -31,12 +31,11 @@ struct PokemonImageView: View {
                         self.didFail = true
                     }
                     .resizable()
-                    .placeholder{
+                    .placeholder {
                         ProgressView()
                     }
                     .scaledToFit()
             }
-
         }
         .padding(.top, 30)
     }

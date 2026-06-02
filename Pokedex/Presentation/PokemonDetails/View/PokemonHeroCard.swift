@@ -183,36 +183,18 @@ struct DotMatrixScreen: View {
     }
 }
 
-// #Preview {
-//    ZStack {
-//        LinearGradient(colors: [TypeColor.grass.color, Color.pokemonHeroCardBackground], startPoint: .top, endPoint: .bottom)
-//            .ignoresSafeArea()
-//            .opacity(0.5)
-//
-//        PokemonHeroCard(
-//            pokemonListEntry: .mock,
-//            pokemonTypes: [PokemonType(id: 12, name: "grass", typeEfficaciesByTargetTypeId: [
-//                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 10, name: "fire")),
-//                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 15, name: "ice")),
-//                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 3, name: "flying")),
-//                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 7, name: "bug")),
-//                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 11, name: "water")),
-//                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 13, name: "electric")),
-//                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 12, name: "grass")),
-//            ]),
-//            PokemonType(id: 12, name: "grass", typeEfficaciesByTargetTypeId: [
-//                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 10, name: "fire")),
-//                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 15, name: "ice")),
-//                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 3, name: "flying")),
-//                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 7, name: "bug")),
-//                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 11, name: "water")),
-//                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 13, name: "electric")),
-//                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 12, name: "grass")),
-//            ])],
-//            typeColors: (TypeColor.grass.color, nil)
-//        )
-//        .padding()
-//        .padding(.bottom, 350)
-//    }
-//    .environment(SoundManager())
-// }
+#Preview {
+    ZStack {
+        LinearGradient(colors: [TypeColor.grass.color, Color.pokemonHeroCardBackground], startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
+            .opacity(0.5)
+
+        PokemonHeroCard(
+            pokemonListEntry: .mock,
+            typeColors: (TypeColor.grass.color, nil)
+        )
+        .padding()
+        .padding(.bottom, 350)
+    }
+    .environment(SoundManager())
+}
