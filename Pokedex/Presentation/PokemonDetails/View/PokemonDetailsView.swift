@@ -13,6 +13,7 @@ struct PokemonDetailsView: View {
             apiService: PokemonDetailsAPIService()
         )
     )
+    @State private var selectedTab = PokemonDetailTab.about
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     let pokemonListEntry: PokemonListEntry
@@ -22,7 +23,7 @@ struct PokemonDetailsView: View {
     private let progressViewScale: CGFloat = 2
     private let gradientTypeStopLocation = 0.3
     private let gradientFadeStopLocation = 0.6
-    private let contentSpacing: CGFloat = 20
+    private let contentSpacing: CGFloat = 24
     private let contentPadding: CGFloat = 16
     private let transitionAnimationDuration: Double = 0.25
 
@@ -97,6 +98,9 @@ struct PokemonDetailsView: View {
             if let details = viewModel.pokemonDetails {
                 VStack(spacing: contentSpacing) {
                     PokemonHeroCard(pokemonListEntry: pokemonListEntry, typeColors: typeColors)
+
+                    PokemonDetailsTabBarView(selectedTab: $selectedTab)
+
                     PokemonStatsView(
                         typeString: pokemonListEntry.typeString,
                         weight: details.weight,
