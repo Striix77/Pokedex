@@ -91,6 +91,7 @@ struct EfficacyPill: View {
         Text(efficacy.name)
             .font(.headline)
             .fontWeight(.bold)
+            .foregroundStyle(Color.white)
     }
 
     private var pillOffsetBackground: some View {

@@ -22,6 +22,10 @@ struct PokemonHeroCard: View {
         Color.pokemonHeroCardBackground
     }
 
+    private var screenBackgroundColor: Color {
+        Color.pokemonHeroCardScreenBackground
+    }
+
     private var accentColor: Color {
         typeColors.0 ?? Color.clear
     }
@@ -85,6 +89,9 @@ struct PokemonHeroCard: View {
     private var retroScreen: some View {
         RoundedRectangle(cornerRadius: 20)
             .fill(
+                screenBackgroundColor
+            )
+            .overlay(
                 retroScreenCornerLightBleed
             )
             .overlay(
@@ -101,12 +108,13 @@ struct PokemonHeroCard: View {
             .frame(height: 300)
     }
 
-    private var retroScreenCornerLightBleed: some ShapeStyle {
+    private var retroScreenCornerLightBleed: some View {
         RadialGradient(stops: [
-            Gradient.Stop(color: backgroundColor, location: 0),
+            Gradient.Stop(color: screenBackgroundColor, location: 0),
             Gradient.Stop(color: accentColor, location: 1),
         ], center: .center, startRadius: 150, endRadius: 325)
             .opacity(0.3)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 
     private var retroScreenBorder: some View {
