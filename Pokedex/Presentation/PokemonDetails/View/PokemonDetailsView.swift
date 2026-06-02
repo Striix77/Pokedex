@@ -24,6 +24,7 @@ struct PokemonDetailsView: View {
     private let gradientFadeStopLocation = 0.6
     private let contentSpacing: CGFloat = 20
     private let contentPadding: CGFloat = 16
+    private let transitionAnimationDuration: Double = 0.25
 
     private var colorSchemeBackground: Color {
         Color.pokemonHeroCardBackground
@@ -65,8 +66,10 @@ struct PokemonDetailsView: View {
                 progressView
             } else {
                 mainContent
+                    .transition(.blurReplace)
             }
         }
+        .animation(.easeInOut(duration: transitionAnimationDuration), value: viewModel.isLoading)
         .task {
             await viewModel.fetchPokemonDetails(id: pokemonListEntry.id)
         }
