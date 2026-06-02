@@ -10,12 +10,13 @@ import SwiftUI
 struct MainTabView: View {
     @State private var viewModel = PokedexViewModel(
         pokemonListDataUseCase: PokemonListDataUseCase(
-            apiService: PokemonListAPIService(),
+            apiService: PokemonListAPIService()
         ),
         filteringService: FilteringService()
     )
     @State private var soundManager = SoundManager()
     @State private var favoritesService = FavoritesService()
+    @State private var showContent = false
 
     private let loadingLabel = "Catching 'em all..."
     private let allPokemonLabel = "All Pokémon"
@@ -28,27 +29,31 @@ struct MainTabView: View {
     private let tryAgainLabel = "Try Again"
 
     var body: some View {
-        TabView {
-            if viewModel.isLoading && viewModel.pokemonList.isEmpty {
-                ProgressView(loadingLabel)
+        ZStack {
+            if !showContent {
+                progressView
             } else if viewModel.errorMessage != nil {
                 contentUnavailable
             } else {
-                PokedexView(viewModel: viewModel)
-                    .tabItem {
-                        Label(allPokemonLabel, systemImage: allPokemonIcon)
-                    }
-                FavoritesView(viewModel: viewModel)
-                    .tabItem {
-                        Label(favoritesLabel, systemImage: favoritesIcon)
-                    }
+                tabView
             }
         }
+        .animation(.easeInOut(duration: 1), value: showContent)
         .task {
             await viewModel.fetchPokemon()
         }
         .environment(soundManager)
         .environment(\.favoritesService, favoritesService)
+    }
+
+    private var progressView: some View {
+        VStack {
+            PokeballProgressView(isLoading: $viewModel.isLoading) {
+                showContent = true
+            }
+            .frame(width: 40)
+            Text(loadingLabel)
+        }
     }
 
     private var contentUnavailable: some View {
@@ -62,10 +67,25 @@ struct MainTabView: View {
         } actions: {
             Button(tryAgainLabel) {
                 Task { await viewModel.fetchPokemon() }
+                showContent = false
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
         }
+    }
+
+    private var tabView: some View {
+        TabView {
+            PokedexView(viewModel: viewModel)
+                .tabItem {
+                    Label(allPokemonLabel, systemImage: allPokemonIcon)
+                }
+            FavoritesView(viewModel: viewModel)
+                .tabItem {
+                    Label(favoritesLabel, systemImage: favoritesIcon)
+                }
+        }
+        .transition(.opacity)
     }
 }
 
