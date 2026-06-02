@@ -18,6 +18,16 @@ struct MainTabView: View {
     @State private var favoritesService = FavoritesService()
     @State private var showContent = false
 
+    private let loadingLabel = "Catching 'em all..."
+    private let allPokemonLabel = "All Pokémon"
+    private let allPokemonIcon = "bolt.fill"
+    private let favoritesLabel = "Favorites"
+    private let favoritesIcon = "heart.fill"
+    private let errorIcon = "wifi.exclamationmark"
+    private let fallbackErrorMessage = "Connection Lost"
+    private let errorDescription = "Looks like Team Rocket is at it again...\nMaybe try again later!"
+    private let tryAgainLabel = "Try Again"
+
     var body: some View {
         ZStack {
             if !showContent {
@@ -42,7 +52,7 @@ struct MainTabView: View {
                 showContent = true
             }
             .frame(width: 40)
-            Text("Catching 'em all...")
+            Text(loadingLabel)
         }
     }
 
@@ -68,11 +78,11 @@ struct MainTabView: View {
         TabView {
             PokedexView(viewModel: viewModel)
                 .tabItem {
-                    Label("All Pokémon", systemImage: "bolt.fill")
+                    Label(allPokemonLabel, systemImage: allPokemonIcon)
                 }
             FavoritesView(viewModel: viewModel)
                 .tabItem {
-                    Label("Favorites", systemImage: "heart.fill")
+                    Label(favoritesLabel, systemImage: favoritesIcon)
                 }
         }
         .transition(.opacity)
