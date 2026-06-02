@@ -21,6 +21,8 @@ struct EfficacyPill: View {
     let backgroundOpacity: CGFloat
     let shadowRadius: Double
 
+    private let backgroundPillOpacity: Double = 0.7
+
     init(
         efficacy: TypeStrength,
         hStackSpacing: CGFloat = 12,
@@ -30,7 +32,7 @@ struct EfficacyPill: View {
         pillHorizontalPadding: CGFloat = 12,
         pillVerticalPadding: CGFloat = 12,
         pillCornerRadius: CGFloat = 16,
-        backgroundOpacity: CGFloat = 0.7,
+        backgroundOpacity: CGFloat = 1,
         shadowRadius: Double = 4
     ) {
         self.efficacy = efficacy
@@ -52,6 +54,9 @@ struct EfficacyPill: View {
     var body: some View {
         ZStack {
             mainPill
+                .background(
+                    pillOffsetBackground
+                )
         }
     }
 
@@ -86,6 +91,16 @@ struct EfficacyPill: View {
         Text(efficacy.name)
             .font(.headline)
             .fontWeight(.bold)
+    }
+
+    private var pillOffsetBackground: some View {
+        RoundedRectangle(cornerRadius: pillCornerRadius)
+            .overlay(
+                backgroundColor
+                    .opacity(backgroundPillOpacity)
+                    .clipShape(RoundedRectangle(cornerRadius: pillCornerRadius))
+            )
+            .offset(x: 0, y: -2)
     }
 }
 
