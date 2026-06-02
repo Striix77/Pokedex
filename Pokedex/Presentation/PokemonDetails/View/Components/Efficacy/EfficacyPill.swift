@@ -45,34 +45,51 @@ struct EfficacyPill: View {
         self.shadowRadius = shadowRadius
     }
 
+    private var backgroundColor: Color? {
+        TypeColor(rawValue: efficacy.name.lowercased())?.color.opacity(backgroundOpacity)
+    }
+
     var body: some View {
+        ZStack {
+            mainPill
+        }
+    }
+
+    private var mainPill: some View {
         HStack(spacing: hStackSpacing) {
-            KFImage(EfficacyCardHelper.getIconUrl(for: efficacy.id))
-                .placeholder {
-                    Image(systemName: "questionmark.circle.fill")
-                        .imageScale(.large)
-                }
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: iconMaxWidth)
-                .aspectRatio(1, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: iconCornerRadius))
-                .shadow(radius: iconShadowRadius)
-            Text(efficacy.name)
-                .font(.headline)
-                .fontWeight(.bold)
+            pillImage
+
+            pillText
         }
         .padding(.horizontal, pillHorizontalPadding)
         .padding(.vertical, pillVerticalPadding)
-        .background(
-            TypeColor(rawValue: efficacy.name.lowercased())?.color.opacity(backgroundOpacity)
-        )
+        .background(backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: pillCornerRadius))
-        .shadow(color: TypeColor(rawValue: efficacy.name.lowercased())?.color.opacity(backgroundOpacity) ?? Color.black, radius: shadowRadius)
+        .shadow(color: backgroundColor ?? Color.black, radius: shadowRadius)
+    }
+
+    private var pillImage: some View {
+        KFImage(EfficacyCardHelper.getIconUrl(for: efficacy.id))
+            .placeholder {
+                Image(systemName: "questionmark.circle.fill")
+                    .imageScale(.large)
+            }
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(maxWidth: iconMaxWidth)
+            .aspectRatio(1, contentMode: .fit)
+            .clipShape(RoundedRectangle(cornerRadius: iconCornerRadius))
+            .shadow(radius: iconShadowRadius)
+    }
+
+    private var pillText: some View {
+        Text(efficacy.name)
+            .font(.headline)
+            .fontWeight(.bold)
     }
 }
 
-#Preview {
+#Preview("Efficacy View") {
     EfficacyView(
         title: "Strong against",
         efficacies: [
@@ -87,4 +104,9 @@ struct EfficacyPill: View {
             TypeStrength(name: "Shadow", id: 10002),
         ]
     )
+}
+
+#Preview("Single Pill", traits: .sizeThatFitsLayout) {
+    EfficacyPill(efficacy: .init(name: "Water", id: 11))
+        .padding()
 }
