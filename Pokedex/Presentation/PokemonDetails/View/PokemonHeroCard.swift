@@ -31,6 +31,7 @@ struct PokemonHeroCard: View {
     private let floatAnimationDuration: CGFloat = 3
     private let headerIconScale: CGFloat = 0.5
     private let imageWidthFraction: CGFloat = 2
+    private let shadowRadius: Double = 4
 
     private var backgroundColors: (Color, Color) {
         (typeColors.0 ?? Color.pokemonHeroCardBackground,
@@ -59,6 +60,7 @@ struct PokemonHeroCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: cardCornerRadius)
                 .stroke(accentColor, lineWidth: cardBorderLineWidth)
+                .shadow(color: accentColor, radius: shadowRadius)
         )
     }
 
