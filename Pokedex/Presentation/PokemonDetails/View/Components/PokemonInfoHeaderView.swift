@@ -20,7 +20,14 @@ struct PokemonInfoHeaderView: View {
                 pokemonTitle
                 HStack {
                     ForEach(pokemonTypes, id: \.type.id) { pokemonType in
-                        EfficacyPill(efficacy: TypeStrength(name: pokemonType.type.name, id: pokemonType.type.id))
+                        EfficacyPill(
+                            efficacy: TypeStrength(
+                                name: pokemonType.type.name.uppercased(), id: pokemonType.type.id
+                            ),
+                            iconCornerRadius: 22,
+                            pillVerticalPadding: 8,
+                            pillCornerRadius: 22
+                        )
                     }
 
                     Spacer()
