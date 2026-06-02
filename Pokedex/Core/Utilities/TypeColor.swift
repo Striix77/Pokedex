@@ -34,6 +34,7 @@ enum TypeColor: String {
         }
     }
 
+    // TODO: Remove if not needed after redesign
     static func getSafeColor(for typeName: String, scheme: ColorScheme) -> Color {
         let type = TypeColor(rawValue: typeName.lowercased()) ?? .normal
 
