@@ -9,15 +9,15 @@ import SwiftUI
 struct EfficacyView: View {
     let title: String
     let efficacies: [TypeStrength]
-    private let spacing: Int = 10
+    private let verticalSpacing: CGFloat = 10
+    private let horizontalSpacing: CGFloat = 10
 
     var body: some View {
-        VStack(alignment: .leading, spacing: CGFloat(spacing)) {
+        VStack(alignment: .leading, spacing: verticalSpacing) {
             Text(title)
                 .font(.title2)
                 .bold()
             cardScrollView
-
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
@@ -26,17 +26,18 @@ struct EfficacyView: View {
     private var cardScrollView: some View {
         HStack {
             ScrollView(.horizontal) {
-                HStack(spacing: 24) {
+                HStack(spacing: horizontalSpacing) {
                     ForEach(efficacies) { efficacy in
                         EfficacyPill(
-                            efficacy: efficacy
+                            efficacy: efficacy,
+                            iconMaxWidth: 30,
+                            pillVerticalPadding: 10
                         )
                     }
                 }
             }
             .scrollIndicators(.hidden)
             .scrollBounceBehavior(.basedOnSize, axes: [.horizontal])
-
         }
     }
 }
