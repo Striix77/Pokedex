@@ -35,6 +35,7 @@ struct EfficacyView: View {
                         )
                     }
                 }
+                .padding(.vertical)
             }
             .scrollIndicators(.hidden)
             .scrollBounceBehavior(.basedOnSize, axes: [.horizontal])

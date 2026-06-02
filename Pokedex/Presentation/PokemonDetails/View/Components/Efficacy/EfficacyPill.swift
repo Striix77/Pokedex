@@ -19,6 +19,7 @@ struct EfficacyPill: View {
     let pillVerticalPadding: CGFloat
     let pillCornerRadius: CGFloat
     let backgroundOpacity: CGFloat
+    let shadowRadius: Double
 
     init(
         efficacy: TypeStrength,
@@ -29,7 +30,8 @@ struct EfficacyPill: View {
         pillHorizontalPadding: CGFloat = 12,
         pillVerticalPadding: CGFloat = 12,
         pillCornerRadius: CGFloat = 16,
-        backgroundOpacity: CGFloat = 0.7
+        backgroundOpacity: CGFloat = 0.7,
+        shadowRadius: Double = 4
     ) {
         self.efficacy = efficacy
         self.hStackSpacing = hStackSpacing
@@ -40,6 +42,7 @@ struct EfficacyPill: View {
         self.pillVerticalPadding = pillVerticalPadding
         self.pillCornerRadius = pillCornerRadius
         self.backgroundOpacity = backgroundOpacity
+        self.shadowRadius = shadowRadius
     }
 
     var body: some View {
@@ -65,6 +68,7 @@ struct EfficacyPill: View {
             TypeColor(rawValue: efficacy.name.lowercased())?.color.opacity(backgroundOpacity)
         )
         .clipShape(RoundedRectangle(cornerRadius: pillCornerRadius))
+        .shadow(color: TypeColor(rawValue: efficacy.name.lowercased())?.color.opacity(backgroundOpacity) ?? Color.black, radius: shadowRadius)
     }
 }
 
