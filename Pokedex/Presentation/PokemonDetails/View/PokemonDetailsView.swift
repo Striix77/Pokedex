@@ -18,10 +18,30 @@ struct PokemonDetailsView: View {
     let pokemonListEntry: PokemonListEntry
     let types: [PokemonType]
 
+    private let typeColorOpacity = 0.3
+    private let progressViewScale: CGFloat = 2
+    private let gradientTypeStopLocation = 0.3
+    private let gradientFadeStopLocation = 0.6
+    private let contentSpacing: CGFloat = 20
+    private let contentPadding: CGFloat = 16
+
+    private var colorSchemeBackground: Color {
+        Color.pokemonHeroCardBackground
+    }
+
     private var backgroundColors: (Color, Color) {
-        let colorSchemeBackground =
-            colorScheme == .light ? Color.white : Color.black
-        return (typeColors.0 ?? colorSchemeBackground, typeColors.1 ?? colorSchemeBackground)
+        let firstColor = typeColors.0?.opacity(typeColorOpacity) ?? colorSchemeBackground
+        let secondColor = typeColors.1?.opacity(typeColorOpacity) ?? firstColor
+        return (firstColor, secondColor)
+    }
+
+    private var backgroundGradientStops: [Gradient.Stop] {
+        [
+            Gradient.Stop(color: backgroundColors.0, location: 0),
+            Gradient.Stop(color: backgroundColors.1, location: gradientTypeStopLocation),
+            Gradient.Stop(color: colorSchemeBackground, location: gradientFadeStopLocation),
+            Gradient.Stop(color: colorSchemeBackground, location: 1),
+        ]
     }
 
     private var calculator: BattleStatsCalculator {
@@ -66,13 +86,13 @@ struct PokemonDetailsView: View {
     private var progressView: some View {
         ProgressView()
             .progressViewStyle(.circular)
-            .scaleEffect(2)
+            .scaleEffect(progressViewScale)
     }
 
     private var mainContent: some View {
         ScrollView {
             if let details = viewModel.pokemonDetails {
-                VStack(spacing: 20) {
+                VStack(spacing: contentSpacing) {
                     PokemonHeroCard(pokemonListEntry: pokemonListEntry, typeColors: typeColors)
                     PokemonStatsView(
                         typeString: pokemonListEntry.typeString,
@@ -91,7 +111,7 @@ struct PokemonDetailsView: View {
                         calculator: calculator
                     )
                 }
-                .padding()
+                .padding(contentPadding)
             }
         }
         .toolbar {
@@ -104,12 +124,10 @@ struct PokemonDetailsView: View {
     }
 
     private var backgroundGradient: some View {
-        return LinearGradient(
-            colors: [
-                backgroundColors.0, backgroundColors.1
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
+        LinearGradient(
+            stops: backgroundGradientStops,
+            startPoint: .top,
+            endPoint: .bottom
         )
         .ignoresSafeArea()
     }
