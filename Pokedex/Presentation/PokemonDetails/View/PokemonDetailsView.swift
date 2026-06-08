@@ -46,13 +46,6 @@ struct PokemonDetailsView: View {
         ]
     }
 
-    private var calculator: BattleStatsCalculator {
-        BattleStatsCalculator(
-            pokemonTypes: pokemonListEntry.pokemontypes,
-            allTypes: types
-        )
-    }
-
     private var typeColors: (Color?, Color?) {
         TypeColor.getDoubleTypeColors(
             for: pokemonListEntry,
@@ -101,22 +94,16 @@ struct PokemonDetailsView: View {
 
                     PokemonDetailsTabBarView(selectedTab: $selectedTab)
 
-                    PokemonStatsView(
-                        typeString: pokemonListEntry.typeString,
-                        weight: details.weight,
-                        height: details.height
-                    )
-                    PokemonBattleStatsView(
-                        pokemonHP: details.statValue(named: "hp"),
-                        pokemonAttack: details.statValue(
-                            named: "attack"
-                        ),
-                        pokemonDefense: details.statValue(
-                            named: "defense"
-                        ),
-                        pokemonSpeed: details.statValue(named: "speed"),
-                        calculator: calculator
-                    )
+                    switch selectedTab {
+                    case .about:
+                        PokemonAboutTab(pokemonListEntry: pokemonListEntry, types: types, details: details)
+                    case .stats:
+                        PokemonStatsTab()
+                    case .moves:
+                        PokemonMovesTab()
+                    case .evolution:
+                        PokemonEvolutionTab()
+                    }
                 }
                 .padding(contentPadding)
             }
