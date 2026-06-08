@@ -11,6 +11,12 @@ struct PokemonAboutTab: View {
     let types: [PokemonType]
     let details: PokemonDetailsEntry
 
+    private let strongEfficacyTitle = "Strong against"
+    private let weakEfficacyTitle = "Weak against"
+    private let strongEfficacyValue = 50
+    private let weakEfficacyValue = 200
+    private let noEfficacyLabel = "Other stats to be discovered..."
+
     private var calculator: BattleStatsCalculator {
         BattleStatsCalculator(
             pokemonTypes: pokemonListEntry.pokemontypes,
@@ -18,23 +24,48 @@ struct PokemonAboutTab: View {
         )
     }
 
+    private var strengthEfficacies: [TypeStrength]? {
+        calculator.calculateEfficacies(for: strongEfficacyValue)
+    }
+
+    private var weaknessEfficacies: [TypeStrength]? {
+        calculator.calculateEfficacies(for: weakEfficacyValue)
+    }
+
     var body: some View {
-        PokemonStatsView(
-            weight: details.weight,
-            height: details.height,
-            category: details.pokemonspecy?.genus
-        )
-        PokemonBattleStatsView(
-            pokemonHP: details.statValue(named: "hp"),
-            pokemonAttack: details.statValue(
-                named: "attack"
-            ),
-            pokemonDefense: details.statValue(
-                named: "defense"
-            ),
-            pokemonSpeed: details.statValue(named: "speed"),
-            calculator: calculator
-        )
+        VStack {
+            PokemonStatsView(
+                weight: details.weight,
+                height: details.height,
+                category: details.pokemonspecy?.genus
+            )
+            efficacyViews
+        }
+    }
+
+    private var efficacyViews: some View {
+        VStack {
+            if let efficacies = strengthEfficacies {
+                EfficacyView(title: strongEfficacyTitle, efficacies: efficacies)
+            } else {
+                noEfficacySubview
+            }
+            if let efficacies = weaknessEfficacies {
+                EfficacyView(title: weakEfficacyTitle, efficacies: efficacies)
+            } else if strengthEfficacies != nil {
+                noEfficacySubview
+            }
+        }
+    }
+
+    private var noEfficacySubview: some View {
+        Text(noEfficacyLabel)
+            .font(.title3)
+            .bold()
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(Color.noEfficacyBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 

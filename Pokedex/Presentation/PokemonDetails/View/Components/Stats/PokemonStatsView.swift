@@ -8,38 +8,32 @@
 import SwiftUI
 
 struct PokemonStatsView: View {
-    let typeString: String
     let weight: Int
     let height: Int
+    let category: String?
 
-    private let typeLabel = "Type"
     private let weightLabel = "Weight"
     private let heightLabel = "Height"
+    private let categoryLabel = "Category"
 
     var body: some View {
-        HStack(spacing: 40) {
-            StatView(
-                label: typeLabel,
-                value: typeString,
-                color: .orange
-            )
+        HStack(spacing: 24) {
             StatView(
                 label: weightLabel,
-                value: "\(weight)",
-                color: .blue
+                value: "\(weight)"
             )
+
             StatView(
                 label: heightLabel,
-                value: "\(height)",
-                color: .green
+                value: "\(height)"
             )
+
+            if let categoryValue = category {
+                StatView(
+                    label: categoryLabel,
+                    value: categoryValue
+                )
+            }
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 20).fill(
-                .ultraThinMaterial
-            ).shadow(radius: 5)
-        )
     }
 }
-

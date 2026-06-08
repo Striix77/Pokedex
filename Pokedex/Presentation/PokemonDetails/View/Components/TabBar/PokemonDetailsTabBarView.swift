@@ -51,11 +51,11 @@ struct PokemonDetailsTabBarView: View {
         .padding(.vertical, containerVerticalPadding)
         .background(
             RoundedRectangle(cornerRadius: containerCornerRadius)
-                .fill(Color.gray.opacity(containerBackgroundOpacity))
+                .fill(Color.containerBackground)
         )
         .overlay(
             RoundedRectangle(cornerRadius: containerCornerRadius)
-                .stroke(Color.gray.opacity(containerBorderOpacity), lineWidth: containerBorderLineWidth)
+                .stroke(Color.containerBorder, lineWidth: containerBorderLineWidth)
         )
     }
 

@@ -98,7 +98,7 @@ struct PokemonDetailsView: View {
                     case .about:
                         PokemonAboutTab(pokemonListEntry: pokemonListEntry, types: types, details: details)
                     case .stats:
-                        PokemonStatsTab()
+                        PokemonStatsTab(details: details)
                     case .moves:
                         PokemonMovesTab()
                     case .evolution:
