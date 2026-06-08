@@ -19,7 +19,8 @@ extension PokemonListEntry {
                 ))
             ],
             pokemonspecy: SpeciesEntry(
-                generation: PokemonGeneration(name: "generation-i")
+                generation: PokemonGeneration(name: "generation-i"),
+                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "")]
             ),
             pokemonsprites: [
                 SpriteEntry(sprites: SpriteData(
@@ -50,7 +51,8 @@ extension PokemonListEntry {
                 ))
             ],
             pokemonspecy: SpeciesEntry(
-                generation: PokemonGeneration(name: "generation-i")
+                generation: PokemonGeneration(name: "generation-i"),
+                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "")]
             ),
             pokemonsprites: [
                 SpriteEntry(sprites: SpriteData(

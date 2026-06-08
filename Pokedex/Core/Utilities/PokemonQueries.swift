@@ -6,71 +6,80 @@
 //
 import Foundation
 
-struct PokemonQueries {
+enum PokemonQueries {
     static let pokemonListQuery = """
-            query getPokemonList {
-              pokemon {
-                id
-                name
-                pokemonsprites {
-                    sprites
-                  }
-                pokemonspecy {
-                  generation {
-                    name
-                  }
-                }
-                pokemontypes{
-                  type{
-                    id
-                    name
-                  }
-                }
-              }
-            }
-            """
-    
-    static func getPokemonDetailsQuery(for id: Int) -> String {
-            """
-            query getPokemonDetails {
-                pokemon(where: {id: {_eq: \(id)}}) {
-                  weight
-                  height
-                  pokemonsprites {
-                        sprites
-                      }
-                  pokemonstats {
-                      base_stat
-                      stat {
-                          name
-                      }
-                  }
-                }
-            }
-            """
-        }
-    
-    static let pokemonTypesQuery = """
-        query samplePokeAPIquery {
-          type{
-              id
-              name
-              TypeefficaciesByTargetTypeId(where: {damage_factor: {_neq: 100}}) {
-                  damage_factor
-                  type {
-                      id
-                      name
-                  }
-              }
+    query getPokemonList {
+      pokemon {
+        id
+        name
+        pokemonsprites {
+            sprites
           }
-        }
-        """
-    
-    static let pokemonGenerationsQuery = """
-        query getGenerations {
+        pokemonspecy {
           generation {
             name
           }
         }
+        pokemontypes{
+          type{
+            id
+            name
+          }
+        }
+      }
+    }
+    """
+    
+    static func getPokemonDetailsQuery(for id: Int) -> String {
         """
+        query getPokemonDetails {
+            pokemon(where: {id: {_eq: \(id)}}) {
+              weight
+              height
+              pokemonsprites {
+                    sprites
+                  }
+              pokemonstats {
+                  base_stat
+                  stat {
+                      name
+                  }
+              }
+        pokemonspecy {
+              pokemonspeciesflavortexts(
+                where: {language_id: {_eq: 9}}
+                order_by: {version_id: asc}
+                limit: 1
+              ) {
+                flavor_text
+              }
+            }
+            }
+        }
+        """
+    }
+    
+    static let pokemonTypesQuery = """
+    query samplePokeAPIquery {
+      type{
+          id
+          name
+          TypeefficaciesByTargetTypeId(where: {damage_factor: {_neq: 100}}) {
+              damage_factor
+              type {
+                  id
+                  name
+              }
+          }
+      }
+    }
+    """
+    
+    static let pokemonGenerationsQuery = """
+    query getGenerations {
+      generation {
+        name
+      }
+    }
+    """
 }

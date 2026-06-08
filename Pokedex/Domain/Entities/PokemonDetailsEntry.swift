@@ -10,6 +10,7 @@ struct PokemonDetailsEntry: Codable, Hashable {
     let weight: Int
     let height: Int
     let pokemonstats: [StatEntry]
+    let pokemonspecy: SpeciesEntry?
 
     func statValue(named name: String) -> Int {
         pokemonstats
