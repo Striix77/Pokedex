@@ -46,6 +46,9 @@ enum PokemonQueries {
                   }
               }
         pokemonspecy {
+              pokemonspeciesnames(where: {language_id: {_eq: 9}}) {
+                genus
+              }
               pokemonspeciesflavortexts(
                 where: {language_id: {_eq: 9}}
                 order_by: {version_id: asc}

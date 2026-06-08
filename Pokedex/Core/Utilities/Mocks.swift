@@ -20,7 +20,8 @@ extension PokemonListEntry {
             ],
             pokemonspecy: SpeciesEntry(
                 generation: PokemonGeneration(name: "generation-i"),
-                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "")]
+                pokemonspeciesnames: [SpeciesNameEntry(genus: "Tiny Turtle")],
+                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "After birth, its back swells and hardens into a shell. It powerfully sprays foam from its mouth to keep enemies at bay.")]
             ),
             pokemonsprites: [
                 SpriteEntry(sprites: SpriteData(
@@ -52,7 +53,8 @@ extension PokemonListEntry {
             ],
             pokemonspecy: SpeciesEntry(
                 generation: PokemonGeneration(name: "generation-i"),
-                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "")]
+                pokemonspeciesnames: [SpeciesNameEntry(genus: "Seed")],
+                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon, drawing energy from sunlight.")]
             ),
             pokemonsprites: [
                 SpriteEntry(sprites: SpriteData(

@@ -20,9 +20,9 @@ struct PokemonAboutTab: View {
 
     var body: some View {
         PokemonStatsView(
-            typeString: pokemonListEntry.typeString,
             weight: details.weight,
-            height: details.height
+            height: details.height,
+            category: details.pokemonspecy?.genus
         )
         PokemonBattleStatsView(
             pokemonHP: details.statValue(named: "hp"),
