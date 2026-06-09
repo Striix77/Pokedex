@@ -37,16 +37,26 @@ struct PokemonAboutTab: View {
     }
 
     var body: some View {
-        VStack {
-            Text(description)
+        VStack(spacing: 32) {
+            descriptionText
 
             PokemonStatsView(
                 weight: details.weight,
                 height: details.height,
                 category: details.pokemonspecy?.genus
             )
+
             efficacyViews
         }
+    }
+
+    private var descriptionText: some View {
+        HStack {
+            Text(description)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.leading)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var efficacyViews: some View {

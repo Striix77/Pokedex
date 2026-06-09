@@ -20,7 +20,6 @@ struct EfficacyView: View {
             cardScrollView
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
     }
 
     private var cardScrollView: some View {
