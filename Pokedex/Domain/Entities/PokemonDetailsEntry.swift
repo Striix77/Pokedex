@@ -12,7 +12,18 @@ struct PokemonDetailsEntry: Codable, Hashable {
     let pokemonstats: [StatEntry]
     let pokemonspecy: SpeciesEntry?
 
-    func statValue(named name: String) -> Int {
+    var stats: PokemonStats {
+        PokemonStats(
+            hp: statValue(named: "hp"),
+            atk: statValue(named: "attack"),
+            def: statValue(named: "defense"),
+            spa: statValue(named: "special-attack"),
+            spd: statValue(named: "special-defense"),
+            spe: statValue(named: "speed")
+        )
+    }
+
+    private func statValue(named name: String) -> Int {
         pokemonstats
             .first(where: { $0.stat.name == name })?
             .base_stat ?? 0

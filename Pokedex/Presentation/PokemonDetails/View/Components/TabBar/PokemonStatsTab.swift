@@ -8,13 +8,16 @@ import SwiftUI
 
 struct PokemonStatsTab: View {
     let details: PokemonDetailsEntry
+    let accentColor: Color
+
     var body: some View {
-        PokemonBattleStatsView(
-            pokemonHP: details.statValue(named: "hp"),
-            pokemonAttack: details.statValue(named: "attack"),
-            pokemonDefense: details.statValue(named: "defense"),
-            pokemonSpeed: details.statValue(named: "speed")
-        )
+        VStack {
+            HexStatGrid(stats: details.stats, accentColor: accentColor)
+                .padding(20)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .border(.red)
     }
 }
 

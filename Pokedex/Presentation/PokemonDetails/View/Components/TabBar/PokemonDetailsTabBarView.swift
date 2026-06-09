@@ -21,7 +21,8 @@ struct PokemonDetailsTabBarView: View {
     private let animationDuration: CGFloat = 0.25
     private let buttonCornerRadius: CGFloat = 16
     private let buttonBackgroundOpacity: CGFloat = 0.8
-    private let buttonBackgroundOffset: CGFloat = -1
+    private let buttonBackgroundOffset: CGFloat = -2
+    private let buttonBackgroundShadowRadius: CGFloat = 2
 
     var body: some View {
         HStack(spacing: contentSpacing) {
@@ -62,7 +63,6 @@ struct PokemonDetailsTabBarView: View {
     private var tabButtonBackground: some View {
         return ZStack {
             RoundedRectangle(cornerRadius: buttonCornerRadius)
-                .fill(Color.white)
                 .overlay(
                     Color.tabBarButtonBackground
                         .clipShape(RoundedRectangle(cornerRadius: buttonCornerRadius))
@@ -73,6 +73,7 @@ struct PokemonDetailsTabBarView: View {
             RoundedRectangle(cornerRadius: buttonCornerRadius)
                 .fill(Color.tabBarButtonBackground)
         }
+        .shadow(radius: buttonBackgroundShadowRadius)
     }
 }
 
