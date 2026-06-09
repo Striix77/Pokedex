@@ -13,7 +13,7 @@ struct PokemonDetailsView: View {
             apiService: PokemonDetailsAPIService()
         )
     )
-    @State private var selectedTab = PokemonDetailTab.stats
+    @State private var selectedTab = PokemonDetailTab.about
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     let pokemonListEntry: PokemonListEntry

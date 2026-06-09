@@ -10,16 +10,24 @@ struct PokemonStatsTab: View {
     let details: PokemonDetailsEntry
     let accentColor: Color
 
-    var total: Int {
+    private let gridHeight: CGFloat = 300
+    private let gridPadding: CGFloat = 20
+    private let contentSpacing: CGFloat = 48
+    private let totalLabelPadding: CGFloat = 20
+    private let totalContainerCornerRadius: CGFloat = 22
+    private let totalContainerBorderWidth: CGFloat = 1
+    private let totalLabel = "TOTAL"
+
+    private var total: Int {
         details.stats.total
     }
 
     var body: some View {
-        VStack(spacing: 48) {
+        VStack(spacing: contentSpacing) {
             HexStatGrid(stats: details.stats, accentColor: accentColor)
-                .frame(height: 300)
-                .padding(20)
-                .padding(.top, 20)
+                .frame(height: gridHeight)
+                .padding(gridPadding)
+                .padding(.top, gridPadding)
 
             statsTotal
         }
@@ -28,7 +36,7 @@ struct PokemonStatsTab: View {
 
     private var statsTotal: some View {
         VStack {
-            Text("TOTAL")
+            Text(totalLabel)
                 .font(.title3)
                 .foregroundStyle(.secondary)
             Text("\(total)")
@@ -36,14 +44,14 @@ struct PokemonStatsTab: View {
                 .bold()
                 .foregroundStyle(accentColor)
         }
-        .padding(20)
+        .padding(totalLabelPadding)
         .frame(maxWidth: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 22)
+            RoundedRectangle(cornerRadius: totalContainerCornerRadius)
                 .fill(Color.containerBackground)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 22)
-                        .stroke(Color.containerBorder, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: totalContainerCornerRadius)
+                        .stroke(Color.containerBorder, lineWidth: totalContainerBorderWidth)
                 )
         )
     }
