@@ -32,8 +32,14 @@ struct PokemonAboutTab: View {
         calculator.calculateEfficacies(for: weakEfficacyValue)
     }
 
+    private var description: String {
+        details.pokemonspecy?.flavorText ?? "The origins of this Pokémon are unknown..."
+    }
+
     var body: some View {
         VStack {
+            Text(description)
+
             PokemonStatsView(
                 weight: details.weight,
                 height: details.height,
