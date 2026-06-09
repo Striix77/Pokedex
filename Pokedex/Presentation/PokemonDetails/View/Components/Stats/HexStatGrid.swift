@@ -9,7 +9,6 @@ import SwiftUI
 struct HexStatGrid: View {
     let stats: PokemonStats
     let accentColor: Color
-
     private let ringCount = 5
     private let radiusFraction: CGFloat = 1
     private let gridLineOpacity: CGFloat = 0.25

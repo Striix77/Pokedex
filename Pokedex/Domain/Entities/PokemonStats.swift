@@ -24,4 +24,8 @@ struct PokemonStats: Codable, Hashable {
             (label: "SPE", value: spe),
         ]
     }
+
+    var total: Int {
+        hp + atk + def + spa + spd + spe
+    }
 }
