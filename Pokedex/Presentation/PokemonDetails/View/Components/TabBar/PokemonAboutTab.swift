@@ -16,6 +16,7 @@ struct PokemonAboutTab: View {
     private let strongEfficacyValue = 50
     private let weakEfficacyValue = 200
     private let noEfficacyLabel = "Other stats to be discovered..."
+    private let contentSpacing: CGFloat = 32
 
     private var calculator: BattleStatsCalculator {
         BattleStatsCalculator(
@@ -37,7 +38,7 @@ struct PokemonAboutTab: View {
     }
 
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: contentSpacing) {
             descriptionText
 
             PokemonStatsView(
