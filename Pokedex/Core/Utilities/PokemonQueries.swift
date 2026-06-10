@@ -85,4 +85,26 @@ enum PokemonQueries {
       }
     }
     """
+    
+    static func getQueryForVersionGroupsForPokemon(for pokemonName: String) -> String {
+        """
+        query GetVersionGroupsForPokemon() {
+         versiongroup(
+           where: {
+             pokemonmoves: {
+               pokemon: { name: { _eq: "\(pokemonName.lowercased())" } }
+             }
+           }
+           order_by: { id: asc }
+         ) {
+           id
+           name
+           generation {
+             name
+           }
+         }
+        }
+
+        """
+    }
 }
