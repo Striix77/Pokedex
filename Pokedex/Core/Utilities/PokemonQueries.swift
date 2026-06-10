@@ -86,25 +86,63 @@ enum PokemonQueries {
     }
     """
     
-    static func getQueryForVersionGroupsForPokemon(for pokemonName: String) -> String {
+    static func getQueryForVersionGroups(for pokemonName: String) -> String {
         """
-        query GetVersionGroupsForPokemon() {
-         versiongroup(
-           where: {
-             pokemonmoves: {
-               pokemon: { name: { _eq: "\(pokemonName.lowercased())" } }
-             }
-           }
-           order_by: { id: asc }
-         ) {
-           id
-           name
-           generation {
-             name
-           }
-         }
+        query GetVersionGroupsForPokemon {
+          versiongroup(
+            where: {
+              pokemonmoves: {
+                pokemon: { name: { _eq: "\(pokemonName.lowercased())" } }
+              }
+            }
+            order_by: { id: asc }
+          ) {
+            id
+            name
+            generation {
+              name
+            }
+          }
         }
+        """
+    }
 
+    static func getMovesQuery(for pokemonId: Int, versionGroupId: Int) -> String {
+        """
+        query GetPokemonMoves {
+          pokemonmoves(
+            where: {
+              pokemon_id: { _eq: \(pokemonId) }
+              version_group_id: { _eq: \(versionGroupId) }
+            }
+            order_by: [{ move_learn_method_id: asc }, { level: asc }]
+          ) {
+            level
+            movelearnmethod {
+              name
+            }
+            move {
+              id
+              name
+              power
+              accuracy
+              pp
+              type {
+                id
+                name
+              }
+              movedamageclas {
+                name
+              }
+              moveeffectprose(where: { language_id: { _eq: 9 } }) {
+                short_effect
+              }
+              movemachines(where: { version_group_id: { _eq: \(versionGroupId) } }) {
+                machine_number
+              }
+            }
+          }
+        }
         """
     }
 }

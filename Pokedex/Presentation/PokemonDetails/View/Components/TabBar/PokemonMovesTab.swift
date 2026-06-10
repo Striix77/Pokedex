@@ -7,8 +7,29 @@
 import SwiftUI
 
 struct PokemonMovesTab: View {
+    @State private var viewModel = PokemonMovesViewModel(pokemonGameVersionsUseCase: PokemonGameVersionsUseCase(apiService: PokemonGameVersionsAPIService()))
+    @Environment(\.dismiss) var dismiss
+    
+    let pokemonName: String
     var body: some View {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
+        ScrollView(.horizontal){
+            HStack{
+                ForEach(viewModel.pokemonGameVersions, id: \.id) {gameVersion in
+                    Text(gameVersion.formattedName)
+                }
+            }
+        }
+        .task{
+            await viewModel.fetchPokemonGameVersions(name: pokemonName)
+        }
+        .fetchingAlert(
+            showAlert: $viewModel.showAlert,
+            fetchAction: {
+                await viewModel.fetchPokemonGameVersions(name: pokemonName)
+            },
+            confirmAction: { dismiss() },
+            errorMessage: viewModel.errorMessage
+        )
     }
 }
 

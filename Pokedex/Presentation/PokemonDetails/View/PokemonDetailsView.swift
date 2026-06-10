@@ -100,7 +100,7 @@ struct PokemonDetailsView: View {
                     case .stats:
                         PokemonStatsTab(details: details, accentColor: typeColors.0 ?? .white)
                     case .moves:
-                        PokemonMovesTab()
+                        PokemonMovesTab(pokemonName: pokemonListEntry.name)
                     case .evolution:
                         PokemonEvolutionTab()
                     }
