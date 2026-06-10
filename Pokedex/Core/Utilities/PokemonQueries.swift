@@ -107,38 +107,41 @@ enum PokemonQueries {
         """
     }
 
-    static func getMovesQuery(for pokemonId: Int, versionGroupId: Int) -> String {
+    static func getMovesQuery(for pokemonName: String, versionGroupName: String) -> String {
         """
-        query GetPokemonMoves {
-          pokemonmoves(
-            where: {
-              pokemon_id: { _eq: \(pokemonId) }
-              version_group_id: { _eq: \(versionGroupId) }
-            }
-            order_by: [{ move_learn_method_id: asc }, { level: asc }]
-          ) {
-            level
-            movelearnmethod {
-              name
-            }
-            move {
+        query PokemonMovesByVersion {
+          pokemon(where: {name: {_eq: "\(pokemonName)"}}) {
+            name
+            pokemonmoves(
+              where: {versiongroup: {name: {_eq: "\(versionGroupName)"}}}
+              order_by: [{move_learn_method_id: asc}, {level: asc}]
+            ) {
               id
-              name
-              power
-              accuracy
-              pp
-              type {
-                id
+              level
+              movelearnmethod {
                 name
               }
-              movedamageclas {
+              move {
                 name
-              }
-              moveeffectprose(where: { language_id: { _eq: 9 } }) {
-                short_effect
-              }
-              movemachines(where: { version_group_id: { _eq: \(versionGroupId) } }) {
-                machine_number
+                power
+                accuracy
+                pp
+                type {
+                  name
+                }
+                movedamageclass {
+                  name
+                }
+                moveeffect {
+                  moveeffecteffecttexts(where: {language_id: {_eq: 9}}) {
+                    short_effect
+                  }
+                }
+                machines(where: {versiongroup: {name: {_eq: "\(versionGroupName)"}}}) {
+                  item {
+                    name
+                  }
+                }
               }
             }
           }
