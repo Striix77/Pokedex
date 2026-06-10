@@ -4,26 +4,43 @@ import Foundation
 @MainActor
 class PokemonMovesViewModel {
     var isLoading = true
-    var errorMessage: String? = nil
-    var showAlert: Bool = false
-    var pokemonGameVersions: [PokemonGameVersion]
-    
-    private let pokemonGameVersionsUseCase: PokemonGameVersionsUseCaseProtocol
+    var errorMessage: String?
+    var showVersionsAlert: Bool = false
+    var showMovesAlert: Bool = false
+    var pokemonGameVersions: [PokemonGameVersion] = []
+    var pokemonMoves: [PokemonMoveEntry] = []
 
-    init(pokemonGameVersionsUseCase: PokemonGameVersionsUseCaseProtocol) {
-        self.pokemonGameVersions = [PokemonGameVersion]()
+    private let pokemonGameVersionsUseCase: PokemonGameVersionsUseCaseProtocol
+    private let pokemonMovesUseCase: PokemonMovesUseCaseProtocol
+
+    init(
+        pokemonGameVersionsUseCase: PokemonGameVersionsUseCaseProtocol,
+        pokemonMovesUseCase: PokemonMovesUseCaseProtocol
+    ) {
         self.pokemonGameVersionsUseCase = pokemonGameVersionsUseCase
+        self.pokemonMovesUseCase = pokemonMovesUseCase
     }
 
     func fetchPokemonGameVersions(name: String) async {
         isLoading = true
 
         errorMessage = await ErrorHandler.handleFetching {
-            let gameVersions = try await pokemonGameVersionsUseCase.execute(name: name)
-
-            self.pokemonGameVersions = gameVersions
+            self.pokemonGameVersions = try await self.pokemonGameVersionsUseCase.execute(name: name)
         }
-        showAlert = errorMessage != nil
+        showVersionsAlert = errorMessage != nil
+        isLoading = false
+    }
+
+    func fetchMoves(name: String, versionGroupName: String) async {
+        isLoading = true
+
+        errorMessage = await ErrorHandler.handleFetching {
+            self.pokemonMoves = try await self.pokemonMovesUseCase.execute(
+                name: name,
+                versionGroupName: versionGroupName
+            )
+        }
+        showMovesAlert = errorMessage != nil
         isLoading = false
     }
 }

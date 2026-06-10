@@ -10,6 +10,9 @@ struct PokemonMovesTab: View {
     @State private var viewModel = PokemonMovesViewModel(
         pokemonGameVersionsUseCase: PokemonGameVersionsUseCase(
             apiService: PokemonGameVersionsAPIService()
+        ),
+        pokemonMovesUseCase: PokemonMovesUseCase(
+            apiService: PokemonMovesAPIService()
         )
     )
     @Environment(\.dismiss) var dismiss
@@ -29,9 +32,97 @@ struct PokemonMovesTab: View {
         viewModel.pokemonGameVersions
     }
 
+    private var levelUpMoves: [PokemonMoveEntry] {
+        viewModel.pokemonMoves.filter { $0.move.machineBadge == nil }
+    }
+
+    private var tmMoves: [PokemonMoveEntry] {
+        viewModel.pokemonMoves.filter {
+            if let badge = $0.move.machineBadge, badge.contains("TM") {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+    }
+
+    private var hmMoves: [PokemonMoveEntry] {
+        viewModel.pokemonMoves.filter {
+            if let badge = $0.move.machineBadge, badge.contains("HM") {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+    }
+
     var body: some View {
+        VStack {
+            gameVersionsContainer
+
+            VStack(alignment: .leading) {
+                Text("Level-Up")
+                    .font(.title2)
+
+                VStack(alignment: .center) {
+                    ForEach(levelUpMoves, id: \.id) { move in
+                        Text(move.move.formattedName)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+
+                Text("TM")
+                    .font(.title2)
+
+                VStack(alignment: .center) {
+                    ForEach(tmMoves, id: \.id) { move in
+                        Text(move.move.formattedName)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+
+                Text("HM")
+                    .font(.title2)
+
+                VStack(alignment: .center) {
+                    ForEach(hmMoves, id: \.id) { move in
+                        Text(move.move.formattedName)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .task {
+            await fetchVersions()
+        }
+        .fetchingAlert(
+            showAlert: $viewModel.showVersionsAlert,
+            fetchAction: {
+                await fetchVersions()
+            },
+            confirmAction: { dismiss() },
+            errorMessage: viewModel.errorMessage
+        )
+        .task(id: selectedVersion) {
+            guard let version = selectedVersion else { return }
+            await viewModel.fetchMoves(name: pokemonName, versionGroupName: version)
+        }
+        .fetchingAlert(
+            showAlert: $viewModel.showMovesAlert,
+            fetchAction: {
+                await fetchVersions()
+            },
+            confirmAction: { dismiss() },
+            errorMessage: viewModel.errorMessage
+        )
+    }
+
+    private var gameVersionsContainer: some View {
         ScrollView(.horizontal) {
-            HStack {
+            HStack(spacing: 16) {
                 ForEach(gameVersions, id: \.id) { gameVersion in
                     gameVersionButton(gameVersion, isSelected: selectedVersion == gameVersion.name)
                 }
@@ -39,18 +130,6 @@ struct PokemonMovesTab: View {
         }
         .scrollIndicators(.hidden)
         .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
-        .task {
-            await viewModel.fetchPokemonGameVersions(name: pokemonName)
-            selectedVersion = gameVersions.first?.name
-        }
-        .fetchingAlert(
-            showAlert: $viewModel.showAlert,
-            fetchAction: {
-                await viewModel.fetchPokemonGameVersions(name: pokemonName)
-            },
-            confirmAction: { dismiss() },
-            errorMessage: viewModel.errorMessage
-        )
     }
 
     private func gameVersionButton(_ gameVersion: PokemonGameVersion, isSelected: Bool) -> some View {
@@ -79,6 +158,11 @@ struct PokemonMovesTab: View {
                 selectedVersion = gameVersion.name
             }
         }
+    }
+
+    private func fetchVersions() async {
+        await viewModel.fetchPokemonGameVersions(name: pokemonName)
+        selectedVersion = gameVersions.first?.name
     }
 }
 
