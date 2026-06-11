@@ -86,6 +86,7 @@ struct PokemonMovesTab: View {
                     gameVersionButton(gameVersion, isSelected: selectedVersion == gameVersion.name)
                 }
             }
+            .padding(.vertical)
         }
         .scrollIndicators(.hidden)
         .scrollBounceBehavior(.basedOnSize, axes: .horizontal)

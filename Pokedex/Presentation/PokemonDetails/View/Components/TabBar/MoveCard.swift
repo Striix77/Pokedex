@@ -5,42 +5,48 @@ struct MoveCard: View {
     let accentColor: Color
 
     private let labelWidth: CGFloat = 62
+    private let labelVerticalPadding: CGFloat = 6
+    private let labelCornerRadius: CGFloat = 8
+    private let typeIconMaxWidth: CGFloat = 40
+    private let typeIconCornerRadius: CGFloat = 12
+    private let typeIconOffset: CGFloat = -1
+    private let typeIconWhiteMix: CGFloat = 0.4
+    private let labelWhiteMix: CGFloat = 0.4
+    private let labelBackgroundOpacity: CGFloat = 0.2
+    private let cardCornerRadius: CGFloat = 18
+    private let leadingSpacing: CGFloat = 12
+    private let trailingSpacing: CGFloat = 12
 
-    var isLevelUpMove: Bool {
+    private var isLevelUpMove: Bool {
         move.moveLearnType == .levelUp
     }
 
-    var type: MoveType {
+    private var type: MoveType {
         move.move.type
     }
 
     var body: some View {
         HStack {
             leadingContent
-
             Spacer()
-
             trailingContent
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .containerBackground(cornerRadius: 18, lineWidth: 2)
+        .containerBackground(cornerRadius: cardCornerRadius, lineWidth: 1)
     }
 
     private var leadingContent: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: leadingSpacing) {
             levelMachineLabel
-
             typeIcon
-
             moveName
         }
     }
 
     private var trailingContent: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: trailingSpacing) {
             movePower
-
             expandIcon
         }
     }
@@ -49,38 +55,32 @@ struct MoveCard: View {
         Group {
             if isLevelUpMove {
                 Text(move.levelString)
-            }
-            else if let badge = move.move.machineBadge {
+            } else if let badge = move.move.machineBadge {
                 Text(badge)
             }
         }
         .bold()
-        .foregroundStyle(accentColor.mix(with: .white, by: 0.4))
+        .foregroundStyle(accentColor.mix(with: .white, by: labelWhiteMix))
         .frame(width: labelWidth)
-        .padding(.vertical, 6)
-        .containerBackground(cornerRadius: 8, fill: accentColor.opacity(0.2), stroke: accentColor)
+        .padding(.vertical, labelVerticalPadding)
+        .containerBackground(cornerRadius: labelCornerRadius, fill: accentColor.opacity(labelBackgroundOpacity), stroke: accentColor)
     }
 
     private var typeIcon: some View {
         PokemonTypeIcon(id: type.id)
-            .frame(maxWidth: 40)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .frame(maxWidth: typeIconMaxWidth)
+            .clipShape(RoundedRectangle(cornerRadius: typeIconCornerRadius))
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(
-                        TypeColor(rawValue: type.name)?.color
-                            .mix(with: .white, by: 0.4) ?? .white
-                    )
-                    .offset(y: -1)
+                RoundedRectangle(cornerRadius: typeIconCornerRadius)
+                    .fill(TypeColor(rawValue: type.name)?.color.mix(with: .white, by: typeIconWhiteMix) ?? .white)
+                    .offset(y: typeIconOffset)
             )
     }
 
     private var moveName: some View {
-        HStack {
-            Text(move.move.formattedName)
-                .font(.title3)
-                .bold()
-        }
+        Text(move.move.formattedName)
+            .font(.title3)
+            .bold()
     }
 
     private var movePower: some View {
@@ -93,11 +93,9 @@ struct MoveCard: View {
             if let power = move.move.power {
                 Text("\(power)")
                     .bold()
-            }
-            else {
+            } else {
                 Text("⎯")
                     .foregroundStyle(.secondary)
-                    .bold()
                     .bold()
             }
         }
