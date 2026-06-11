@@ -59,41 +59,12 @@ struct PokemonMovesTab: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 24) {
             gameVersionsContainer
 
-            VStack(alignment: .leading) {
-                Text("Level-Up")
-                    .font(.title2)
+            stabDescription
 
-                VStack(alignment: .center) {
-                    ForEach(levelUpMoves, id: \.id) { move in
-                        Text(move.move.formattedName)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-
-                Text("TM")
-                    .font(.title2)
-
-                VStack(alignment: .center) {
-                    ForEach(tmMoves, id: \.id) { move in
-                        Text(move.move.formattedName)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-
-                Text("HM")
-                    .font(.title2)
-
-                VStack(alignment: .center) {
-                    ForEach(hmMoves, id: \.id) { move in
-                        Text(move.move.formattedName)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            moveSetViews
         }
         .task {
             await fetchVersions()
@@ -130,6 +101,32 @@ struct PokemonMovesTab: View {
         }
         .scrollIndicators(.hidden)
         .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+    }
+
+    private var stabDescription: some View {
+        HStack {
+            Image(systemName: "sparkle")
+                .imageScale(.small)
+                .bold()
+                .foregroundStyle(accentColor)
+
+            Text("STAB - Same Type Ability Boost, hits 1.5x harder")
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var moveSetViews: some View {
+        VStack(alignment: .leading) {
+            MoveSetView(moveSet: levelUpMoves, title: "Level-Up", accentColor: accentColor)
+
+            MoveSetView(moveSet: levelUpMoves, title: "TM", accentColor: accentColor)
+
+            MoveSetView(moveSet: levelUpMoves, title: "HM", accentColor: accentColor)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func gameVersionButton(_ gameVersion: PokemonGameVersion, isSelected: Bool) -> some View {
