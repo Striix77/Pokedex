@@ -6,12 +6,11 @@
 //
 import Foundation
 
-struct EfficacyCardHelper {
-
+enum PokemonIconUrlHelper {
     static func getIconUrl(for id: Int) -> URL? {
         URL(
             string:
-                PokedexStrings.getIconURLString(for: id)
+            PokedexStrings.getIconURLString(for: id)
         )
     }
 }

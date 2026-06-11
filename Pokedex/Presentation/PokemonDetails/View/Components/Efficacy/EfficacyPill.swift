@@ -74,13 +74,7 @@ struct EfficacyPill: View {
     }
 
     private var pillImage: some View {
-        KFImage(EfficacyCardHelper.getIconUrl(for: efficacy.id))
-            .placeholder {
-                Image(systemName: "questionmark.circle.fill")
-                    .imageScale(.large)
-            }
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+        PokemonTypeIcon(id: efficacy.id)
             .frame(maxWidth: iconMaxWidth)
             .aspectRatio(1, contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: iconCornerRadius))
