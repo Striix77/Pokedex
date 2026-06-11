@@ -23,14 +23,7 @@ struct StatView: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 22)
-                .fill(Color.containerBackground)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 22)
-                .stroke(Color.containerBorder, lineWidth: 1)
-        )
+        .containerBackground(cornerRadius: 22)
     }
 }
 

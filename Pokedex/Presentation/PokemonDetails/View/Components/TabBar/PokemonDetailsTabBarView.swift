@@ -51,14 +51,7 @@ struct PokemonDetailsTabBarView: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal, containerHorizontalPadding)
         .padding(.vertical, containerVerticalPadding)
-        .background(
-            RoundedRectangle(cornerRadius: containerCornerRadius)
-                .fill(Color.containerBackground)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: containerCornerRadius)
-                .stroke(Color.containerBorder, lineWidth: containerBorderLineWidth)
-        )
+        .containerBackground(cornerRadius: containerCornerRadius, lineWidth: containerBorderLineWidth)
     }
 
     private var tabButtonBackground: some View {

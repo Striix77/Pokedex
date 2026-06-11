@@ -142,13 +142,11 @@ struct PokemonMovesTab: View {
         }
         .padding(.horizontal, buttonHorizontalPadding)
         .padding(.vertical, buttonVerticalPadding)
-        .background(
-            RoundedRectangle(cornerRadius: buttonCornerRadius)
-                .fill(isSelected ? accentColor.opacity(buttonSelectedBackgroundOpacity) : Color.containerBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: buttonCornerRadius)
-                        .stroke(isSelected ? accentColor : Color.containerBorder, lineWidth: buttonBorderWidth)
-                )
+        .containerBackground(
+            cornerRadius: buttonCornerRadius,
+            fill: isSelected ? accentColor.opacity(buttonSelectedBackgroundOpacity) : Color.containerBackground,
+            stroke: isSelected ? accentColor : Color.containerBorder,
+            lineWidth: buttonBorderWidth
         )
         .onTapGesture {
             withAnimation(.easeInOut(duration: animationDuration)) {

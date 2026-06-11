@@ -46,14 +46,7 @@ struct PokemonStatsTab: View {
         }
         .padding(totalLabelPadding)
         .frame(maxWidth: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: totalContainerCornerRadius)
-                .fill(Color.containerBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: totalContainerCornerRadius)
-                        .stroke(Color.containerBorder, lineWidth: totalContainerBorderWidth)
-                )
-        )
+        .containerBackground(cornerRadius: totalContainerCornerRadius, lineWidth: totalContainerBorderWidth)
     }
 }
 
