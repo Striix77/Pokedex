@@ -33,36 +33,24 @@ struct PokemonMovesTab: View {
     }
 
     private var levelUpMoves: [PokemonMoveEntry] {
-        viewModel.pokemonMoves.filter { $0.move.machineBadge == nil }
+        viewModel.pokemonMoves.filter { $0.moveLearnType == .levelUp }
     }
 
     private var tmMoves: [PokemonMoveEntry] {
-        viewModel.pokemonMoves.filter {
-            if let badge = $0.move.machineBadge, badge.contains("TM") {
-                return true
-            }
-            else {
-                return false
-            }
-        }
+        viewModel.pokemonMoves.filter { $0.moveLearnType == .tm }
     }
 
     private var hmMoves: [PokemonMoveEntry] {
-        viewModel.pokemonMoves.filter {
-            if let badge = $0.move.machineBadge, badge.contains("HM") {
-                return true
-            }
-            else {
-                return false
-            }
-        }
+        viewModel.pokemonMoves.filter { $0.moveLearnType == .hm }
+    }
+
+    private var eggMoves: [PokemonMoveEntry] {
+        viewModel.pokemonMoves.filter { $0.moveLearnType == .egg }
     }
 
     var body: some View {
         VStack(spacing: 24) {
             gameVersionsContainer
-
-            stabDescription
 
             moveSetViews
         }
@@ -103,28 +91,19 @@ struct PokemonMovesTab: View {
         .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
     }
 
-    private var stabDescription: some View {
-        HStack {
-            Image(systemName: "sparkle")
-                .imageScale(.small)
-                .bold()
-                .foregroundStyle(accentColor)
-
-            Text("STAB - Same Type Ability Boost, hits 1.5x harder")
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
     private var moveSetViews: some View {
         VStack(alignment: .leading) {
-            MoveSetView(moveSet: levelUpMoves, title: "Level-Up", accentColor: accentColor)
+            MoveSetView(moveSet: levelUpMoves, title: moveSetTitle(moves: levelUpMoves), accentColor: accentColor)
 
-            MoveSetView(moveSet: levelUpMoves, title: "TM", accentColor: accentColor)
+            MoveSetView(moveSet: tmMoves, title: moveSetTitle(moves: tmMoves), accentColor: accentColor)
 
-            MoveSetView(moveSet: levelUpMoves, title: "HM", accentColor: accentColor)
+            if !hmMoves.isEmpty {
+                MoveSetView(moveSet: hmMoves, title: moveSetTitle(moves: hmMoves), accentColor: accentColor)
+            }
+
+            if !eggMoves.isEmpty {
+                MoveSetView(moveSet: eggMoves, title: moveSetTitle(moves: eggMoves), accentColor: accentColor)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -158,6 +137,10 @@ struct PokemonMovesTab: View {
     private func fetchVersions() async {
         await viewModel.fetchPokemonGameVersions(name: pokemonName)
         selectedVersion = gameVersions.first?.name
+    }
+
+    private func moveSetTitle(moves: [PokemonMoveEntry]) -> String {
+        moves.first?.moveLearnType.label ?? "Other"
     }
 }
 
