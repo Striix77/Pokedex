@@ -2,16 +2,23 @@ import SwiftUI
 
 struct ExpandedMoveCard: View {
     let move: PokemonMoveEntry
-    let versionName: String
     let accentColor: Color
+    let tapOffset: CGSize
+    let onClose: () -> Void
 
     @State private var powerProgressMultiplier: Double = 0
     @State private var powerAnimatedValue: Double = 0
     @State private var accuracyAnimatedValue: Int = 0
     @State private var powerPointsAnimatedValue: Int = 0
+    @State private var isVisible = false
+    @State private var yOffset: CGFloat = 0
+    @State private var xOffset: CGFloat = 0
 
     private let maxPower: Double = 250
-    private let animationDuration: Double = 0.5
+    private let animationDuration: Double = 1
+    private let appearAnimationResponse: Double = 0.7
+    private let appearAnimationDamping: Double = 0.7
+    private let appearScaleStart: CGFloat = 0.2
     private let overlayOpacity: Double = 0.5
     private let headerGradientOpacity: Double = 0.5
     private let backgroundGradientOpacity: Double = 0.4
@@ -72,18 +79,35 @@ struct ExpandedMoveCard: View {
         move.move.pp ?? 0
     }
 
+    private var versionName: String {
+        move.move.versiongroup.formattedName
+    }
+
     var body: some View {
         ZStack {
             Color.black
-                .opacity(overlayOpacity)
+                .opacity(isVisible ? overlayOpacity : 0)
                 .ignoresSafeArea()
+                .animation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping), value: isVisible)
 
             ZStack(alignment: .topTrailing) {
                 VStack {
                     header
                     details
                 }
+                .opacity(isVisible ? 1 : 0)
                 .onAppear {
+                    yOffset = tapOffset.height
+                    xOffset = tapOffset.width
+                    withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping)) {
+                        xOffset = 0
+                    }
+                    withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping).delay(0.2)) {
+                        isVisible = true
+                    }
+                    withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping).delay(0.21)) {
+                        yOffset = 0
+                    }
                     withAnimation(.easeInOut(duration: animationDuration)) {
                         powerProgressMultiplier = powerProgress
                         powerAnimatedValue = power
@@ -93,10 +117,25 @@ struct ExpandedMoveCard: View {
                 }
 
                 closeButton
+                    .opacity(isVisible ? 1 : 0)
             }
             .background(gradientBackground)
             .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
+            .scaleEffect(isVisible ? 1 : appearScaleStart)
+            .offset(x: xOffset, y: yOffset)
+            .animation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping), value: isVisible)
             .padding()
+        }
+    }
+
+    private func close() {
+        withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping)) {
+            isVisible = false
+            yOffset = tapOffset.height
+            xOffset = tapOffset.width
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + appearAnimationResponse) {
+            onClose()
         }
     }
 
@@ -210,6 +249,7 @@ struct ExpandedMoveCard: View {
             .padding(8)
             .containerBackground(cornerRadius: closeButtonCornerRadius)
             .padding()
+            .onTapGesture { close() }
     }
 
     private func moveDetailsContainer(title: String, value: String) -> some View {
@@ -258,30 +298,43 @@ struct ExpandedMoveCard: View {
 }
 
 #Preview {
+    @Previewable @State var isExpanded = false
+    @Previewable @State var tapOffset: CGSize = .zero
     ZStack {
         Color.white.ignoresSafeArea()
-        ExpandedMoveCard(
-            move: PokemonMoveEntry(
-                id: 2,
-                level: 0,
-                movelearnmethod: MoveLearnMethod(name: "machine"),
-                move: MoveEntry(
-                    name: "water-gun",
-                    power: 40,
-                    accuracy: 100,
-                    pp: 25,
-                    type: MoveType(id: 11, name: "water"),
-                    movedamageclass: MoveDamageClass(name: "physical"),
-                    moveeffect: MoveEffect(
-                        moveeffecteffecttexts: [
-                            MoveEffectText(short_effect: "Inflicts regular damage with no additional effect.")
-                        ]
-                    ),
-                    machines: [MoveMachine(item: MoveMachineItem(name: "tm12"))]
+            .onTapGesture(coordinateSpace: .global) { location in
+                tapOffset = CGSize(
+                    width: location.x - UIScreen.main.bounds.midX,
+                    height: location.y - UIScreen.main.bounds.midY
                 )
-            ),
-            versionName: "Emerald",
-            accentColor: TypeColor.water.color
-        )
+                isExpanded = true
+            }
+        if isExpanded {
+            ExpandedMoveCard(
+                move: PokemonMoveEntry(
+                    id: 2,
+                    level: 0,
+                    movelearnmethod: MoveLearnMethod(name: "machine"),
+                    move: MoveEntry(
+                        name: "water-gun",
+                        power: 40,
+                        accuracy: 100,
+                        pp: 25,
+                        type: MoveType(id: 11, name: "water"),
+                        movedamageclass: MoveDamageClass(name: "physical"),
+                        moveeffect: MoveEffect(
+                            moveeffecteffecttexts: [
+                                MoveEffectText(short_effect: "Inflicts regular damage with no additional effect.")
+                            ]
+                        ),
+                        machines: [MoveMachine(item: MoveMachineItem(name: "tm12"))],
+                        versiongroup: PokemonGameVersion(id: 1, name: "emerald", generation: PokemonGeneration(name: "gen-iii"))
+                    )
+                ),
+                accentColor: TypeColor.water.color,
+                tapOffset: tapOffset,
+                onClose: { isExpanded = false }
+            )
+        }
     }
 }

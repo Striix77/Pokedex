@@ -14,6 +14,8 @@ struct PokemonDetailsView: View {
         )
     )
     @State private var selectedTab = PokemonDetailTab.moves
+    @State private var selectedMove: PokemonMoveEntry? = nil
+    @State private var moveTapOffset: CGSize = .zero
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     let pokemonListEntry: PokemonListEntry
@@ -62,6 +64,14 @@ struct PokemonDetailsView: View {
                 mainContent
                     .transition(.blurReplace)
             }
+            if let move = selectedMove {
+                ExpandedMoveCard(
+                    move: move,
+                    accentColor: typeColors.0 ?? .white,
+                    tapOffset: moveTapOffset,
+                    onClose: { selectedMove = nil }
+                )
+            }
         }
         .animation(.easeInOut(duration: transitionAnimationDuration), value: viewModel.isLoading)
         .task {
@@ -100,7 +110,14 @@ struct PokemonDetailsView: View {
                     case .stats:
                         PokemonStatsTab(details: details, accentColor: typeColors.0 ?? .white)
                     case .moves:
-                        PokemonMovesTab(pokemonName: pokemonListEntry.name, accentColor: typeColors.0 ?? .white)
+                        PokemonMovesTab(
+                            pokemonName: pokemonListEntry.name,
+                            accentColor: typeColors.0 ?? .white,
+                            onMoveTap: { move, offset in
+                                moveTapOffset = offset
+                                selectedMove = move
+                            }
+                        )
                     case .evolution:
                         PokemonEvolutionTab()
                     }

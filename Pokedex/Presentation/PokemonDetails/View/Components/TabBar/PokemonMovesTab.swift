@@ -20,6 +20,7 @@ struct PokemonMovesTab: View {
 
     let pokemonName: String
     let accentColor: Color
+    let onMoveTap: (PokemonMoveEntry, CGSize) -> Void
 
     private let buttonHorizontalPadding: CGFloat = 16
     private let buttonVerticalPadding: CGFloat = 12
@@ -94,16 +95,16 @@ struct PokemonMovesTab: View {
 
     private var moveSetViews: some View {
         VStack(alignment: .leading) {
-            MoveSetView(moveSet: levelUpMoves, title: moveSetTitle(moves: levelUpMoves), accentColor: accentColor)
+            MoveSetView(moveSet: levelUpMoves, title: moveSetTitle(moves: levelUpMoves), accentColor: accentColor, onMoveTap: onMoveTap)
 
-            MoveSetView(moveSet: tmMoves, title: moveSetTitle(moves: tmMoves), accentColor: accentColor)
+            MoveSetView(moveSet: tmMoves, title: moveSetTitle(moves: tmMoves), accentColor: accentColor, onMoveTap: onMoveTap)
 
             if !hmMoves.isEmpty {
-                MoveSetView(moveSet: hmMoves, title: moveSetTitle(moves: hmMoves), accentColor: accentColor)
+                MoveSetView(moveSet: hmMoves, title: moveSetTitle(moves: hmMoves), accentColor: accentColor, onMoveTap: onMoveTap)
             }
 
             if !eggMoves.isEmpty {
-                MoveSetView(moveSet: eggMoves, title: moveSetTitle(moves: eggMoves), accentColor: accentColor)
+                MoveSetView(moveSet: eggMoves, title: moveSetTitle(moves: eggMoves), accentColor: accentColor, onMoveTap: onMoveTap)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

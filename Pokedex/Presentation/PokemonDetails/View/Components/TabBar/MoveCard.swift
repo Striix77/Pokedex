@@ -3,6 +3,7 @@ import SwiftUI
 struct MoveCard: View {
     let move: PokemonMoveEntry
     let accentColor: Color
+    let onTap: (PokemonMoveEntry, CGSize) -> Void
 
     private let labelWidth: CGFloat = 62
     private let labelVerticalPadding: CGFloat = 6
@@ -16,6 +17,10 @@ struct MoveCard: View {
     private let cardCornerRadius: CGFloat = 18
     private let leadingSpacing: CGFloat = 12
     private let trailingSpacing: CGFloat = 12
+
+    private var screenBounds: CGRect {
+        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.screen.bounds ?? .zero
+    }
 
     private var isLevelUpMove: Bool {
         move.moveLearnType == .levelUp
@@ -34,6 +39,13 @@ struct MoveCard: View {
         .padding()
         .frame(maxWidth: .infinity)
         .containerBackground(cornerRadius: cardCornerRadius, lineWidth: 1)
+        .onTapGesture(coordinateSpace: .global) { location in
+            let offset = CGSize(
+                width: location.x - screenBounds.midX,
+                height: location.y - screenBounds.midY
+            )
+            onTap(move, offset)
+        }
     }
 
     private var leadingContent: some View {

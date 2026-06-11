@@ -4,6 +4,8 @@ struct MoveSetView: View {
     let moveSet: [PokemonMoveEntry]
     let title: String
     let accentColor: Color
+    let onMoveTap: (PokemonMoveEntry, CGSize) -> Void
+
     var body: some View {
         moveTypeTitle(title, count: moveSet.count)
 
@@ -28,7 +30,7 @@ struct MoveSetView: View {
     private var moveList: some View {
         VStack(alignment: .center) {
             ForEach(moveSet, id: \.id) { move in
-                MoveCard(move: move, accentColor: accentColor)
+                MoveCard(move: move, accentColor: accentColor, onTap: onMoveTap)
             }
         }
         .frame(maxWidth: .infinity)
