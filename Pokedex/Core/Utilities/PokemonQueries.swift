@@ -142,6 +142,13 @@ enum PokemonQueries {
                     name
                   }
                 }
+                versiongroup{
+                    id
+                    name
+                    generation {
+                      name
+                    }
+                }
               }
             }
           }
