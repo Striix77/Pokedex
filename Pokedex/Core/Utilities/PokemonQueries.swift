@@ -126,6 +126,7 @@ enum PokemonQueries {
                 accuracy
                 pp
                 type {
+                  id
                   name
                 }
                 movedamageclass {

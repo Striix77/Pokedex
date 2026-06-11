@@ -7,5 +7,6 @@
 import Foundation
 
 struct MoveType: Codable, Hashable {
+    let id: Int
     let name: String
 }
