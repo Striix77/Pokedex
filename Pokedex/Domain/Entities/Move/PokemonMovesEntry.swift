@@ -7,6 +7,5 @@
 import Foundation
 
 struct PokemonMovesEntry: Codable {
-    let name: String
     let pokemonmoves: [PokemonMoveEntry]
 }

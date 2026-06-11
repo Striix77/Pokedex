@@ -111,7 +111,6 @@ enum PokemonQueries {
         """
         query PokemonMovesByVersion {
           pokemon(where: {name: {_eq: "\(pokemonName)"}}) {
-            name
             pokemonmoves(
               where: {versiongroup: {name: {_eq: "\(versionGroupName)"}}}
               order_by: [{move_learn_method_id: asc}, {level: asc}]

@@ -11,4 +11,25 @@ struct PokemonMoveEntry: Codable, Hashable {
     let level: Int
     let movelearnmethod: MoveLearnMethod
     let move: MoveEntry
+
+    var levelString: String {
+        "Lv \(level)"
+    }
+
+    var moveLearnType: MoveLearnType {
+        if let badge = move.machineBadge {
+            return MoveLearnType(
+                rawValue: badge.hasPrefix("TM") ? "tm" : "hm"
+
+            ) ?? .levelUp
+        }
+        else {
+            if level > 0 {
+                return .levelUp
+            }
+            else {
+                return .egg
+            }
+        }
+    }
 }
