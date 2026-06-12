@@ -15,7 +15,6 @@ struct MoveEntry: Codable, Hashable {
     let movedamageclass: MoveDamageClass
     let moveeffect: MoveEffect?
     let machines: [MoveMachine]?
-    let versiongroup: PokemonGameVersion
 
     var formattedName: String {
         name.split(separator: "-").map { $0.capitalized }.joined(separator: " ")

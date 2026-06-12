@@ -80,7 +80,7 @@ struct ExpandedMoveCard: View {
     }
 
     private var versionName: String {
-        move.move.versiongroup.formattedName
+        move.versiongroup.formattedName
     }
 
     var body: some View {
@@ -297,44 +297,22 @@ struct ExpandedMoveCard: View {
     }
 }
 
-#Preview {
-    @Previewable @State var isExpanded = false
-    @Previewable @State var tapOffset: CGSize = .zero
-    ZStack {
-        Color.white.ignoresSafeArea()
-            .onTapGesture(coordinateSpace: .global) { location in
-                tapOffset = CGSize(
-                    width: location.x - UIScreen.main.bounds.midX,
-                    height: location.y - UIScreen.main.bounds.midY
-                )
-                isExpanded = true
-            }
-        if isExpanded {
-            ExpandedMoveCard(
-                move: PokemonMoveEntry(
-                    id: 2,
-                    level: 0,
-                    movelearnmethod: MoveLearnMethod(name: "machine"),
-                    move: MoveEntry(
-                        name: "water-gun",
-                        power: 40,
-                        accuracy: 100,
-                        pp: 25,
-                        type: MoveType(id: 11, name: "water"),
-                        movedamageclass: MoveDamageClass(name: "physical"),
-                        moveeffect: MoveEffect(
-                            moveeffecteffecttexts: [
-                                MoveEffectText(short_effect: "Inflicts regular damage with no additional effect.")
-                            ]
-                        ),
-                        machines: [MoveMachine(item: MoveMachineItem(name: "tm12"))],
-                        versiongroup: PokemonGameVersion(id: 1, name: "emerald", generation: PokemonGeneration(name: "gen-iii"))
-                    )
-                ),
-                accentColor: TypeColor.water.color,
-                tapOffset: tapOffset,
-                onClose: { isExpanded = false }
-            )
-        }
+#Preview("Bulbasaur") {
+    NavigationStack {
+        PokemonDetailsView(
+            pokemonListEntry: .mock,
+            types: PokemonType.mockTypes
+        )
+        .environment(SoundManager())
+    }
+}
+
+#Preview("Squirtle") {
+    NavigationStack {
+        PokemonDetailsView(
+            pokemonListEntry: .mockSquirtle,
+            types: PokemonType.mockSquirtleTypes
+        )
+        .environment(SoundManager())
     }
 }

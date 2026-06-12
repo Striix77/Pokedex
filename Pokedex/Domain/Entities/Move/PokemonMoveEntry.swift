@@ -11,6 +11,7 @@ struct PokemonMoveEntry: Codable, Hashable {
     let level: Int
     let movelearnmethod: MoveLearnMethod
     let move: MoveEntry
+    let versiongroup: PokemonGameVersion
 
     var levelString: String {
         "Lv \(level)"
