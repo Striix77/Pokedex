@@ -29,7 +29,7 @@ enum PokemonQueries {
       }
     }
     """
-    
+
     static func getPokemonDetailsQuery(for id: Int) -> String {
         """
         query getPokemonDetails {
@@ -61,7 +61,7 @@ enum PokemonQueries {
         }
         """
     }
-    
+
     static let pokemonTypesQuery = """
     query samplePokeAPIquery {
       type{
@@ -77,7 +77,7 @@ enum PokemonQueries {
       }
     }
     """
-    
+
     static let pokemonGenerationsQuery = """
     query getGenerations {
       generation {
@@ -85,7 +85,7 @@ enum PokemonQueries {
       }
     }
     """
-    
+
     static func getQueryForVersionGroups(for pokemonName: String) -> String {
         """
         query GetVersionGroupsForPokemon {
@@ -101,6 +101,70 @@ enum PokemonQueries {
             name
             generation {
               name
+            }
+          }
+        }
+        """
+    }
+
+    static func getEvolutionChainQuery(for pokemonName: String) -> String {
+        """
+        query GetEvolutionChain {
+          evolutionchain(
+            where: {
+              pokemonspecies: { name: { _eq: "\(pokemonName)" } }
+            }
+          ) {
+            pokemonspecies(order_by: { order: asc }) {
+              id
+              name
+              evolves_from_species_id
+              pokemonevolutions {
+                min_level
+                min_happiness
+                min_affection
+                time_of_day
+                needs_overworld_rain
+                turn_upside_down
+                item { name }
+                evolutiontrigger { name }
+                location { name }
+                move { name }
+                type { id, name }
+              }
+              defaultPokemon: pokemons(
+                where: { is_default: { _eq: true } }
+                limit: 1
+              ) {
+                id
+                name
+                pokemontypes(order_by: { slot: asc }) {
+                  type { id, name }
+                }
+                pokemonsprites { sprites(path: "other.official-artwork.front_default") }
+                pokemonspecy {
+                  generation { name }
+                }
+              }
+              megaPokemon: pokemons(
+                where: {
+                  is_default: { _eq: false }
+                  pokemonforms: { is_mega: { _eq: true } }
+                }
+              ) {
+                id
+                name
+                pokemontypes(order_by: { slot: asc }) {
+                  type { id, name }
+                }
+                pokemonsprites { sprites(path: "other.official-artwork.front_default") }
+                pokemonspecy {
+                  generation { name }
+                }
+                pokemonforms(where: { is_mega: { _eq: true } }) {
+                  form_name
+                }
+              }
             }
           }
         }
