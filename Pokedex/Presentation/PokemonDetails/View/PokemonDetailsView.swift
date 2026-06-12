@@ -13,7 +13,7 @@ struct PokemonDetailsView: View {
             apiService: PokemonDetailsAPIService()
         )
     )
-    @State private var selectedTab = PokemonDetailTab.moves
+    @State private var selectedTab = PokemonDetailTab.evolution
     @State private var moveSelection = MoveSelectionState()
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
@@ -118,7 +118,7 @@ struct PokemonDetailsView: View {
                             accentColor: typeColors.0 ?? .white
                         )
                     case .evolution:
-                        PokemonEvolutionTab()
+                        PokemonEvolutionTab(pokemonName: pokemonListEntry.name, types: types)
                     }
                 }
                 .padding(contentPadding)
