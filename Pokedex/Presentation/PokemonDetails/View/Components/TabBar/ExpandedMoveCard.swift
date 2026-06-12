@@ -4,21 +4,25 @@ struct ExpandedMoveCard: View {
     let move: PokemonMoveEntry
     let accentColor: Color
     let tapOffset: CGSize
+    let onStartClose: () -> Void
     let onClose: () -> Void
 
     @State private var powerProgressMultiplier: Double = 0
     @State private var powerAnimatedValue: Double = 0
     @State private var accuracyAnimatedValue: Int = 0
     @State private var powerPointsAnimatedValue: Int = 0
-    @State private var isVisible = false
+    @State private var isContentVisible = false
+    @State private var isContainerVisible = false
     @State private var yOffset: CGFloat = 0
     @State private var xOffset: CGFloat = 0
 
     private let maxPower: Double = 250
-    private let animationDuration: Double = 1
+    private let contentAnimationDuration: Double = 0.5
+    private let containerAnimationDuration: Double = 0.2
     private let appearAnimationResponse: Double = 0.7
     private let appearAnimationDamping: Double = 0.7
-    private let appearScaleStart: CGFloat = 0.2
+    private let yOffsetAnimationResponse: Double = 0.7
+    private let appearScaleStart: CGFloat = 0.23
     private let overlayOpacity: Double = 0.5
     private let headerGradientOpacity: Double = 0.5
     private let backgroundGradientOpacity: Double = 0.4
@@ -86,56 +90,57 @@ struct ExpandedMoveCard: View {
     var body: some View {
         ZStack {
             Color.black
-                .opacity(isVisible ? overlayOpacity : 0)
+                .opacity(isContentVisible ? overlayOpacity : 0)
                 .ignoresSafeArea()
-                .animation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping), value: isVisible)
+                .onTapGesture { close() }
 
             ZStack(alignment: .topTrailing) {
                 VStack {
                     header
                     details
                 }
-                .opacity(isVisible ? 1 : 0)
+                .opacity(isContentVisible ? 1 : 0)
                 .onAppear {
                     yOffset = tapOffset.height
-                    xOffset = tapOffset.width
-                    withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping)) {
-                        xOffset = 0
-                    }
-                    withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping).delay(0.2)) {
-                        isVisible = true
-                    }
-                    withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping).delay(0.21)) {
-                        yOffset = 0
-                    }
-                    withAnimation(.easeInOut(duration: animationDuration)) {
-                        powerProgressMultiplier = powerProgress
-                        powerAnimatedValue = power
-                        accuracyAnimatedValue = accuracy
-                        powerPointsAnimatedValue = powerPoints
+                    withAnimation(.easeIn(duration: containerAnimationDuration)) {
+                        isContainerVisible = true
+                    } completion: {
+                        withAnimation(.spring(response: yOffsetAnimationResponse, dampingFraction: appearAnimationDamping)) {
+                            yOffset = 0
+                        }
+                        withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping)) {
+                            isContentVisible = true
+                        }
+                        withAnimation(.easeInOut(duration: contentAnimationDuration)) {
+                            powerProgressMultiplier = powerProgress
+                            powerAnimatedValue = power
+                            accuracyAnimatedValue = accuracy
+                            powerPointsAnimatedValue = powerPoints
+                        }
                     }
                 }
 
                 closeButton
-                    .opacity(isVisible ? 1 : 0)
+                    .opacity(isContentVisible ? 1 : 0)
             }
             .background(gradientBackground)
             .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
-            .scaleEffect(isVisible ? 1 : appearScaleStart)
+            .scaleEffect(x: 1, y: isContentVisible ? 1 : appearScaleStart, anchor: .center)
             .offset(x: xOffset, y: yOffset)
-            .animation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping), value: isVisible)
             .padding()
+            .opacity(isContainerVisible ? 1 : 0)
         }
     }
 
     private func close() {
-        withAnimation(.spring(response: appearAnimationResponse, dampingFraction: appearAnimationDamping)) {
-            isVisible = false
+        withAnimation(.easeInOut(duration: contentAnimationDuration)) {
+            isContentVisible = false
             yOffset = tapOffset.height
-            xOffset = tapOffset.width
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + appearAnimationResponse) {
-            onClose()
+        } completion: {
+            withAnimation(.easeInOut(duration: containerAnimationDuration)) {
+                isContainerVisible = false
+                onStartClose()
+            } completion: { onClose() }
         }
     }
 
@@ -172,9 +177,7 @@ struct ExpandedMoveCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(
-            headerGradientBackground
-        )
+        .background(headerGradientBackground)
     }
 
     private var details: some View {

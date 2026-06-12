@@ -3,7 +3,8 @@ import SwiftUI
 struct MoveCard: View {
     let move: PokemonMoveEntry
     let accentColor: Color
-    let onTap: (PokemonMoveEntry, CGSize) -> Void
+
+    @Environment(MoveSelectionState.self) private var moveSelection
 
     private let labelWidth: CGFloat = 62
     private let labelVerticalPadding: CGFloat = 6
@@ -17,6 +18,8 @@ struct MoveCard: View {
     private let cardCornerRadius: CGFloat = 18
     private let leadingSpacing: CGFloat = 12
     private let trailingSpacing: CGFloat = 12
+
+    @State private var cardFrame: CGRect = .zero
 
     private var screenBounds: CGRect {
         (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.screen.bounds ?? .zero
@@ -39,12 +42,19 @@ struct MoveCard: View {
         .padding()
         .frame(maxWidth: .infinity)
         .containerBackground(cornerRadius: cardCornerRadius, lineWidth: 1)
-        .onTapGesture(coordinateSpace: .global) { location in
+        .onGeometryChange(for: CGRect.self) { geo in
+            geo.frame(in: .global)
+        } action: { frame in
+            cardFrame = frame
+        }
+        .opacity(moveSelection.highlightedMoveId == move.id ? 0 : 1)
+        .animation(.easeInOut(duration: 0.2), value: moveSelection.highlightedMoveId)
+        .onTapGesture {
             let offset = CGSize(
-                width: location.x - screenBounds.midX,
-                height: location.y - screenBounds.midY
+                width: cardFrame.midX - screenBounds.midX,
+                height: cardFrame.minY - screenBounds.midY
             )
-            onTap(move, offset)
+            moveSelection.select(move, offset: offset)
         }
     }
 
