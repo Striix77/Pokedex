@@ -71,6 +71,7 @@ struct PokemonDetailsView: View {
                     onStartClose: moveSelection.startClose,
                     onClose: moveSelection.didClose
                 )
+                .id(move.id)
                 .transition(.identity)
             }
         }

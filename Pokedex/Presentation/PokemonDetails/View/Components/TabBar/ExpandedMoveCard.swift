@@ -60,6 +60,7 @@ struct ExpandedMoveCard: View {
             Color.black
                 .opacity(isContentVisible ? Constants.overlayOpacity : 0)
                 .ignoresSafeArea()
+                .ignoresSafeArea()
                 .onTapGesture { close() }
 
             ZStack(alignment: .topTrailing) {
@@ -170,6 +171,7 @@ struct ExpandedMoveCard: View {
                 Text(effect)
                     .bold()
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             powerBar
