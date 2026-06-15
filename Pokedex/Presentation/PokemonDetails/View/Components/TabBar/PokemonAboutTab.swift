@@ -13,8 +13,8 @@ struct PokemonAboutTab: View {
 
     private let strongEfficacyTitle = "Strong against"
     private let weakEfficacyTitle = "Weak against"
-    private let strongEfficacyValue = 50
-    private let weakEfficacyValue = 200
+    private let strongEfficacyValues = [0, 50]
+    private let weakEfficacyValues = [0, 200]
     private let noEfficacyLabel = "Other stats to be discovered..."
     private let contentSpacing: CGFloat = 32
 
@@ -26,11 +26,11 @@ struct PokemonAboutTab: View {
     }
 
     private var strengthEfficacies: [TypeStrength]? {
-        calculator.calculateEfficacies(for: strongEfficacyValue)
+        calculator.calculateEfficacies(for: strongEfficacyValues)
     }
 
     private var weaknessEfficacies: [TypeStrength]? {
-        calculator.calculateEfficacies(for: weakEfficacyValue)
+        calculator.calculateEfficacies(for: weakEfficacyValues)
     }
 
     private var description: String {

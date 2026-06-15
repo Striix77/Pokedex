@@ -12,40 +12,41 @@ struct BattleStatsCalculator {
 
     private var pokemonTypesWithEfficacies: [PokemonType] {
         var typesWithEfficacies: [PokemonType] = []
-        pokemonTypes.forEach { type in
+        for type in pokemonTypes {
             typesWithEfficacies.append(
                 contentsOf:
-                    allTypes.filter {
-                        $0.name == type.type.name
-                    }
+                allTypes.filter {
+                    $0.name == type.type.name
+                }
             )
         }
         return typesWithEfficacies
     }
 
-    func calculateEfficacies(for strength: Int) -> [TypeStrength]? {
+    func calculateEfficacies(for strengths: [Int]) -> [TypeStrength]? {
         var typeStrengths: [TypeStrength] = []
-        pokemonTypesWithEfficacies.forEach { type in
-            typeStrengths.append(
-                contentsOf: type.typeEfficaciesByTargetTypeId?
-                    .filter {
-                        $0.damageFactor == strength
-                            && !typeStrengths.contains(
-                                TypeStrength(
-                                    name: $0.type.name.capitalized,
-                                    id: $0.type.id
+        for strength in strengths {
+            for type in pokemonTypesWithEfficacies {
+                typeStrengths.append(
+                    contentsOf: type.typeEfficaciesByTargetTypeId?
+                        .filter {
+                            $0.damageFactor == strength
+                                && !typeStrengths.contains(
+                                    TypeStrength(
+                                        name: $0.type.name.capitalized,
+                                        id: $0.type.id
+                                    )
                                 )
+                        }
+                        .map {
+                            TypeStrength(
+                                name: $0.type.name.capitalized,
+                                id: $0.type.id
                             )
-                    }
-                    .map {
-                        TypeStrength(
-                            name: $0.type.name.capitalized,
-                            id: $0.type.id
-                        )
-                    } ?? []
-            )
+                        } ?? []
+                )
+            }
         }
         return !typeStrengths.isEmpty ? typeStrengths : nil
-
     }
 }
