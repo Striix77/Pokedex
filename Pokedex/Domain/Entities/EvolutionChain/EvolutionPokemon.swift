@@ -68,6 +68,10 @@ extension EvolutionPokemon {
 }
 
 extension MegaEvolution {
+    var evolutionCondition: EvolutionCondition {
+        MegaStones.condition(for: name)
+    }
+
     func toPokemonListEntry() -> PokemonListEntry {
         PokemonListEntry(
             id: id,

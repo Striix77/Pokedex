@@ -30,7 +30,7 @@ struct PokemonHeroCard: View {
     private let retroScreenPictureGlowOpacity: CGFloat = 0.3
     private let floatAnimationDuration: CGFloat = 3
     private let headerIconScale: CGFloat = 0.5
-    private let imageWidthFraction: CGFloat = 2
+    private let imageWidthFraction: CGFloat = 1.5
     private let shadowRadius: Double = 4
 
     private var backgroundColors: (Color, Color) {
