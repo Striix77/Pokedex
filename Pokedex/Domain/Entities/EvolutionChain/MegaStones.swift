@@ -2,7 +2,7 @@ import Foundation
 
 enum MegaStones {
     static func condition(for pokemonName: String) -> EvolutionCondition {
-        let trigger = EvolutionNamedEntry(name: "mega-evolution")
+        let trigger = EvolutionTriggerEntry(name: .megaEvolution)
         let stone = stoneByPokemonName[pokemonName].map { EvolutionNamedEntry(name: $0) }
         let move = pokemonName == "rayquaza-mega" ? EvolutionNamedEntry(name: "dragon-ascent") : nil
         return EvolutionCondition(

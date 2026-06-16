@@ -8,7 +8,7 @@ struct EvolutionCondition: Codable, Hashable {
     let needsOverworldRain: Bool?
     let turnUpsideDown: Bool?
     let item: EvolutionNamedEntry?
-    let evolutionTrigger: EvolutionNamedEntry?
+    let evolutionTrigger: EvolutionTriggerEntry?
     let location: EvolutionNamedEntry?
     let move: EvolutionNamedEntry?
     let type: EvolutionTypeEntry?
@@ -51,13 +51,13 @@ extension EvolutionCondition {
 
     var shortDescription: String {
         switch evolutionTrigger?.name {
-        case "use-item":
+        case .useItem:
             return item.map { Self.format($0.name) } ?? "Item"
-        case "trade":
+        case .trade:
             return (["Trade"] + [item.map { Self.format($0.name) }].compactMap { $0 }).joined(separator: " • ")
-        case "mega-evolution":
+        case .megaEvolution:
             return item.map { Self.format($0.name) } ?? "Mega Stone"
-        case "level-up":
+        case .levelUp:
             var parts: [String] = [minLevel.map { "Lv \($0)" } ?? "Lv up"]
             if let item = item               { parts.append(Self.format(item.name)) }
             if let move = move               { parts.append(Self.format(move.name)) }
@@ -70,13 +70,14 @@ extension EvolutionCondition {
             if turnUpsideDown == true        { parts.append("Upside down") }
             return parts.joined(separator: " • ")
         default:
-            return evolutionTrigger.map { Self.format($0.name) } ?? ""
+            return evolutionTrigger.map { Self.format($0.name.rawValue) } ?? ""
         }
     }
 
     var fullDescription: String {
         var extras: [String] = []
-        if let item = item, evolutionTrigger?.name != "use-item" && evolutionTrigger?.name != "mega-evolution" {
+        let trigger = evolutionTrigger?.name
+        if let item = item, trigger != .useItem && trigger != .megaEvolution {
             extras.append("while holding \(Self.format(item.name))")
         }
         if let move = move               { extras.append("knowing \(Self.format(move.name))") }
@@ -90,25 +91,24 @@ extension EvolutionCondition {
 
         let suffix = extras.isEmpty ? "" : " " + extras.joined(separator: ", ")
 
-        switch evolutionTrigger?.name {
-        case "use-item":
+        switch trigger {
+        case .useItem:
             return "Use a \(item.map { Self.format($0.name) } ?? "item")"
-        case "trade":
+        case .trade:
             return "Trade\(suffix)"
-        case "mega-evolution":
+        case .megaEvolution:
             return "Mega evolve using \(item.map { Self.format($0.name) } ?? "a mega stone")"
-        case "level-up":
+        case .levelUp:
             let base = minLevel.map { "Reach level \($0)" } ?? "Level up"
             return "\(base)\(suffix)"
-        case "spin":
+        case .spin:
             return "Spin in place\(suffix)"
-        case "three-critical-hits":
+        case .threeCriticalHits:
             return "Land 3 critical hits in one battle"
-        case "take-damage":
+        case .takeDamage:
             return "Take 49+ damage without fainting, then pass through the stone arch"
         default:
-            let base = evolutionTrigger.map { Self.format($0.name) } ?? "Evolve"
-            return "\(base)\(suffix)"
+            return trigger.map { Self.format($0.rawValue) } ?? "Evolve"
         }
     }
 
@@ -119,6 +119,27 @@ extension EvolutionCondition {
 
 struct EvolutionNamedEntry: Codable, Hashable {
     let name: String
+}
+
+struct EvolutionTriggerEntry: Codable, Hashable {
+    let name: EvolutionTrigger
+}
+
+enum EvolutionTrigger: String, Codable, Hashable {
+    case levelUp           = "level-up"
+    case useItem           = "use-item"
+    case trade             = "trade"
+    case shed              = "shed"
+    case spin              = "spin"
+    case megaEvolution     = "mega-evolution"
+    case towerOfDarkness   = "tower-of-darkness"
+    case towerOfWaters     = "tower-of-waters"
+    case threeCriticalHits = "three-critical-hits"
+    case takeDamage        = "take-damage"
+    case agileStyleMove    = "agile-style-move"
+    case strongStyleMove   = "strong-style-move"
+    case recoilDamage      = "recoil-damage"
+    case other             = "other"
 }
 
 struct EvolutionTypeEntry: Codable, Hashable {

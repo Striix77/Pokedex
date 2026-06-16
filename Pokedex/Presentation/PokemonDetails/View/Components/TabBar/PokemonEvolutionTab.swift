@@ -21,14 +21,13 @@ struct PokemonEvolutionTab: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             if let chain = viewModel.evolutionChain {
-                HStack(alignment: .center) {
+                VStack(alignment: .center) {
                     ForEach(chain.pokemonSpecies) { species in
                         if let pokemon = species.defaultPokemon.first {
                             if species != chain.pokemonSpecies.first {
                                 VStack {
-                                    if let conditions = species.pokemonEvolutions.first?.displayConditions {
-                                        Text(conditions.first?.label.capitalized ?? "")
-                                        Text(conditions.first?.value ?? "")
+                                    if let conditions = species.pokemonEvolutions.first?.shortDescription {
+                                        Text(conditions)
                                     }
                                 }
                             }
