@@ -16,30 +16,64 @@ struct PokemonEvolutionTab: View {
 
     let pokemonName: String
     let types: [PokemonType]
+    let accentColor: Color
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             if let chain = viewModel.evolutionChain {
-                ForEach(chain.pokemonSpecies) { species in
-                    if let pokemon = species.defaultPokemon.first {
-                        NavigationLink(value: pokemon.toPokemonListEntry()) {
-                            Text(species.formattedName)
-                                .font(.title3)
-                                .fontDesign(.rounded)
-                                .bold()
-                        }
-                    }
+                HStack(alignment: .center) {
+                    ForEach(chain.pokemonSpecies) { species in
+                        if let pokemon = species.defaultPokemon.first {
+                            if species != chain.pokemonSpecies.first {
+                                VStack {
+                                    if let conditions = species.pokemonEvolutions.first?.displayConditions {
+                                        Text(conditions.first?.label.capitalized ?? "")
+                                        Text(conditions.first?.value ?? "")
+                                    }
+                                }
+                            }
 
-                    ForEach(species.megaPokemon) { mega in
-                        NavigationLink(value: mega.toPokemonListEntry()) {
-                            Text(mega.formattedName)
-                                .font(.title3)
-                                .fontDesign(.rounded)
-                                .bold()
-                                .foregroundStyle(.secondary)
+                            NavigationLink(value: pokemon.toPokemonListEntry()) {
+                                VStack {
+                                    PokemonImageView(spriteURL: pokemon.spriteURL)
+                                        .frame(maxWidth: 75)
+
+                                    Text(species.formattedName)
+                                        .font(.caption)
+                                        .fontDesign(.rounded)
+                                        .bold()
+                                        .foregroundStyle(accentColor)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.7)
+                                }
+                                .padding()
+                                .frame(maxWidth: 100, maxHeight: 120)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 22)
+                                        .fill(Color.containerBackground)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 22)
+                                                .stroke(Color.containerBorder, lineWidth: 1)
+                                        )
+                                )
+                            }
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .center)
+
+//                    ForEach(species.megaPokemon) { mega in
+//                        NavigationLink(value: mega.toPokemonListEntry()) {
+//                            Text(mega.formattedName)
+//                                .font(.title3)
+//                                .fontDesign(.rounded)
+//                                .bold()
+//                                .foregroundStyle(.secondary)
+//                            ForEach(mega.displayConditions, id: \.label) { condition in
+//                                Text("\(condition.label)".capitalized + " : " + "\(condition.value)".capitalized)
+//                            }
+//                        }
+//                    }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

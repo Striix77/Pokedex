@@ -72,6 +72,10 @@ extension MegaEvolution {
         MegaStones.condition(for: name)
     }
 
+    var displayConditions: [EvolutionCondition.DisplayCondition] {
+        evolutionCondition.displayConditions
+    }
+
     func toPokemonListEntry() -> PokemonListEntry {
         PokemonListEntry(
             id: id,

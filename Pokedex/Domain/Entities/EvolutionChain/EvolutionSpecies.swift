@@ -12,6 +12,10 @@ struct EvolutionSpecies: Codable, Identifiable, Hashable {
         name.capitalized
     }
 
+    var uniqueEvolutionConditions: [EvolutionCondition] {
+        Array(Set(pokemonEvolutions))
+    }
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
