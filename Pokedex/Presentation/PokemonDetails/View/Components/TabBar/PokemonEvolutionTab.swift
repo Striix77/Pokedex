@@ -13,8 +13,7 @@ struct PokemonEvolutionTab: View {
         )
     )
     @Environment(\.dismiss) var dismiss
-    @State private var selectedSpecies: EvolutionSpecies?
-    @State private var selectedMegaPokemon: EvolutionPokemon?
+    @State private var selectedPokemon: EvolutionPokemon?
 
     let pokemonName: String
     let types: [PokemonType]
@@ -38,11 +37,25 @@ struct PokemonEvolutionTab: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
-                
+
                 if let megaPokemon = chain.pokemonSpecies.last?.megaPokemon, !megaPokemon.isEmpty {
-                    ForEach(megaPokemon) { pokemon in
-                        megaConditionBadge(for: pokemon)
-                        megaCard(pokemon: pokemon)
+                    VStack(spacing: Constants.innerSpacing) {
+                        HStack {
+                            Image(systemName: EvolutionTrigger.megaEvolution.icon)
+                                .foregroundStyle(Color.megaEvolution)
+
+                            Text(Constants.megaSectionTitle)
+                                .font(.title2)
+                                .bold()
+                                .foregroundStyle(Color.megaEvolution.exposureAdjust(Constants.megaTitleBrightnessAdjust))
+                        }
+
+                        HStack {
+                            ForEach(megaPokemon) { pokemon in
+                                megaCard(pokemon: pokemon)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
             }
@@ -79,7 +92,7 @@ struct PokemonEvolutionTab: View {
 
     @ViewBuilder
     private func pokemonCard(species: EvolutionSpecies, pokemon: EvolutionPokemon) -> some View {
-        if selectedSpecies == species {
+        if selectedPokemon == pokemon {
             NavigationLink(value: pokemon.toPokemonListEntry()) {
                 cardContent(species: species, pokemon: pokemon)
             }
@@ -88,7 +101,7 @@ struct PokemonEvolutionTab: View {
                 .opacity(Constants.unselectedOpacity)
                 .onTapGesture {
                     withAnimation(.linear(duration: Constants.selectionAnimationDuration)) {
-                        selectedSpecies = species
+                        selectedPokemon = pokemon
                     }
                 }
         }
@@ -99,18 +112,21 @@ struct PokemonEvolutionTab: View {
         let condition = MegaStones.condition(for: pokemon.name)
         HStack {
             Image(systemName: EvolutionTrigger.megaEvolution.icon)
+                .foregroundStyle(Color.megaEvolution)
+
             Text(condition.shortDescription)
-                .foregroundStyle(.secondary)
                 .bold()
+                .lineLimit(1)
+                .minimumScaleFactor(Constants.megaBadgeMinScale)
+                .foregroundStyle(Color.megaEvolution.exposureAdjust(Constants.megaBadgeBrightnessAdjust))
         }
         .padding(.horizontal, Constants.badgeHorizontalPadding)
         .padding(.vertical, Constants.badgeVerticalPadding)
-        .containerBackground(cornerRadius: Constants.cornerRadius)
     }
 
     @ViewBuilder
     private func megaCard(pokemon: EvolutionPokemon) -> some View {
-        if selectedMegaPokemon == pokemon {
+        if selectedPokemon == pokemon {
             NavigationLink(value: pokemon.toPokemonListEntry()) {
                 megaCardContent(pokemon: pokemon)
             }
@@ -119,7 +135,7 @@ struct PokemonEvolutionTab: View {
                 .opacity(Constants.unselectedOpacity)
                 .onTapGesture {
                     withAnimation(.linear(duration: Constants.selectionAnimationDuration)) {
-                        selectedMegaPokemon = pokemon
+                        selectedPokemon = pokemon
                     }
                 }
         }
@@ -128,17 +144,19 @@ struct PokemonEvolutionTab: View {
     private func megaCardContent(pokemon: EvolutionPokemon) -> some View {
         VStack {
             PokemonImageView(spriteURL: pokemon.spriteURL)
-                .frame(maxWidth: Constants.imageSize)
+                .frame(maxWidth: Constants.megaImageSize)
             Text(pokemon.formattedName)
-                .font(.default)
+                .font(.title3)
                 .fontDesign(.rounded)
                 .bold()
                 .foregroundStyle(accentColor)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+
+            megaConditionBadge(for: pokemon)
         }
         .padding()
-        .frame(maxWidth: Constants.cardWidth, maxHeight: Constants.cardHeight)
+        .frame(maxWidth: Constants.megaCardWidth, maxHeight: Constants.megaCardHeight)
         .containerBackground(
             cornerRadius: Constants.cornerRadius,
             fill: accentColor.opacity(Constants.cardFillOpacity),
@@ -171,20 +189,28 @@ struct PokemonEvolutionTab: View {
 }
 
 // MARK: - Constants
+
 extension PokemonEvolutionTab {
     enum Constants {
-        static let outerSpacing: CGFloat = 12
+        static let outerSpacing: CGFloat = 24
         static let innerSpacing: CGFloat = 16
         static let cornerRadius: CGFloat = 22
         static let badgeHorizontalPadding: CGFloat = 16
         static let badgeVerticalPadding: CGFloat = 8
         static let imageSize: CGFloat = 75
+        static let megaImageSize: CGFloat = 150
         static let cardWidth: CGFloat = 120
         static let cardHeight: CGFloat = 144
+        static let megaCardWidth: CGFloat = 200
+        static let megaCardHeight: CGFloat = 380
         static let cardFillOpacity: Double = 0.2
         static let cardBorderWidth: CGFloat = 2
         static let unselectedOpacity: Double = 0.8
         static let selectionAnimationDuration: Double = 0.25
+        static let megaSectionTitle: String = "MEGA EVOLUTION"
+        static let megaTitleBrightnessAdjust: Double = 1.7
+        static let megaBadgeBrightnessAdjust: Double = 2.0
+        static let megaBadgeMinScale: CGFloat = 0.5
     }
 }
 
