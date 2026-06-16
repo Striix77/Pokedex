@@ -20,6 +20,10 @@ struct PokemonEvolutionTab: View {
     let types: [PokemonType]
     let accentColor: Color
 
+    private var pokemonNameForFetching: String {
+        pokemonName.replacing(/-mega.*/, with: "")
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: Constants.outerSpacing) {
             if let chain = viewModel.evolutionChain {
@@ -47,10 +51,10 @@ struct PokemonEvolutionTab: View {
         .navigationDestination(for: PokemonListEntry.self) { entry in
             PokemonDetailsView(pokemonListEntry: entry, types: types)
         }
-        .task { await viewModel.fetchEvolutionChain(pokemonName: pokemonName) }
+        .task { await viewModel.fetchEvolutionChain(pokemonName: pokemonNameForFetching) }
         .fetchingAlert(
             showAlert: $viewModel.showAlert,
-            fetchAction: { await viewModel.fetchEvolutionChain(pokemonName: pokemonName) },
+            fetchAction: { await viewModel.fetchEvolutionChain(pokemonName: pokemonNameForFetching) },
             confirmAction: { dismiss() },
             errorMessage: viewModel.errorMessage
         )
