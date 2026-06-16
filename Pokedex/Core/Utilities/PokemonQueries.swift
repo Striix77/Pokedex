@@ -162,9 +162,6 @@ enum PokemonQueries {
                 pokemonspecy {
                   generation { name }
                 }
-                pokemonforms(where: { is_mega: { _eq: true } }) {
-                  form_name
-                }
               }
             }
           }

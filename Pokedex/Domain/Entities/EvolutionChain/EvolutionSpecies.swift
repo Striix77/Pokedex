@@ -6,7 +6,7 @@ struct EvolutionSpecies: Codable, Identifiable, Hashable {
     let evolvesFromSpeciesId: Int?
     let pokemonEvolutions: [EvolutionCondition]
     let defaultPokemon: [EvolutionPokemon]
-    let megaPokemon: [MegaEvolution]
+    let megaPokemon: [EvolutionPokemon]
 
     var formattedName: String {
         name.capitalized
