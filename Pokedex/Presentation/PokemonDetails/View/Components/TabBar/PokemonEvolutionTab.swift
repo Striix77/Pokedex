@@ -21,13 +21,21 @@ struct PokemonEvolutionTab: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             if let chain = viewModel.evolutionChain {
-                VStack(alignment: .center) {
+                VStack(alignment: .center, spacing: 16) {
                     ForEach(chain.pokemonSpecies) { species in
                         if let pokemon = species.defaultPokemon.first {
                             if species != chain.pokemonSpecies.first {
-                                VStack {
-                                    if let conditions = species.pokemonEvolutions.first?.shortDescription {
-                                        Text(conditions)
+                                VStack(spacing: 16) {
+                                    if let conditions = species.pokemonEvolutions.first?.shortDescription, let icon = species.pokemonEvolutions.first?.evolutionTrigger?.name.icon {
+                                        HStack {
+                                            Image(systemName: icon)
+                                            Text(conditions)
+                                                .foregroundStyle(.secondary)
+                                                .bold()
+                                        }
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .containerBackground(cornerRadius: 22)
                                     }
                                 }
                             }
@@ -38,7 +46,7 @@ struct PokemonEvolutionTab: View {
                                         .frame(maxWidth: 75)
 
                                     Text(species.formattedName)
-                                        .font(.caption)
+                                        .font(.default)
                                         .fontDesign(.rounded)
                                         .bold()
                                         .foregroundStyle(accentColor)
@@ -46,15 +54,8 @@ struct PokemonEvolutionTab: View {
                                         .minimumScaleFactor(0.7)
                                 }
                                 .padding()
-                                .frame(maxWidth: 100, maxHeight: 120)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 22)
-                                        .fill(Color.containerBackground)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 22)
-                                                .stroke(Color.containerBorder, lineWidth: 1)
-                                        )
-                                )
+                                .frame(maxWidth: 120, maxHeight: 144)
+                                .containerBackground(cornerRadius: 22, fill: accentColor.opacity(0.2), stroke: accentColor, lineWidth: 2)
                             }
                         }
                     }
