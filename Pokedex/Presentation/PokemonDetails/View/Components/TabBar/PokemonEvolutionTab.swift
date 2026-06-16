@@ -13,6 +13,7 @@ struct PokemonEvolutionTab: View {
         )
     )
     @Environment(\.dismiss) var dismiss
+    @State private var selectedEvolutionSpecies: EvolutionSpecies? = nil
 
     let pokemonName: String
     let types: [PokemonType]
@@ -40,7 +41,26 @@ struct PokemonEvolutionTab: View {
                                 }
                             }
 
-                            NavigationLink(value: pokemon.toPokemonListEntry()) {
+                            if selectedEvolutionSpecies == species {
+                                NavigationLink(value: pokemon.toPokemonListEntry()) {
+                                    VStack {
+                                        PokemonImageView(spriteURL: pokemon.spriteURL)
+                                            .frame(maxWidth: 75)
+
+                                        Text(species.formattedName)
+                                            .font(.default)
+                                            .fontDesign(.rounded)
+                                            .bold()
+                                            .foregroundStyle(accentColor)
+                                            .lineLimit(1)
+                                            .minimumScaleFactor(0.7)
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: 120, maxHeight: 144)
+                                    .containerBackground(cornerRadius: 22, fill: accentColor.opacity(0.2), stroke: accentColor, lineWidth: 2)
+                                }
+                            }
+                            else {
                                 VStack {
                                     PokemonImageView(spriteURL: pokemon.spriteURL)
                                         .frame(maxWidth: 75)
@@ -56,24 +76,19 @@ struct PokemonEvolutionTab: View {
                                 .padding()
                                 .frame(maxWidth: 120, maxHeight: 144)
                                 .containerBackground(cornerRadius: 22, fill: accentColor.opacity(0.2), stroke: accentColor, lineWidth: 2)
+                                .opacity(0.8)
+                                .onTapGesture {
+                                    withAnimation(.linear(duration: 0.25)) {
+                                        selectedEvolutionSpecies = species
+                                    }
+                                }
                             }
                         }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
 
-//                    ForEach(species.megaPokemon) { mega in
-//                        NavigationLink(value: mega.toPokemonListEntry()) {
-//                            Text(mega.formattedName)
-//                                .font(.title3)
-//                                .fontDesign(.rounded)
-//                                .bold()
-//                                .foregroundStyle(.secondary)
-//                            ForEach(mega.displayConditions, id: \.label) { condition in
-//                                Text("\(condition.label)".capitalized + " : " + "\(condition.value)".capitalized)
-//                            }
-//                        }
-//                    }
+                
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
