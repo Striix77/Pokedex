@@ -183,7 +183,7 @@ struct PokemonHeroCard: View {
             .opacity(0.5)
 
         PokemonHeroCard(
-            pokemonListEntry: .mock,
+            pokemonListEntry: .mockBulbasaur,
             typeColors: (TypeColor.grass.color, nil)
         )
         .padding()

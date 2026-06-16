@@ -37,6 +37,7 @@ struct PokemonGridCard: View {
             PokemonImageView(spriteURL: pokemon.spriteURL)
                 .aspectRatio(1, contentMode: .fit)
                 .frame(maxWidth: .infinity)
+                .padding(.top, 30)
             Text("#\(pokemon.id)")
                 .font(.caption)
                 .foregroundStyle(.secondary)

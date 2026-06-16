@@ -37,6 +37,5 @@ struct PokemonImageView: View {
                     .scaledToFit()
             }
         }
-        .padding(.top, 30)
     }
 }

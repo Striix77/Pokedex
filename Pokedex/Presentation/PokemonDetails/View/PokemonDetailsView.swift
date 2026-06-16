@@ -118,7 +118,7 @@ struct PokemonDetailsView: View {
                             accentColor: typeColors.0 ?? .white
                         )
                     case .evolution:
-                        PokemonEvolutionTab(pokemonName: pokemonListEntry.name, types: types)
+                        PokemonEvolutionTab(pokemonName: pokemonListEntry.name, types: types, accentColor: typeColors.0 ?? .white)
                     }
                 }
                 .padding(contentPadding)
@@ -146,8 +146,8 @@ struct PokemonDetailsView: View {
 #Preview("Bulbasaur") {
     NavigationStack {
         PokemonDetailsView(
-            pokemonListEntry: .mock,
-            types: PokemonType.mockTypes
+            pokemonListEntry: .mockBulbasaur,
+            types: PokemonType.mockBulbasaurTypes
         )
         .environment(SoundManager())
     }

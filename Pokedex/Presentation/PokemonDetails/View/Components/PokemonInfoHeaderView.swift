@@ -82,8 +82,8 @@ struct PokemonInfoHeaderView: View {
 
 #Preview(traits: .sizeThatFitsLayout) {
     PokemonInfoHeaderView(
-        pokemonName: PokemonListEntry.mock.name,
-        pokemonTypes: PokemonListEntry.mock.pokemontypes,
+        pokemonName: PokemonListEntry.mockBulbasaur.name,
+        pokemonTypes: PokemonListEntry.mockBulbasaur.pokemontypes,
         accentColor: TypeColor.grass.color
     )
     .environment(SoundManager())

@@ -35,7 +35,7 @@ extension PokemonListEntry {
         )
     }
 
-    static var mock: PokemonListEntry {
+    static var mockBulbasaur: PokemonListEntry {
         PokemonListEntry(
             id: 1,
             name: "bulbasaur",
@@ -69,6 +69,80 @@ extension PokemonListEntry {
     }
 }
 
+extension PokemonListEntry {
+    static var mockPikachu: PokemonListEntry {
+        PokemonListEntry(
+            id: 25,
+            name: "pikachu",
+            pokemontypes: [
+                PokemonTypes(type: PokemonType(id: 13, name: "electric", typeEfficaciesByTargetTypeId: nil))
+            ],
+            pokemonspecy: SpeciesEntry(
+                generation: PokemonGeneration(name: "generation-i"),
+                pokemonspeciesnames: [SpeciesNameEntry(genus: "Mouse")],
+                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "When several of these Pokémon gather, their electricity can build and cause lightning storms.")]
+            ),
+            pokemonsprites: [
+                SpriteEntry(sprites: SpriteData(
+                    other: OtherSprites(
+                        officialArtwork: OfficialArtwork(
+                            front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+                        )
+                    )
+                ))
+            ]
+        )
+    }
+
+    static var mockCharmander: PokemonListEntry {
+        PokemonListEntry(
+            id: 4,
+            name: "charmander",
+            pokemontypes: [
+                PokemonTypes(type: PokemonType(id: 10, name: "fire", typeEfficaciesByTargetTypeId: nil))
+            ],
+            pokemonspecy: SpeciesEntry(
+                generation: PokemonGeneration(name: "generation-i"),
+                pokemonspeciesnames: [SpeciesNameEntry(genus: "Lizard")],
+                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.")]
+            ),
+            pokemonsprites: [
+                SpriteEntry(sprites: SpriteData(
+                    other: OtherSprites(
+                        officialArtwork: OfficialArtwork(
+                            front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png"
+                        )
+                    )
+                ))
+            ]
+        )
+    }
+
+    static var mockEevee: PokemonListEntry {
+        PokemonListEntry(
+            id: 133,
+            name: "eevee",
+            pokemontypes: [
+                PokemonTypes(type: PokemonType(id: 1, name: "normal", typeEfficaciesByTargetTypeId: nil))
+            ],
+            pokemonspecy: SpeciesEntry(
+                generation: PokemonGeneration(name: "generation-i"),
+                pokemonspeciesnames: [SpeciesNameEntry(genus: "Evolution")],
+                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "Its genetic code is irregular. It may mutate if it is exposed to radiation from element stones.")]
+            ),
+            pokemonsprites: [
+                SpriteEntry(sprites: SpriteData(
+                    other: OtherSprites(
+                        officialArtwork: OfficialArtwork(
+                            front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png"
+                        )
+                    )
+                ))
+            ]
+        )
+    }
+}
+
 extension PokemonType {
     static var mockSquirtleTypes: [PokemonType] {
         [
@@ -83,7 +157,43 @@ extension PokemonType {
         ]
     }
 
-    static var mockTypes: [PokemonType] {
+    static var mockPikachuTypes: [PokemonType] {
+        [
+            PokemonType(id: 13, name: "electric", typeEfficaciesByTargetTypeId: [
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 6, name: "ground")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 3, name: "flying")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 9, name: "steel")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 13, name: "electric"))
+            ])
+        ]
+    }
+
+    static var mockCharmanderTypes: [PokemonType] {
+        [
+            PokemonType(id: 10, name: "fire", typeEfficaciesByTargetTypeId: [
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 11, name: "water")),
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 6, name: "ground")),
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 5, name: "rock")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 10, name: "fire")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 12, name: "grass")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 15, name: "ice")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 7, name: "bug")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 9, name: "steel")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 18, name: "fairy"))
+            ])
+        ]
+    }
+
+    static var mockEeveeTypes: [PokemonType] {
+        [
+            PokemonType(id: 1, name: "normal", typeEfficaciesByTargetTypeId: [
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 2, name: "fighting")),
+                TypeEfficacy(damageFactor: 0, type: AttackerType(id: 8, name: "ghost"))
+            ])
+        ]
+    }
+
+    static var mockBulbasaurTypes: [PokemonType] {
         [
             PokemonType(id: 12, name: "grass", typeEfficaciesByTargetTypeId: [
                 TypeEfficacy(damageFactor: 200, type: AttackerType(id: 10, name: "fire")),

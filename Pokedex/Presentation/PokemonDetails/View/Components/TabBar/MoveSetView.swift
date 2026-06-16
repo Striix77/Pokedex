@@ -39,8 +39,8 @@ struct MoveSetView: View {
 #Preview("Bulbasaur") {
     NavigationStack {
         PokemonDetailsView(
-            pokemonListEntry: .mock,
-            types: PokemonType.mockTypes
+            pokemonListEntry: .mockBulbasaur,
+            types: PokemonType.mockBulbasaurTypes
         )
         .environment(SoundManager())
     }

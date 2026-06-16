@@ -58,21 +58,41 @@ struct PokemonEvolutionTab: View {
     }
 }
 
-#Preview("Bulbasaur") {
-    NavigationStack {
-        PokemonDetailsView(
-            pokemonListEntry: .mock,
-            types: PokemonType.mockTypes
-        )
-        .environment(SoundManager())
-    }
-}
-
 #Preview("Squirtle") {
     NavigationStack {
         PokemonDetailsView(
             pokemonListEntry: .mockSquirtle,
             types: PokemonType.mockSquirtleTypes
+        )
+        .environment(SoundManager())
+    }
+}
+
+#Preview("Eevee") {
+    NavigationStack {
+        PokemonDetailsView(
+            pokemonListEntry: .mockEevee,
+            types: PokemonType.mockEeveeTypes
+        )
+        .environment(SoundManager())
+    }
+}
+
+#Preview("Charmander") {
+    NavigationStack {
+        PokemonDetailsView(
+            pokemonListEntry: .mockCharmander,
+            types: PokemonType.mockCharmanderTypes
+        )
+        .environment(SoundManager())
+    }
+}
+
+#Preview("Pikachu") {
+    NavigationStack {
+        PokemonDetailsView(
+            pokemonListEntry: .mockPikachu,
+            types: PokemonType.mockPikachuTypes
         )
         .environment(SoundManager())
     }
