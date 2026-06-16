@@ -11,6 +11,7 @@ struct EvolutionCondition: Codable, Hashable {
     let evolutionTrigger: EvolutionTriggerEntry?
     let location: EvolutionNamedEntry?
     let move: EvolutionNamedEntry?
+    let usedMove: EvolutionNamedEntry?
     let type: EvolutionTypeEntry?
 
     enum CodingKeys: String, CodingKey {
@@ -24,6 +25,7 @@ struct EvolutionCondition: Codable, Hashable {
         case evolutionTrigger = "evolutiontrigger"
         case location
         case move
+        case usedMove = "usedmove"
         case type
     }
 }
@@ -59,18 +61,28 @@ extension EvolutionCondition {
             return item.map { Self.format($0.name) } ?? "Mega Stone"
         case .levelUp:
             var parts: [String] = [minLevel.map { "Lv \($0)" } ?? "Lv up"]
-            if let item = item               { parts.append(Self.format(item.name)) }
-            if let move = move               { parts.append(Self.format(move.name)) }
-            if let location = location       { parts.append(Self.format(location.name)) }
-            if let type = type               { parts.append(type.name.capitalized) }
-            if let happiness = minHappiness  { parts.append("Hap \(happiness)+") }
-            if let affection = minAffection  { parts.append("Aff \(affection)+") }
+            if let item = item { parts.append(Self.format(item.name)) }
+            if let move = move { parts.append("\(Self.format(move.name)) mov") }
+            if let location = location { parts.append(Self.format(location.name)) }
+            if let type = type { parts.append(type.name.capitalized) }
+            if let happiness = minHappiness { parts.append("Hap \(happiness)+") }
+            if let affection = minAffection { parts.append("Aff \(affection)+") }
             if let tod = timeOfDay, !tod.isEmpty { parts.append(tod.capitalized) }
-            if needsOverworldRain == true    { parts.append("Rain") }
-            if turnUpsideDown == true        { parts.append("Upside down") }
+            if needsOverworldRain == true { parts.append("Rain") }
+            if turnUpsideDown == true { parts.append("Upside down") }
             return parts.joined(separator: " • ")
-        default:
-            return evolutionTrigger.map { Self.format($0.name.rawValue) } ?? ""
+        case .spin: return "Spin"
+        case .shed: return "Special"
+        case .towerOfDarkness: return "Tower of Darkness"
+        case .towerOfWaters: return "Tower of Waters"
+        case .threeCriticalHits: return "3 Critical Hits"
+        case .takeDamage: return "Take Damage"
+        case .agileStyleMove: return "Agile Style"
+        case .strongStyleMove: return "Strong Style"
+        case .recoilDamage: return "Recoil"
+        case .useMove: return usedMove.map { Self.format($0.name) } ?? "Use Move"
+        case .other: return "Special"
+        case nil: return ""
         }
     }
 
@@ -80,14 +92,14 @@ extension EvolutionCondition {
         if let item = item, trigger != .useItem && trigger != .megaEvolution {
             extras.append("while holding \(Self.format(item.name))")
         }
-        if let move = move               { extras.append("knowing \(Self.format(move.name))") }
-        if let location = location       { extras.append("near \(Self.format(location.name))") }
-        if let type = type               { extras.append("knowing a \(type.name)-type move") }
-        if let happiness = minHappiness  { extras.append("with \(happiness)+ happiness") }
-        if let affection = minAffection  { extras.append("with \(affection)+ affection") }
+        if let move = move { extras.append("knowing \(Self.format(move.name))") }
+        if let location = location { extras.append("near \(Self.format(location.name))") }
+        if let type = type { extras.append("knowing a \(type.name)-type move") }
+        if let happiness = minHappiness { extras.append("with \(happiness)+ happiness") }
+        if let affection = minAffection { extras.append("with \(affection)+ affection") }
         if let tod = timeOfDay, !tod.isEmpty { extras.append("during \(tod)") }
-        if needsOverworldRain == true    { extras.append("while it's raining") }
-        if turnUpsideDown == true        { extras.append("while holding your device upside down") }
+        if needsOverworldRain == true { extras.append("while it's raining") }
+        if turnUpsideDown == true { extras.append("while holding your device upside down") }
 
         let suffix = extras.isEmpty ? "" : " " + extras.joined(separator: ", ")
 
@@ -101,14 +113,20 @@ extension EvolutionCondition {
         case .levelUp:
             let base = minLevel.map { "Reach level \($0)" } ?? "Level up"
             return "\(base)\(suffix)"
-        case .spin:
-            return "Spin in place\(suffix)"
-        case .threeCriticalHits:
-            return "Land 3 critical hits in one battle"
-        case .takeDamage:
-            return "Take 49+ damage without fainting, then pass through the stone arch"
-        default:
-            return trigger.map { Self.format($0.rawValue) } ?? "Evolve"
+        case .spin: return "Spin in place\(suffix)"
+        case .shed: return "Evolve Nincada with an empty party slot and a Poké Ball"
+        case .towerOfDarkness: return "Complete the Tower of Darkness"
+        case .towerOfWaters: return "Complete the Tower of Waters"
+        case .threeCriticalHits: return "Land 3 critical hits in one battle"
+        case .takeDamage: return "Take 49+ damage without fainting, then pass through the stone arch"
+        case .agileStyleMove: return "Use an agile style move\(suffix)"
+        case .strongStyleMove: return "Use a strong style move\(suffix)"
+        case .recoilDamage: return "Take recoil damage\(suffix)"
+        case .useMove:
+            let moveName = usedMove.map { Self.format($0.name) } ?? "a specific move"
+            return "Use \(moveName) enough times\(suffix)"
+        case .other: return "Special condition"
+        case nil: return ""
         }
     }
 
@@ -126,20 +144,46 @@ struct EvolutionTriggerEntry: Codable, Hashable {
 }
 
 enum EvolutionTrigger: String, Codable, Hashable {
-    case levelUp           = "level-up"
-    case useItem           = "use-item"
-    case trade             = "trade"
-    case shed              = "shed"
-    case spin              = "spin"
-    case megaEvolution     = "mega-evolution"
-    case towerOfDarkness   = "tower-of-darkness"
-    case towerOfWaters     = "tower-of-waters"
+    case levelUp = "level-up"
+    case useItem = "use-item"
+    case trade
+    case shed
+    case spin
+    case megaEvolution = "mega-evolution"
+    case towerOfDarkness = "tower-of-darkness"
+    case towerOfWaters = "tower-of-waters"
     case threeCriticalHits = "three-critical-hits"
-    case takeDamage        = "take-damage"
-    case agileStyleMove    = "agile-style-move"
-    case strongStyleMove   = "strong-style-move"
-    case recoilDamage      = "recoil-damage"
-    case other             = "other"
+    case takeDamage = "take-damage"
+    case agileStyleMove = "agile-style-move"
+    case strongStyleMove = "strong-style-move"
+    case recoilDamage = "recoil-damage"
+    case useMove = "use-move"
+    case other
+
+    init(from decoder: Decoder) throws {
+        let rawValue = try decoder.singleValueContainer().decode(String.self)
+        self = EvolutionTrigger(rawValue: rawValue) ?? .other
+    }
+
+    var icon: String {
+        switch self {
+        case .levelUp: return "arrow.up.circle"
+        case .useItem: return "sparkles"
+        case .trade: return "arrow.left.arrow.right"
+        case .shed: return "circle.dashed"
+        case .spin: return "arrow.2.circlepath"
+        case .megaEvolution: return "bolt.circle.fill"
+        case .towerOfDarkness: return "moon.stars.fill"
+        case .towerOfWaters: return "drop.fill"
+        case .threeCriticalHits: return "burst.fill"
+        case .takeDamage: return "heart.slash"
+        case .agileStyleMove: return "hare.fill"
+        case .strongStyleMove: return "dumbbell.fill"
+        case .recoilDamage: return "arrow.counterclockwise"
+        case .useMove: return "figure.martial.arts"
+        case .other: return "questionmark.circle"
+        }
+    }
 }
 
 struct EvolutionTypeEntry: Codable, Hashable {

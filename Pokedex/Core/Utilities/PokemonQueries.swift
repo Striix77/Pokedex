@@ -130,6 +130,7 @@ enum PokemonQueries {
                 evolutiontrigger { name }
                 location { name }
                 move { name }
+                usedmove { name }
                 type { id, name }
               }
               defaultPokemon: pokemons(
