@@ -123,7 +123,7 @@ struct PokemonEvolutionTab: View {
         return NavigationLink(value: pokemon.toPokemonListEntry()) {
             cardContent(species: species, pokemon: pokemon)
         }
-        .disabled(!isSelected)
+        .disabled(!isSelected || pokemon.name == pokemonName)
         .opacity(isSelected ? 1.0 : Constants.unselectedOpacity)
         .simultaneousGesture(TapGesture().onEnded {
             guard !isSelected else { return }
@@ -158,7 +158,7 @@ struct PokemonEvolutionTab: View {
         return NavigationLink(value: pokemon.toPokemonListEntry()) {
             megaCardContent(pokemon: pokemon)
         }
-        .disabled(!isSelected)
+        .disabled(!isSelected || pokemon.name == pokemonName)
         .opacity(isSelected ? 1.0 : Constants.unselectedOpacity)
         .simultaneousGesture(TapGesture().onEnded {
             guard !isSelected else { return }
