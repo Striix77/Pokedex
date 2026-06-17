@@ -13,7 +13,7 @@ struct PokemonEvolutionTab: View {
         )
     )
     @Environment(\.dismiss) var dismiss
-    @State private var selectedPokemon: EvolutionPokemon?
+    @State private var selectedPokemonName: String?
 
     let pokemonName: String
     let types: [PokemonType]
@@ -30,7 +30,10 @@ struct PokemonEvolutionTab: View {
                     ForEach(chain.pokemonSpecies) { species in
                         if let pokemon = species.defaultPokemon.first {
                             if species != chain.pokemonSpecies.first {
-                                conditionBadge(for: species)
+                                conditionBadge(for: species, pokemon: pokemon)
+                            }
+                            else {
+                                conditionBadge(pokemon: pokemon)
                             }
                             pokemonCard(species: species, pokemon: pokemon)
                         }
@@ -74,71 +77,89 @@ struct PokemonEvolutionTab: View {
     }
 
     @ViewBuilder
-    private func conditionBadge(for species: EvolutionSpecies) -> some View {
-        if let condition = species.pokemonEvolutions.first,
+    private func conditionBadge(for species: EvolutionSpecies? = nil, pokemon: EvolutionPokemon) -> some View {
+        if let condition = species?.pokemonEvolutions.first,
            let icon = condition.evolutionTrigger?.name.icon
         {
+            let isSelected = selectedPokemonName == pokemon.formattedName
             HStack {
                 Image(systemName: icon)
-                Text(condition.shortDescription)
-                    .foregroundStyle(.secondary)
+
+                Text(isSelected ? condition.fullDescription : condition.shortDescription)
+                    .foregroundStyle(isSelected ? .primary : .secondary)
                     .bold()
             }
             .padding(.horizontal, Constants.badgeHorizontalPadding)
             .padding(.vertical, Constants.badgeVerticalPadding)
             .containerBackground(cornerRadius: Constants.cornerRadius)
         }
-    }
+        else {
+            let isSelected = selectedPokemonName == pokemon.formattedName
+            HStack {
+                Image(systemName: "circle")
+                    .scaleEffect(0.4)
+                    .bold()
 
-    @ViewBuilder
-    private func pokemonCard(species: EvolutionSpecies, pokemon: EvolutionPokemon) -> some View {
-        if selectedPokemon == pokemon {
-            NavigationLink(value: pokemon.toPokemonListEntry()) {
-                cardContent(species: species, pokemon: pokemon)
+                Text("Base Form")
+                    .foregroundStyle(.primary)
+                    .bold()
             }
-        } else {
-            cardContent(species: species, pokemon: pokemon)
-                .opacity(Constants.unselectedOpacity)
-                .onTapGesture {
-                    withAnimation(.linear(duration: Constants.selectionAnimationDuration)) {
-                        selectedPokemon = pokemon
-                    }
-                }
+            .padding(.horizontal, Constants.badgeHorizontalPadding)
+            .padding(.vertical, isSelected ? Constants.badgeVerticalPadding : 0)
+            .containerBackground(cornerRadius: Constants.cornerRadius)
+            .scaleEffect(isSelected ? 1 : 0)
         }
     }
 
-    @ViewBuilder
+    private func pokemonCard(species: EvolutionSpecies, pokemon: EvolutionPokemon) -> some View {
+        let isSelected = selectedPokemonName == pokemon.formattedName
+
+        return NavigationLink(value: pokemon.toPokemonListEntry()) {
+            cardContent(species: species, pokemon: pokemon)
+        }
+        .disabled(!isSelected)
+        .opacity(isSelected ? 1.0 : Constants.unselectedOpacity)
+        .simultaneousGesture(TapGesture().onEnded {
+            guard !isSelected else { return }
+            withAnimation(.spring(duration: Constants.selectionAnimationDuration)) {
+                selectedPokemonName = pokemon.formattedName
+            }
+        })
+    }
+
     private func megaConditionBadge(for pokemon: EvolutionPokemon) -> some View {
         let condition = MegaStones.condition(for: pokemon.name)
-        HStack {
+        let isSelected = selectedPokemonName == pokemon.formattedName
+
+        return HStack {
             Image(systemName: EvolutionTrigger.megaEvolution.icon)
                 .foregroundStyle(Color.megaEvolution)
 
-            Text(condition.shortDescription)
+            Text(isSelected ? condition.fullDescription : condition.shortDescription)
+                .font(.default)
                 .bold()
-                .lineLimit(1)
-                .minimumScaleFactor(Constants.megaBadgeMinScale)
+                .lineLimit(isSelected ? 3 : 1)
+                .minimumScaleFactor(isSelected ? Constants.nameMinScale : Constants.megaBadgeMinScale)
                 .foregroundStyle(Color.megaEvolution.exposureAdjust(Constants.megaBadgeBrightnessAdjust))
         }
-        .padding(.horizontal, Constants.badgeHorizontalPadding)
+        .padding(.horizontal, isSelected ? Constants.megaBadgeHorizontalPadding : Constants.badgeHorizontalPadding)
         .padding(.vertical, Constants.badgeVerticalPadding)
     }
 
-    @ViewBuilder
     private func megaCard(pokemon: EvolutionPokemon) -> some View {
-        if selectedPokemon == pokemon {
-            NavigationLink(value: pokemon.toPokemonListEntry()) {
-                megaCardContent(pokemon: pokemon)
-            }
-        } else {
+        let isSelected = selectedPokemonName == pokemon.formattedName
+
+        return NavigationLink(value: pokemon.toPokemonListEntry()) {
             megaCardContent(pokemon: pokemon)
-                .opacity(Constants.unselectedOpacity)
-                .onTapGesture {
-                    withAnimation(.linear(duration: Constants.selectionAnimationDuration)) {
-                        selectedPokemon = pokemon
-                    }
-                }
         }
+        .disabled(!isSelected)
+        .opacity(isSelected ? 1.0 : Constants.unselectedOpacity)
+        .simultaneousGesture(TapGesture().onEnded {
+            guard !isSelected else { return }
+            withAnimation(.spring(duration: Constants.selectionAnimationDuration)) {
+                selectedPokemonName = pokemon.formattedName
+            }
+        })
     }
 
     private func megaCardContent(pokemon: EvolutionPokemon) -> some View {
@@ -151,7 +172,7 @@ struct PokemonEvolutionTab: View {
                 .bold()
                 .foregroundStyle(accentColor)
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(Constants.nameMinScale)
 
             megaConditionBadge(for: pokemon)
         }
@@ -175,7 +196,7 @@ struct PokemonEvolutionTab: View {
                 .bold()
                 .foregroundStyle(accentColor)
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(Constants.nameMinScale)
         }
         .padding()
         .frame(maxWidth: Constants.cardWidth, maxHeight: Constants.cardHeight)
@@ -196,6 +217,7 @@ extension PokemonEvolutionTab {
         static let innerSpacing: CGFloat = 16
         static let cornerRadius: CGFloat = 22
         static let badgeHorizontalPadding: CGFloat = 16
+        static let megaBadgeHorizontalPadding: CGFloat = 4
         static let badgeVerticalPadding: CGFloat = 8
         static let imageSize: CGFloat = 75
         static let megaImageSize: CGFloat = 150
@@ -205,8 +227,9 @@ extension PokemonEvolutionTab {
         static let megaCardHeight: CGFloat = 380
         static let cardFillOpacity: Double = 0.2
         static let cardBorderWidth: CGFloat = 2
-        static let unselectedOpacity: Double = 0.8
+        static let unselectedOpacity: Double = 0.7
         static let selectionAnimationDuration: Double = 0.25
+        static let nameMinScale: CGFloat = 0.7
         static let megaSectionTitle: String = "MEGA EVOLUTION"
         static let megaTitleBrightnessAdjust: Double = 1.7
         static let megaBadgeBrightnessAdjust: Double = 2.0
