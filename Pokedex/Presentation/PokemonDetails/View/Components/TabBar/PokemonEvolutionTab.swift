@@ -64,6 +64,12 @@ struct PokemonEvolutionTab: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation(.spring(duration: Constants.selectionAnimationDuration)) {
+                selectedPokemonName = nil
+            }
+        }
         .navigationDestination(for: PokemonListEntry.self) { entry in
             PokemonDetailsView(pokemonListEntry: entry, types: types)
         }
