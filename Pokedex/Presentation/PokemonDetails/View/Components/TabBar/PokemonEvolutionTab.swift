@@ -84,13 +84,12 @@ struct PokemonEvolutionTab: View {
 
     @ViewBuilder
     private func conditionBadge(for species: EvolutionSpecies? = nil, pokemon: EvolutionPokemon) -> some View {
+        let isSelected = selectedPokemonName == pokemon.formattedName
         if let condition = species?.pokemonEvolutions.first,
            let icon = condition.evolutionTrigger?.name.icon
         {
-            let isSelected = selectedPokemonName == pokemon.formattedName
             HStack {
                 Image(systemName: icon)
-
                 Text(isSelected ? condition.fullDescription : condition.shortDescription)
                     .foregroundStyle(isSelected ? .primary : .secondary)
                     .bold()
@@ -98,15 +97,12 @@ struct PokemonEvolutionTab: View {
             .padding(.horizontal, Constants.badgeHorizontalPadding)
             .padding(.vertical, Constants.badgeVerticalPadding)
             .containerBackground(cornerRadius: Constants.cornerRadius)
-        }
-        else {
-            let isSelected = selectedPokemonName == pokemon.formattedName
+        } else {
             HStack {
-                Image(systemName: "circle")
-                    .scaleEffect(0.4)
+                Image(systemName: Constants.baseFormIcon)
+                    .scaleEffect(Constants.baseFormIconScale)
                     .bold()
-
-                Text("Base Form")
+                Text(Constants.baseFormLabel)
                     .foregroundStyle(.primary)
                     .bold()
             }
@@ -144,7 +140,7 @@ struct PokemonEvolutionTab: View {
             Text(isSelected ? condition.fullDescription : condition.shortDescription)
                 .font(.default)
                 .bold()
-                .lineLimit(isSelected ? 3 : 1)
+                .lineLimit(isSelected ? Constants.megaBadgeExpandedLineLimit : 1)
                 .minimumScaleFactor(isSelected ? Constants.nameMinScale : Constants.megaBadgeMinScale)
                 .foregroundStyle(Color.megaEvolution.exposureAdjust(Constants.megaBadgeBrightnessAdjust))
         }
@@ -240,6 +236,10 @@ extension PokemonEvolutionTab {
         static let megaTitleBrightnessAdjust: Double = 1.7
         static let megaBadgeBrightnessAdjust: Double = 2.0
         static let megaBadgeMinScale: CGFloat = 0.5
+        static let megaBadgeExpandedLineLimit: Int = 3
+        static let baseFormIcon: String = "circle"
+        static let baseFormIconScale: CGFloat = 0.4
+        static let baseFormLabel: String = "Base Form"
     }
 }
 
