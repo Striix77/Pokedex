@@ -21,13 +21,6 @@ struct PokemonMovesTab: View {
     let pokemonName: String
     let accentColor: Color
 
-    private let buttonHorizontalPadding: CGFloat = 16
-    private let buttonVerticalPadding: CGFloat = 12
-    private let buttonCornerRadius: CGFloat = 22
-    private let buttonBorderWidth: CGFloat = 1
-    private let buttonSelectedBackgroundOpacity: CGFloat = 0.2
-    private let animationDuration: CGFloat = 0.3
-
     private var gameVersions: [PokemonGameVersion] {
         viewModel.pokemonGameVersions
     }
@@ -54,12 +47,7 @@ struct PokemonMovesTab: View {
                 ProgressView()
                     .frame(maxWidth: .infinity)
             } else {
-                VStack(spacing: 24) {
-                    gameVersionsContainer
-
-                    moveSetViews
-                }
-                .transition(.blurReplace())
+                contentView
             }
         }
         .task {
@@ -85,13 +73,21 @@ struct PokemonMovesTab: View {
             confirmAction: { dismiss() },
             errorMessage: viewModel.errorMessage
         )
-        .animation(.easeInOut(duration: 0.5), value: viewModel.areVersionsLoading)
+        .animation(.easeInOut(duration: Constants.loadingAnimationDuration), value: viewModel.areVersionsLoading)
+    }
+
+    private var contentView: some View {
+        VStack(spacing: Constants.outerSpacing) {
+            gameVersionsContainer
+            moveSetViews
+        }
+        .transition(.blurReplace())
     }
 
     private var gameVersionsContainer: some View {
         VStack {
             ScrollView(.horizontal) {
-                HStack(spacing: 16) {
+                HStack(spacing: Constants.versionButtonSpacing) {
                     ForEach(gameVersions, id: \.id) { gameVersion in
                         gameVersionButton(gameVersion, isSelected: selectedVersion == gameVersion.name)
                     }
@@ -103,7 +99,7 @@ struct PokemonMovesTab: View {
 
             ProgressView()
                 .opacity(viewModel.areMovesLoading ? 1 : 0)
-                .animation(.easeInOut(duration: 0.1), value: viewModel.areMovesLoading)
+                .animation(.easeInOut(duration: Constants.movesLoadingAnimationDuration), value: viewModel.areMovesLoading)
         }
     }
 
@@ -135,16 +131,16 @@ struct PokemonMovesTab: View {
                 .font(.caption)
                 .bold()
         }
-        .padding(.horizontal, buttonHorizontalPadding)
-        .padding(.vertical, buttonVerticalPadding)
+        .padding(.horizontal, Constants.buttonHorizontalPadding)
+        .padding(.vertical, Constants.buttonVerticalPadding)
         .containerBackground(
-            cornerRadius: buttonCornerRadius,
-            fill: isSelected ? accentColor.opacity(buttonSelectedBackgroundOpacity) : Color.containerBackground,
+            cornerRadius: Constants.buttonCornerRadius,
+            fill: isSelected ? accentColor.opacity(Constants.buttonSelectedBackgroundOpacity) : Color.containerBackground,
             stroke: isSelected ? accentColor : Color.containerBorder,
-            lineWidth: buttonBorderWidth
+            lineWidth: Constants.buttonBorderWidth
         )
         .onTapGesture {
-            withAnimation(.easeInOut(duration: animationDuration)) {
+            withAnimation(.easeInOut(duration: Constants.selectionAnimationDuration)) {
                 selectedVersion = gameVersion.name
             }
         }
@@ -157,6 +153,23 @@ struct PokemonMovesTab: View {
 
     private func moveSetTitle(moves: [PokemonMoveEntry]) -> String {
         moves.first?.moveLearnType.label ?? "Other"
+    }
+}
+
+// MARK: - Constants
+
+extension PokemonMovesTab {
+    enum Constants {
+        static let outerSpacing: CGFloat = 24
+        static let versionButtonSpacing: CGFloat = 16
+        static let buttonHorizontalPadding: CGFloat = 16
+        static let buttonVerticalPadding: CGFloat = 12
+        static let buttonCornerRadius: CGFloat = 22
+        static let buttonBorderWidth: CGFloat = 1
+        static let buttonSelectedBackgroundOpacity: Double = 0.2
+        static let selectionAnimationDuration: Double = 0.3
+        static let loadingAnimationDuration: Double = 0.5
+        static let movesLoadingAnimationDuration: Double = 0.1
     }
 }
 
