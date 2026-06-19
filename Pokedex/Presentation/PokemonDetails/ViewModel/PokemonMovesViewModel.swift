@@ -3,7 +3,8 @@ import Foundation
 @Observable
 @MainActor
 class PokemonMovesViewModel {
-    var isLoading = true
+    var areVersionsLoading = true
+    var areMovesLoading = true
     var errorMessage: String?
     var showVersionsAlert: Bool = false
     var showMovesAlert: Bool = false
@@ -22,17 +23,17 @@ class PokemonMovesViewModel {
     }
 
     func fetchPokemonGameVersions(name: String) async {
-        isLoading = true
+        areVersionsLoading = true
 
         errorMessage = await ErrorHandler.handleFetching {
             self.pokemonGameVersions = try await self.pokemonGameVersionsUseCase.execute(name: name)
         }
         showVersionsAlert = errorMessage != nil
-        isLoading = false
+        areVersionsLoading = false
     }
 
     func fetchMoves(name: String, versionGroupName: String) async {
-        isLoading = true
+        areMovesLoading = true
 
         errorMessage = await ErrorHandler.handleFetching {
             self.pokemonMoves = try await self.pokemonMovesUseCase.execute(
@@ -41,6 +42,6 @@ class PokemonMovesViewModel {
             )
         }
         showMovesAlert = errorMessage != nil
-        isLoading = false
+        areMovesLoading = false
     }
 }

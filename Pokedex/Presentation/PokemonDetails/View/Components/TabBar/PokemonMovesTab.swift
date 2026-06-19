@@ -49,10 +49,18 @@ struct PokemonMovesTab: View {
     }
 
     var body: some View {
-        VStack(spacing: 24) {
-            gameVersionsContainer
+        ZStack {
+            if viewModel.areVersionsLoading, selectedVersion != nil {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+            } else {
+                VStack(spacing: 24) {
+                    gameVersionsContainer
 
-            moveSetViews
+                    moveSetViews
+                }
+                .transition(.blurReplace())
+            }
         }
         .task {
             await fetchVersions()
@@ -77,19 +85,26 @@ struct PokemonMovesTab: View {
             confirmAction: { dismiss() },
             errorMessage: viewModel.errorMessage
         )
+        .animation(.easeInOut(duration: 0.5), value: viewModel.areVersionsLoading)
     }
 
     private var gameVersionsContainer: some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: 16) {
-                ForEach(gameVersions, id: \.id) { gameVersion in
-                    gameVersionButton(gameVersion, isSelected: selectedVersion == gameVersion.name)
+        VStack {
+            ScrollView(.horizontal) {
+                HStack(spacing: 16) {
+                    ForEach(gameVersions, id: \.id) { gameVersion in
+                        gameVersionButton(gameVersion, isSelected: selectedVersion == gameVersion.name)
+                    }
                 }
+                .padding(.vertical)
             }
-            .padding(.vertical)
+            .scrollIndicators(.hidden)
+            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+
+            ProgressView()
+                .opacity(viewModel.areMovesLoading ? 1 : 0)
+                .animation(.easeInOut(duration: 0.1), value: viewModel.areMovesLoading)
         }
-        .scrollIndicators(.hidden)
-        .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
     }
 
     private var moveSetViews: some View {
