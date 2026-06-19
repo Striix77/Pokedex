@@ -52,6 +52,34 @@ struct PokemonEvolutionTab: View {
         )
     }
 
+    @ViewBuilder
+    private func evolutionSpeciesSection(for chain: EvolutionChainEntry) -> some View {
+        let count = chain.pokemonSpecies.count
+        if count > Constants.radialLayoutThreshold {
+            radialEvolutionSection(for: chain)
+                .frame(maxWidth: .infinity, alignment: .center)
+        } else if count > 1 {
+            VStack(alignment: .center, spacing: Constants.innerSpacing) {
+                ForEach(chain.pokemonSpecies) { species in
+                    if let pokemon = species.defaultPokemon.first {
+                        if species != chain.pokemonSpecies.first {
+                            conditionBadge(for: species, pokemon: pokemon)
+                        } else {
+                            conditionBadge(pokemon: pokemon)
+                        }
+                        pokemonCard(species: species, pokemon: pokemon)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+        } else {
+            if let species = chain.pokemonSpecies.first, let pokemon = species.defaultPokemon.first {
+                noEvolutionView(species: species, pokemon: pokemon)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
+        }
+    }
+
     private func noEvolutionView(species: EvolutionSpecies, pokemon: EvolutionPokemon) -> some View {
         VStack(spacing: Constants.innerSpacing) {
             pokemonCard(species: species, pokemon: pokemon)
@@ -77,6 +105,80 @@ struct PokemonEvolutionTab: View {
                 .opacity(Constants.noEvolutionRingTwoOpacity)
         }
     }
+
+    private func radialEvolutionSection(for chain: EvolutionChainEntry) -> some View {
+        let evolutions = Array(chain.pokemonSpecies.dropFirst())
+        let count = evolutions.count
+        let baseSpecies = chain.pokemonSpecies.first
+        let basePokemon = baseSpecies?.defaultPokemon.first
+        let isBaseSelected = selectedPokemonName != nil && basePokemon?.formattedName == selectedPokemonName
+        let selectedSpecies = evolutions.first(where: { $0.defaultPokemon.first?.formattedName == selectedPokemonName })
+
+        return VStack(spacing: Constants.innerSpacing) {
+            ZStack {
+                if let base = baseSpecies, let pokemon = basePokemon {
+                    pokemonCard(species: base, pokemon: pokemon)
+                }
+
+                ForEach(evolutions.indices, id: \.self) { index in
+                    radialEvolutionEntry(for: evolutions[index], at: index, outOf: count)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: Constants.radialContainerSize)
+
+            if let species = selectedSpecies, let pokemon = species.defaultPokemon.first {
+                conditionBadge(for: species, pokemon: pokemon)
+            } else if isBaseSelected, let pokemon = basePokemon {
+                conditionBadge(pokemon: pokemon)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func radialEvolutionEntry(for species: EvolutionSpecies, at index: Int, outOf count: Int) -> some View {
+        if let pokemon = species.defaultPokemon.first {
+            let angle = (360.0 / Double(count)) * Double(index) - 90.0
+            let radians = angle * .pi / 180.0
+            let cardX = Constants.radialRadius * CGFloat(cos(radians))
+            let cardY = Constants.radialRadius * CGFloat(sin(radians))
+
+            pokemonCard(
+                species: species,
+                pokemon: pokemon,
+                imageSize: Constants.radialImageSize,
+                cardWidth: Constants.radialCardWidth,
+                cardHeight: Constants.radialCardHeight
+            )
+            .offset(x: cardX, y: cardY)
+        }
+    }
+
+    private func megaEvolutionSection(_ megaPokemon: [EvolutionPokemon]) -> some View {
+        VStack(spacing: Constants.innerSpacing) {
+            megaSectionHeader
+
+            HStack {
+                ForEach(megaPokemon) { pokemon in
+                    megaCard(pokemon: pokemon)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
+
+    private var megaSectionHeader: some View {
+        HStack {
+            Image(systemName: EvolutionTrigger.megaEvolution.icon)
+                .foregroundStyle(Color.megaEvolution)
+
+            Text(Constants.megaSectionTitle)
+                .font(.title2)
+                .bold()
+                .foregroundStyle(Color.megaEvolution.exposureAdjust(Constants.megaTitleBrightnessAdjust))
+        }
+    }
+
     @ViewBuilder
     private func conditionBadge(for species: EvolutionSpecies? = nil, pokemon: EvolutionPokemon) -> some View {
         let isSelected = selectedPokemonName == pokemon.formattedName
@@ -108,11 +210,17 @@ struct PokemonEvolutionTab: View {
         }
     }
 
-    private func pokemonCard(species: EvolutionSpecies, pokemon: EvolutionPokemon) -> some View {
+    private func pokemonCard(
+        species: EvolutionSpecies,
+        pokemon: EvolutionPokemon,
+        imageSize: CGFloat = Constants.imageSize,
+        cardWidth: CGFloat = Constants.cardWidth,
+        cardHeight: CGFloat = Constants.cardHeight
+    ) -> some View {
         let isSelected = selectedPokemonName == pokemon.formattedName
 
         return NavigationLink(value: pokemon.toPokemonListEntry()) {
-            cardContent(species: species, pokemon: pokemon)
+            cardContent(species: species, pokemon: pokemon, imageSize: imageSize, cardWidth: cardWidth, cardHeight: cardHeight)
         }
         .disabled(!isSelected || pokemon.name == pokemonName)
         .opacity(isSelected ? 1.0 : Constants.unselectedOpacity)
@@ -183,10 +291,16 @@ struct PokemonEvolutionTab: View {
         )
     }
 
-    private func cardContent(species: EvolutionSpecies, pokemon: EvolutionPokemon) -> some View {
+    private func cardContent(
+        species: EvolutionSpecies,
+        pokemon: EvolutionPokemon,
+        imageSize: CGFloat = Constants.imageSize,
+        cardWidth: CGFloat = Constants.cardWidth,
+        cardHeight: CGFloat = Constants.cardHeight
+    ) -> some View {
         VStack {
             PokemonImageView(spriteURL: pokemon.spriteURL)
-                .frame(maxWidth: Constants.imageSize)
+                .frame(maxWidth: imageSize)
             Text(species.formattedName)
                 .font(.default)
                 .fontDesign(.rounded)
@@ -196,7 +310,7 @@ struct PokemonEvolutionTab: View {
                 .minimumScaleFactor(Constants.nameMinScale)
         }
         .padding()
-        .frame(maxWidth: Constants.cardWidth, maxHeight: Constants.cardHeight)
+        .frame(maxWidth: cardWidth, maxHeight: cardHeight)
         .containerBackground(
             cornerRadius: Constants.cornerRadius,
             fill: accentColor.opacity(Constants.cardFillOpacity),
@@ -226,7 +340,7 @@ extension PokemonEvolutionTab {
         static let cardBorderWidth: CGFloat = 2
         static let unselectedOpacity: Double = 0.7
         static let selectionAnimationDuration: Double = 0.25
-        static let nameMinScale: CGFloat = 0.7
+        static let nameMinScale: CGFloat = 0.5
         static let megaSectionTitle: String = "MEGA EVOLUTION"
         static let megaTitleBrightnessAdjust: Double = 1.7
         static let megaBadgeBrightnessAdjust: Double = 2.0
@@ -235,6 +349,19 @@ extension PokemonEvolutionTab {
         static let baseFormIcon: String = "circle"
         static let baseFormIconScale: CGFloat = 0.4
         static let baseFormLabel: String = "Base Form"
+        static let noEvolutionRingLineWidth: CGFloat = 1
+        static let noEvolutionRingOneScale: CGFloat = 1.5
+        static let noEvolutionRingOneOpacity: Double = 0.5
+        static let noEvolutionRingTwoScale: CGFloat = 2
+        static let noEvolutionRingTwoOpacity: Double = 0.2
+        static let noEvolutionCardVerticalPadding: CGFloat = 64
+        static let noEvolutionText: String = "has no evolutionary relatives. Its form is final from the moment it hatches."
+        static let radialLayoutThreshold: Int = 4
+        static let radialRadius: CGFloat = 145
+        static let radialContainerSize: CGFloat = 520
+        static let radialCardWidth: CGFloat = 80
+        static let radialCardHeight: CGFloat = 90
+        static let radialImageSize: CGFloat = 48
     }
 }
 
