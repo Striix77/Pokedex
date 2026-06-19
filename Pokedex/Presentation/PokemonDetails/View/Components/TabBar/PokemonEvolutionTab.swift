@@ -26,40 +26,10 @@ struct PokemonEvolutionTab: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Constants.outerSpacing) {
             if let chain = viewModel.evolutionChain {
-                VStack(alignment: .center, spacing: Constants.innerSpacing) {
-                    ForEach(chain.pokemonSpecies) { species in
-                        if let pokemon = species.defaultPokemon.first {
-                            if species != chain.pokemonSpecies.first {
-                                conditionBadge(for: species, pokemon: pokemon)
-                            }
-                            else {
-                                conditionBadge(pokemon: pokemon)
-                            }
-                            pokemonCard(species: species, pokemon: pokemon)
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
+                evolutionSpeciesSection(for: chain)
 
                 if let megaPokemon = chain.pokemonSpecies.last?.megaPokemon, !megaPokemon.isEmpty {
-                    VStack(spacing: Constants.innerSpacing) {
-                        HStack {
-                            Image(systemName: EvolutionTrigger.megaEvolution.icon)
-                                .foregroundStyle(Color.megaEvolution)
-
-                            Text(Constants.megaSectionTitle)
-                                .font(.title2)
-                                .bold()
-                                .foregroundStyle(Color.megaEvolution.exposureAdjust(Constants.megaTitleBrightnessAdjust))
-                        }
-
-                        HStack {
-                            ForEach(megaPokemon) { pokemon in
-                                megaCard(pokemon: pokemon)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    }
+                    megaEvolutionSection(megaPokemon)
                 }
             }
         }
@@ -82,6 +52,31 @@ struct PokemonEvolutionTab: View {
         )
     }
 
+    private func noEvolutionView(species: EvolutionSpecies, pokemon: EvolutionPokemon) -> some View {
+        VStack(spacing: Constants.innerSpacing) {
+            pokemonCard(species: species, pokemon: pokemon)
+                .overlay(noEvolutionRingOverlay)
+                .padding(.vertical, Constants.noEvolutionCardVerticalPadding)
+
+            Text("\(pokemon.formattedName) \(Constants.noEvolutionText)")
+                .foregroundStyle(.secondary)
+                .font(.default)
+                .multilineTextAlignment(.center)
+        }
+    }
+
+    private var noEvolutionRingOverlay: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                .stroke(accentColor, lineWidth: Constants.noEvolutionRingLineWidth)
+                .scaleEffect(Constants.noEvolutionRingOneScale)
+                .opacity(Constants.noEvolutionRingOneOpacity)
+            RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                .stroke(accentColor, lineWidth: Constants.noEvolutionRingLineWidth)
+                .scaleEffect(Constants.noEvolutionRingTwoScale)
+                .opacity(Constants.noEvolutionRingTwoOpacity)
+        }
+    }
     @ViewBuilder
     private func conditionBadge(for species: EvolutionSpecies? = nil, pokemon: EvolutionPokemon) -> some View {
         let isSelected = selectedPokemonName == pokemon.formattedName
@@ -278,6 +273,16 @@ extension PokemonEvolutionTab {
         PokemonDetailsView(
             pokemonListEntry: .mockPikachu,
             types: PokemonType.mockPikachuTypes
+        )
+        .environment(SoundManager())
+    }
+}
+
+#Preview("Lapras") {
+    NavigationStack {
+        PokemonDetailsView(
+            pokemonListEntry: .mockLapras,
+            types: PokemonType.mockLaprasTypes
         )
         .environment(SoundManager())
     }

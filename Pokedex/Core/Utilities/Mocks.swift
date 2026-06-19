@@ -118,6 +118,31 @@ extension PokemonListEntry {
         )
     }
 
+    static var mockLapras: PokemonListEntry {
+        PokemonListEntry(
+            id: 131,
+            name: "lapras",
+            pokemontypes: [
+                PokemonTypes(type: PokemonType(id: 11, name: "water", typeEfficaciesByTargetTypeId: nil)),
+                PokemonTypes(type: PokemonType(id: 15, name: "ice", typeEfficaciesByTargetTypeId: nil))
+            ],
+            pokemonspecy: SpeciesEntry(
+                generation: PokemonGeneration(name: "generation-i"),
+                pokemonspeciesnames: [SpeciesNameEntry(genus: "Transport")],
+                pokemonspeciesflavortexts: [FlavorTextEntry(flavor_text: "A gentle soul that can read the feelings of people and Pokémon. It slowly travels the seas as it carries people on its back.")]
+            ),
+            pokemonsprites: [
+                SpriteEntry(sprites: SpriteData(
+                    other: OtherSprites(
+                        officialArtwork: OfficialArtwork(
+                            front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/131.png"
+                        )
+                    )
+                ))
+            ]
+        )
+    }
+
     static var mockEevee: PokemonListEntry {
         PokemonListEntry(
             id: 133,
@@ -189,6 +214,26 @@ extension PokemonType {
             PokemonType(id: 1, name: "normal", typeEfficaciesByTargetTypeId: [
                 TypeEfficacy(damageFactor: 200, type: AttackerType(id: 2, name: "fighting")),
                 TypeEfficacy(damageFactor: 0, type: AttackerType(id: 8, name: "ghost"))
+            ])
+        ]
+    }
+
+    static var mockLaprasTypes: [PokemonType] {
+        [
+            PokemonType(id: 11, name: "water", typeEfficaciesByTargetTypeId: [
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 13, name: "electric")),
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 12, name: "grass")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 10, name: "fire")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 11, name: "water")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 15, name: "ice")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 9, name: "steel"))
+            ]),
+            PokemonType(id: 15, name: "ice", typeEfficaciesByTargetTypeId: [
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 10, name: "fire")),
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 2, name: "fighting")),
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 5, name: "rock")),
+                TypeEfficacy(damageFactor: 200, type: AttackerType(id: 9, name: "steel")),
+                TypeEfficacy(damageFactor: 50, type: AttackerType(id: 15, name: "ice"))
             ])
         ]
     }
