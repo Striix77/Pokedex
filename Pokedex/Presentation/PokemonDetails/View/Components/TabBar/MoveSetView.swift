@@ -13,16 +13,18 @@ struct MoveSetView: View {
 
     private func moveTypeTitle(_ title: String, count: Int) -> some View {
         HStack {
-            Text(title)
-                .font(.title2)
-                .fontDesign(.rounded)
-                .bold()
+            if count > 0 {
+                Text(title)
+                    .font(.title2)
+                    .fontDesign(.rounded)
+                    .bold()
 
-            Text("\(count)")
-                .font(.title3)
-                .fontDesign(.rounded)
-                .bold()
-                .foregroundStyle(accentColor)
+                Text("\(count)")
+                    .font(.title3)
+                    .fontDesign(.rounded)
+                    .bold()
+                    .foregroundStyle(accentColor)
+            }
         }
     }
 
